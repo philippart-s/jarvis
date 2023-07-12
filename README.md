@@ -4,6 +4,7 @@ Here you can find the different steps to create a first CLI in Java with the [Pi
 The main steps of the project are store each in a separate git branch chronological named with numbers.
 
 ## 01-Init project
+ - all the resulted source code will be find in the branch `01-🎉-Init-Project`
  - init the Quarkus project: `quarkus create cli fr.wilda:discover-picocli:0.0.1-SNAPSHOT`
 ```bash
 $ quarkus create cli fr.wilda:discover-picocli:0.0.1-SNAPSHOT
