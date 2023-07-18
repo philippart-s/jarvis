@@ -128,3 +128,30 @@ __  ____  __  _____   ___  __ ____  ______
 Tests paused
 Press [space] to restart, [e] to edit command line args (currently ''), [r] to resume testing, [o] Toggle test output, [:] for the terminal, [h] for more options>
 ```
+
+## 📦 - Package the CLI
+  - launch the _build_ Quarkus command: `quarkus build`
+  - test the packaged CLI:
+```bash
+java -jar ./target/quarkus-app/quarkus-run.jar wilda
+__  ____  __  _____   ___  __ ____  ______ 
+ --/ __ \/ / / / _ | / _ \/ //_/ / / / __/ 
+ -/ /_/ / /_/ / __ |/ , _/ ,< / /_/ /\ \   
+--\___\_\____/_/ |_/_/|_/_/|_|\____/___/   
+2023-07-18 17:58:13,619 INFO  [io.quarkus] (main) discover-picocli 0.0.1-SNAPSHOT on JVM (powered by Quarkus 3.2.0.Final) started in 0.180s. 
+2023-07-18 17:58:13,636 INFO  [io.quarkus] (main) Profile prod activated. 
+2023-07-18 17:58:13,636 INFO  [io.quarkus] (main) Installed features: [cdi, picocli]
+👋, wilda!
+2023-07-18 17:58:13,680 INFO  [io.quarkus] (main) discover-picocli stopped in 0.005s
+```
+  - create as sh file named _greeting.sh_:
+```bash
+#!/bin/bash
+
+java -Dquarkus.log.console.enable=false -jar ../../target/quarkus-app/quarkus-run.jar $1
+```
+  - test the CLI:
+```bash
+./greeting.sh wilda
+👋, wilda!
+```
