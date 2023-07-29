@@ -13,7 +13,6 @@ Looking for the newly published extensions in registry.quarkus.io
 selected extensions: 
 - io.quarkus:quarkus-picocli
 
-
 applying codestarts...
 📚 java
 🔨 maven
@@ -28,4 +27,24 @@ applying codestarts...
 --> /Users/sphilipp/dev/talks/cli/discover-picocli
 -----------
 Navigate into this directory and get started: quarkus dev
+```
+ - the first CLI is generated in `GreetingCommand.java`:
+```java
+package fr.wilda;
+
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Parameters;
+
+@Command(name = "greeting", mixinStandardHelpOptions = true)
+public class GreetingCommand implements Runnable {
+
+    @Parameters(paramLabel = "<name>", defaultValue = "picocli",
+        description = "Your name.")
+    String name;
+
+    @Override
+    public void run() {
+        System.out.printf("Hello %s, go go commando!\n", name);
+    }
+}
 ```
