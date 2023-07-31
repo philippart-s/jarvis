@@ -151,3 +151,16 @@ java -jar $PATH_TO_ROOT_DEV_FOLDER/discover-picocli/target/quarkus-app/quarkus-r
 $ ./jarvis 🌍
 Hello 🌍, go go commando!
 ```
+
+## 03-GraalVM
+
+ - source code of this step is in the branch `03-🚀-graalvm`
+ - if needed install GraalVM: https://www.graalvm.org/latest/docs/getting-started/
+ - set the `GRAALVM_HOME` environment variable: `export GRAALVM_HOME=/Library/Java/JavaVirtualMachines/graalvm-jdk-17.0.8+9.1/Contents/Home`
+ - build the binary with the command `quarkus build --native`
+ - use the generated CLI: 
+```bash
+$ ./target/discover-picocli-0.0.1-SNAPSHOT-runner 🌍
+Hello 🌍, go go commando!
+```
+
