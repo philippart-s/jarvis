@@ -1,5 +1,6 @@
-package fr.wilda;
+package fr.wilda.picocli;
 
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
@@ -14,4 +15,5 @@ public class GreetingCommand implements Runnable {
     public void run() {
         System.out.printf("Hello %s, go go commando!\n", name);
     }
+
 }
