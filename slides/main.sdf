@@ -1,0 +1,19 @@
+/::
+custom_css: assets/custom.css
+::/
+
+## .[title]
+
+# Picocli, mets du Java dans ton terminal !
+
+🧑‍💻 ☕️
+
+!image(assets/images/opensourceexperience.png | width="250px")
+
+!include(_speaker.sdf)
+
+!include(_CLI.sdf)
+
+!include(_java.sdf)
+
+!include(_thanks.sdf)
