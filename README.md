@@ -5,13 +5,14 @@ The main steps of the project are store each in a separate git branch chronologi
 
 ## 01-Init project
  - all the resulted source code will be find in the branch `01-🎉-Init-Project`
- - init the Quarkus project: `quarkus create cli fr.wilda:discover-picocli:0.0.1-SNAPSHOT`
+ - init the Quarkus project: `quarkus create cli fr.wilda.picocli:jarvis:0.0.1-SNAPSHOT`
 ```bash
-$ quarkus create cli fr.wilda:discover-picocli:0.0.1-SNAPSHOT
+$ quarkus create cli fr.wilda.picocli:jarvis:0.0.1-SNAPSHOT  
 Looking for the newly published extensions in registry.quarkus.io
 -----------
 selected extensions: 
 - io.quarkus:quarkus-picocli
+
 
 applying codestarts...
 📚 java
@@ -24,14 +25,15 @@ applying codestarts...
 
 -----------
 [SUCCESS] ✅  quarkus project has been successfully generated in:
---> /Users/sphilipp/dev/talks/cli/discover-picocli
+--> /Users/stef/xxx/jarvis
 -----------
 Navigate into this directory and get started: quarkus dev
 ```
  - the first CLI is generated in `GreetingCommand.java`:
 ```java
-package fr.wilda;
+package fr.wilda.picocli;
 
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
@@ -46,5 +48,6 @@ public class GreetingCommand implements Runnable {
     public void run() {
         System.out.printf("Hello %s, go go commando!\n", name);
     }
+
 }
 ```
