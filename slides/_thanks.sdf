@@ -3,7 +3,7 @@
 <table style="font-size: 1.5vw; text-align: center; width: 100%;">
     <tr>
         <td>&nbsp;</td>
-        <td>!responsiveimg(assets/images/thanks/qrcode.png | width: 15vw; height: 17vw; margin: 0 auto;)</td>
+        <td>!image(assets/images/thanks/qrcode.png, qrcode, 15, 26, margin: 0 auto;)</td>
     </tr>
     <tr>
         <td>
@@ -18,4 +18,4 @@
 </table>
 <h2>Merci !!!<h2>
 
-!responsiveimg(assets/images/thanks/minions.png | width: 20vw; height: 20vw)
+!image(assets/images/thanks/minions.png, minious, 20, 32)

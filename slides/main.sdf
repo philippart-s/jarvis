@@ -8,7 +8,7 @@ custom_css: assets/custom.css
 
 🧑‍💻 ☕️
 
-!image(assets/images/opensourceexperience.png | width="250px")
+!image(assets/images/opensourceexperience.png,, 17)
 
 !include(_speaker.sdf)
 
