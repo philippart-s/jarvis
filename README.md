@@ -106,3 +106,8 @@ Hello Stéphane, go go commando!
 Tests paused
 Press [space] to restart, [e] to edit command line args (currently ''), [r] to resume testing, [o] Toggle test output, [:] for the terminal, [h] for more options>
 ```
+
+## 03-ovhcloud-sdk
+
+ - all the resulted source code will be find in the branch `03-🔗-ovhcloud-sdk`
+ - add the _rest client reactive_ client: `quarkus extension add rest-client-reactive-jackson`
