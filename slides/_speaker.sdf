@@ -1,15 +1,15 @@
 ## Stéphane Philippart .[slide-text]
 
-!image(assets/images/speaker/whoami.png,, 26, 15, position: absolute; right: 1vw; top: 1vh;)
+!image(assets/images/speaker/whoami.png,, 26, 15, float: right; margin-top: -16vh)
 
 - 🏷️ 🥑 DeveloperRelations@OVHCloud 🦄
 - 🏷️ Co-creator of TADx (Agile, Dev, DevOps meetups in Tours)
 
-!image(assets/images/speaker/tadx.png, tadx, 21, 21, position: absolute; right: 5vw; margin-top: -9vh;)
+!image(assets/images/speaker/tadx.png, tadx, 21, 21, float: right; margin-top: -9vh)
 
 - 🧠 Padawan Intelligence Artificielle 🏕
 
-!image(assets/images/speaker/ours.png, ours, 23, 40, position: absolute; right: 0;)
+!image(assets/images/speaker/ours.png, ours, 23, 40, float: right;)
 
 - 🐦 <span class="twitter">@wildagsx</span>
 - 🔗 https://philippart-s.github.io/blog

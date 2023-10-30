@@ -40,6 +40,7 @@ h2 {
   height: 100%;
   background-image: url(images/background.png);
   background-size: cover;
+  background-position: bottom;
   z-index: -1;
 }
 
@@ -62,11 +63,14 @@ h2 {
 
 .slide-text ul li {
   list-style: none;
-  padding-bottom: 2rem;
 }
 
 .slide-text .twitter {
   color: var(--sd-primary-color);
+}
+
+.slide-text p {
+  text-align: left;
 }
 
 .lego {

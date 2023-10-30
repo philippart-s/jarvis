@@ -17,3 +17,15 @@ custom_css: assets/custom.css
 !include(_java.sdf)
 
 !include(_thanks.sdf)
+
+## 🔗 Liens .[slide-text]
+
+!image(assets/images/opensourceexperience.png,,10,20, float: right; margin-top: -20vh)
+
+https://picocli.info/
+
+https://quarkus.io/ 
+
+https://quarkus.io/guides/cli-tooling
+
+https://quarkus.io/guides/dev-mode-differences  
