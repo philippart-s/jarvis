@@ -76,6 +76,7 @@ h2 {
 
 .slide-text ul li {
   list-style: none;
+  line-height: 1.6em;
 }
 
 .slide-text .twitter {
@@ -84,6 +85,7 @@ h2 {
 
 .slide-text p {
   text-align: left;
+  line-height: 1.6em;
 }
 
 .lego {
