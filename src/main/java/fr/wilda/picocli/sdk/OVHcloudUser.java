@@ -6,7 +6,6 @@ public class OVHcloudUser implements Serializable{
 
   private String firstname;
   private String name;
-  private String birthDay;
   private String city;
   private String country;
   private String language;
@@ -22,12 +21,6 @@ public class OVHcloudUser implements Serializable{
   }
   public void setName(String name) {
     this.name = name;
-  }
-  public String getBirthDay() {
-    return birthDay;
-  }
-  public void setBirthDay(String birthDay) {
-    this.birthDay = birthDay;
   }
   public String getCity() {
     return city;
@@ -46,5 +39,15 @@ public class OVHcloudUser implements Serializable{
   }
   public void setLanguage(String language) {
     this.language = language;
+  }
+
+  public String toString() {
+    return """
+        First name: %s
+        Last name: %s
+        City: %s
+        Country: %s
+        Language: %s
+        """.formatted(firstname, name, city, country, language);
   }
 }
