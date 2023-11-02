@@ -114,3 +114,11 @@ Press [space] to restart, [e] to edit command line args (currently ''), [r] to r
  - create the two DTO classes used to store the result of the calling API: [OVHcloudUser.java](./src/main/java/fr/wilda/picocli/sdk/OVHcloudUser.java) and [OVHcloudKube.java](./src/main/java/fr/wilda/picocli/sdk/OVHcloudKube.java)
  - create the API Service that is responsible to call the OVHcloud API: [OVHcloudAPIService.java](./src/main/java/fr/wilda/picocli/sdk/OVHcloudAPIService.java)
  - create the OVHcloud helper: [OVHcloudSignatureHelper](./src/main/java/fr/wilda/picocli/sdk/OVHcloudSignatureHelper.java)
+
+## 04-🤖-add-ovhcloud-feature
+
+ - all the resulted source code will be find in the branch `04-🤖-add-ovhcloud-feature`
+ - create the main entry point for the CLI: [JarvisCommand.java](./src/main/java/fr/wilda/picocli/JarvisCommand.java)
+ - delete the `GreetingCommand.java` file
+ - test your CLI with the developer mode: `quarkus dev`
+
