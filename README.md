@@ -115,31 +115,16 @@ Press [space] to restart, [e] to edit command line args (currently ''), [r] to r
  - create the API Service that is responsible to call the OVHcloud API: [OVHcloudAPIService.java](./src/main/java/fr/wilda/picocli/sdk/OVHcloudAPIService.java)
  - create the OVHcloud helper: [OVHcloudSignatureHelper](./src/main/java/fr/wilda/picocli/sdk/OVHcloudSignatureHelper.java)
 
-## 04-📦-package
+## 04-🤖-create-jarvis
 
-  - all the resulted source code will be find in the branch `04-📦-package`
-  - launch the _build_ Quarkus command: `quarkus build`
-  - test the packaged CLI:
-```bash
-java -jar ./target/quarkus-app/quarkus-run.jar wilda
-__  ____  __  _____   ___  __ ____  ______ 
- --/ __ \/ / / / _ | / _ \/ //_/ / / / __/ 
- -/ /_/ / /_/ / __ |/ , _/ ,< / /_/ /\ \   
---\___\_\____/_/ |_/_/|_/_/|_|\____/___/   
-2023-07-18 17:58:13,619 INFO  [io.quarkus] (main) discover-picocli 0.0.1-SNAPSHOT on JVM (powered by Quarkus 3.2.0.Final) started in 0.180s. 
-2023-07-18 17:58:13,636 INFO  [io.quarkus] (main) Profile prod activated. 
-2023-07-18 17:58:13,636 INFO  [io.quarkus] (main) Installed features: [cdi, picocli]
-👋, wilda!
-2023-07-18 17:58:13,680 INFO  [io.quarkus] (main) discover-picocli stopped in 0.005s
-```
-  - create as sh file named _greeting.sh_:
-```bash
-#!/bin/bash
+ - all the resulted source code will be find in the branch `04-🤖-add-ovhcloud-feature`
+ - create the main entry point for the CLI: [JarvisCommand.java](./src/main/java/fr/wilda/picocli/JarvisCommand.java)
+ - delete the `GreetingCommand.java` file
+ - test your CLI with the developer mode: `quarkus dev`
 
-java -Dquarkus.log.console.enable=false -jar ../../target/quarkus-app/quarkus-run.jar $1
-```
-  - test the CLI:
-```bash
-./greeting.sh wilda
-👋, wilda!
-```
+## 05-☁️-add-ovhcloud-command
+
+- all the resulted source code will be find in the branch `05-☁️-add-ovhcloud-command`
+- create the OVHcloud sub command to access to the REST API: [OVHcloudSubCommand.java](./src/main/java/fr/wilda/picocli/OVHcloudSubCommand.java)
+- update the [JarvisCommand.java](./src/main/java/fr/wilda/picocli/JarvisCommand.java) with the `@TopCommand` annotation and the sub command list `subcommands = {OVHcloudSubCommand.class}` 
+- test the new subcommand: `ovhcloud -m -k`
