@@ -128,3 +128,12 @@ Press [space] to restart, [e] to edit command line args (currently ''), [r] to r
 - create the OVHcloud sub command to access to the REST API: [OVHcloudSubCommand.java](./src/main/java/fr/wilda/picocli/OVHcloudSubCommand.java)
 - update the [JarvisCommand.java](./src/main/java/fr/wilda/picocli/JarvisCommand.java) with the `@TopCommand` annotation and the sub command list `subcommands = {OVHcloudSubCommand.class}` 
 - test the new subcommand: `ovhcloud -m -k`
+
+## 06-📦-package
+
+  - all the resulted source code will be find in the branch `06-📦-package`
+  - launch the _build_ Quarkus command: `quarkus build`
+  - update the [](./src/main/resources/application.properties) to have clean outputs: `%prod.quarkus.log.category."fr.wilda".level=INFO` & `%prod.quarkus.log.console.format=%m`
+  - test the packaged CLI: `java -jar ./target/quarkus-app/quarkus-run.jar Stéphane`, `java -jar ./target/quarkus-app/quarkus-run.jar ovhcloud -m -k`
+  - create the [jarvis.sh](./src/main/script/jarvis.sh) script
+  - test the CLI: `./jarvis.sh ovhcloud -m -k`
