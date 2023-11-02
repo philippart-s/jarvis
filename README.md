@@ -113,4 +113,4 @@ Press [space] to restart, [e] to edit command line args (currently ''), [r] to r
  - add the _rest client reactive_ client: `quarkus extension add rest-client-reactive-jackson`
  - create the two DTO classes used to store the result of the calling API: [OVHcloudUser.java](./src/main/java/fr/wilda/picocli/sdk/OVHcloudUser.java) and [OVHcloudKube.java](./src/main/java/fr/wilda/picocli/sdk/OVHcloudKube.java)
  - create the API Service that is responsible to call the OVHcloud API: [OVHcloudAPIService.java](./src/main/java/fr/wilda/picocli/sdk/OVHcloudAPIService.java)
- - create the OVHcloud helper: [](./src/main/java/fr/wilda/picocli/sdk/OVHcloudSignatureHelper.java)
+ - create the OVHcloud helper: [OVHcloudSignatureHelper](./src/main/java/fr/wilda/picocli/sdk/OVHcloudSignatureHelper.java)
