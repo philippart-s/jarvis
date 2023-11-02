@@ -115,7 +115,7 @@ Press [space] to restart, [e] to edit command line args (currently ''), [r] to r
  - create the API Service that is responsible to call the OVHcloud API: [OVHcloudAPIService.java](./src/main/java/fr/wilda/picocli/sdk/OVHcloudAPIService.java)
  - create the OVHcloud helper: [OVHcloudSignatureHelper](./src/main/java/fr/wilda/picocli/sdk/OVHcloudSignatureHelper.java)
 
-## 04-🤖-add-ovhcloud-feature
+## 04-🤖-create-jarvis
 
  - all the resulted source code will be find in the branch `04-🤖-add-ovhcloud-feature`
  - create the main entry point for the CLI: [JarvisCommand.java](./src/main/java/fr/wilda/picocli/JarvisCommand.java)
