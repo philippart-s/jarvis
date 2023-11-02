@@ -122,3 +122,9 @@ Press [space] to restart, [e] to edit command line args (currently ''), [r] to r
  - delete the `GreetingCommand.java` file
  - test your CLI with the developer mode: `quarkus dev`
 
+## 05-☁️-add-ovhcloud-command
+
+- all the resulted source code will be find in the branch `05-☁️-add-ovhcloud-command`
+- create the OVHcloud sub command to access to the REST API: [OVHcloudSubCommand.java](./src/main/java/fr/wilda/picocli/OVHcloudSubCommand.java)
+- update the [JarvisCommand.java](./src/main/java/fr/wilda/picocli/JarvisCommand.java) with the `@TopCommand` annotation and the sub command list `subcommands = {OVHcloudSubCommand.class}` 
+- test the new subcommand: `ovhcloud -m -k`

@@ -3,10 +3,12 @@ package fr.wilda.picocli;
 import java.util.concurrent.Callable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import io.quarkus.picocli.runtime.annotations.TopCommand;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
-@Command(name = "jarvis", mixinStandardHelpOptions = true)
+@TopCommand
+@Command(name = "jarvis", mixinStandardHelpOptions = true, subcommands = {OVHcloudSubCommand.class})
 public class JarvisCommand implements Callable<Integer> {
   // Logger
   private static final Logger _LOG = LoggerFactory.getLogger(JarvisCommand.class);
