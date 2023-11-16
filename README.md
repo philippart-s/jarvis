@@ -1,7 +1,7 @@
 # Discover Picocli
 
-Here you can find the different steps to create a first CLI in Java with the [Picocli](https://picocli.info/) Framework.
-The main steps of the project are store each in a separate git branch chronological named with numbers.
+Here you can find the different steps to create your first CLI in Java with the [Picocli](https://picocli.info/) Framework.
+The main steps of the project are stored each in a separate git branch chronological named with numbers.
 
 ## 01-Init project
  - all the resulted source code will be find in the branch `01-🎉-Init-Project`
@@ -29,25 +29,12 @@ applying codestarts...
 -----------
 Navigate into this directory and get started: quarkus dev
 ```
- - the first CLI is generated in `GreetingCommand.java`:
-```java
-package fr.wilda.picocli;
-
-import picocli.CommandLine;
-import picocli.CommandLine.Command;
-import picocli.CommandLine.Parameters;
-
-@Command(name = "greeting", mixinStandardHelpOptions = true)
-public class GreetingCommand implements Runnable {
-
-    @Parameters(paramLabel = "<name>", defaultValue = "picocli",
-        description = "Your name.")
-    String name;
-
-    @Override
-    public void run() {
-        System.out.printf("Hello %s, go go commando!\n", name);
-    }
-
-}
-```
+  - let's see what the command generated:
+    - a [pom.xml](pom.xml) with all necessary dependences
+      - take look to the dependecies section with a reference to the *picocli* extension
+    - an example class, [GreetingCommand](./src/main/java/fr/wilda/picocli/GreetingCommand.java)
+      - take a look to the annotations : 
+        - `@Command(name = "greeting", mixinStandardHelpOptions = true)`: 'mixinStandardHelpOptions' adds the `--help` and `--version` options
+        - `@Parameters(paramLabel = "<name>", defaultValue = "picocli",  description = "Your name.")`: parameter to set to the CLI, if empty use the `defaultValue` value. The description parameter will be displayed when calling the `--help` option
+    - a set of Dockerfiles in [src/main/docker](./src/main/docker/)
+    - an empty [application.properties](./src/main/resources/application.properties)
