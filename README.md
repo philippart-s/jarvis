@@ -1,7 +1,7 @@
 # Discover Picocli
 
-Here you can find the different steps to create a first CLI in Java with the [Picocli](https://picocli.info/) Framework.
-The main steps of the project are store each in a separate git branch chronological named with numbers.
+Here you can find the different steps to create your first CLI in Java with the [Picocli](https://picocli.info/) Framework.
+The main steps of the project are stored each in a separate git branch chronological named with numbers.
 
 ## 01-Init project
  - all the resulted source code will be find in the branch `01-🎉-Init-Project`
@@ -29,28 +29,15 @@ applying codestarts...
 -----------
 Navigate into this directory and get started: quarkus dev
 ```
- - the first CLI is generated in `GreetingCommand.java`:
-```java
-package fr.wilda.picocli;
-
-import picocli.CommandLine;
-import picocli.CommandLine.Command;
-import picocli.CommandLine.Parameters;
-
-@Command(name = "greeting", mixinStandardHelpOptions = true)
-public class GreetingCommand implements Runnable {
-
-    @Parameters(paramLabel = "<name>", defaultValue = "picocli",
-        description = "Your name.")
-    String name;
-
-    @Override
-    public void run() {
-        System.out.printf("Hello %s, go go commando!\n", name);
-    }
-
-}
-```
+  - let's see what the command generated:
+    - a [pom.xml](pom.xml) with all necessary dependences
+      - take look to the dependecies section with a reference to the *picocli* extension
+    - an example class, [GreetingCommand](./src/main/java/fr/wilda/picocli/GreetingCommand.java)
+      - take a look to the annotations : 
+        - `@Command(name = "greeting", mixinStandardHelpOptions = true)`: 'mixinStandardHelpOptions' adds the `--help` and `--version` options
+        - `@Parameters(paramLabel = "<name>", defaultValue = "picocli",  description = "Your name.")`: parameter to set to the CLI, if empty use the `defaultValue` value. The description parameter will be displayed when calling the `--help` option
+    - a set of Dockerfiles in [src/main/docker](./src/main/docker/)
+    - an empty [application.properties](./src/main/resources/application.properties) 
 
 ## 02-Try the CLI
 
@@ -110,10 +97,15 @@ Press [space] to restart, [e] to edit command line args (currently ''), [r] to r
 ## 03-ovhcloud-sdk
 
  - all the resulted source code will be find in the branch `03-🔗-ovhcloud-sdk`
- - add the _rest client reactive_ client: `quarkus extension add rest-client-reactive-jackson`
+ - add the _rest client reactive_ client: `quarkus extension add rest-client-reactive-jackson` (see it in the _dependencies_ section in the [pom.xml](./pom.xml))
  - create the two DTO classes used to store the result of the calling API: [OVHcloudUser.java](./src/main/java/fr/wilda/picocli/sdk/OVHcloudUser.java) and [OVHcloudKube.java](./src/main/java/fr/wilda/picocli/sdk/OVHcloudKube.java)
  - create the API Service that is responsible to call the OVHcloud API: [OVHcloudAPIService.java](./src/main/java/fr/wilda/picocli/sdk/OVHcloudAPIService.java)
+  - take a look to the _Jakarta_ anotations:
+    - `@RegisterRestClient`: to use it as client to do API call, see [application.properties](./src/main/resources/application.properties) for parameters
+    - `@Path("/v1")`: root path fir the called end-point
+    - `@ClientHeaderParam(name = "X-Ovh-Consumer", value = "${ovhcloud.consumer}")`, `@ClientHeaderParam(name = "X-Ovh-Application", value = "${ovhcloud.application}")`, `@ClientHeaderParam(name = "Content-Type", value = "application/json")`: header parameters, see [application.properties](./src/main/resources/application.properties) for dynamic parameters
  - create the OVHcloud helper: [OVHcloudSignatureHelper](./src/main/java/fr/wilda/picocli/sdk/OVHcloudSignatureHelper.java)
+  - the hash method is mandatory to use the OVHcloud API
 
 ## 04-🤖-create-jarvis
 
@@ -121,4 +113,3 @@ Press [space] to restart, [e] to edit command line args (currently ''), [r] to r
  - create the main entry point for the CLI: [JarvisCommand.java](./src/main/java/fr/wilda/picocli/JarvisCommand.java)
  - delete the `GreetingCommand.java` file
  - test your CLI with the developer mode: `quarkus dev`
-
