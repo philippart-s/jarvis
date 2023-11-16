@@ -142,6 +142,6 @@ Press [space] to restart, [e] to edit command line args (currently ''), [r] to r
   - if needed install GraalVM: https://www.graalvm.org/latest/docs/getting-started/
   - set the `GRAALVM_HOME` environment variable: `export GRAALVM_HOME=/Library/Java/JavaVirtualMachines/graalvm-jdk-17.0.8+9.1/Contents/Home`
   - build the binary with the command `quarkus build --native`
-  - use the generated CLI: `./target/jarvis-0.0.1-SNAPSHOT-runner ovhcloud -m -k`
+  - use the generated CLI: `./target/jarvis-0.0.1-SNAPSHOT-runner ovhcloud -m -k` or use the backuped one: `jarvis_bck ovhcloud -m -k`
   - rename and move the generated CLI: `cp ./target/jarvis-0.0.1-SNAPSHOT-runner ~/bin/jarvis && mv ~/bin/jarvis-0.0.1-SNAPSHOT-runner jarvis`
   - use the CLI: `jarvis ovhcloud -m`
