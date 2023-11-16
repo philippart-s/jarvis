@@ -128,8 +128,10 @@ Press [space] to restart, [e] to edit command line args (currently ''), [r] to r
 ## 06-📦-package
 
   - all the resulted source code will be find in the branch `06-📦-package`
+  - update the [application.properties](./src/main/resources/application.properties) to have clean outputs: `%prod.quarkus.log.category."fr.wilda".level=INFO` & `%prod.quarkus.log.console.format=%m`
   - launch the _build_ Quarkus command: `quarkus build`
-  - update the [](./src/main/resources/application.properties) to have clean outputs: `%prod.quarkus.log.category."fr.wilda".level=INFO` & `%prod.quarkus.log.console.format=%m`
+    - take a look that the application is available in [target/quarkus-app](./target/quarkus-app/) folder, espacially the [lib](./target/quarkus-app/lib/) folder
+    - take a look to the generated application: `du -h --max-depth=1`
   - test the packaged CLI: `java -jar ./target/quarkus-app/quarkus-run.jar Stéphane`, `java -jar ./target/quarkus-app/quarkus-run.jar ovhcloud -m -k`
   - create the [jarvis.sh](./src/main/script/jarvis.sh) script
-  - test the CLI: `./jarvis.sh ovhcloud -m -k`
+  - in the [src/main/script](./src/main/script/) folder, test the CLI: `./jarvis.sh ovhcloud -m -k`
