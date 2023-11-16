@@ -118,5 +118,9 @@ Press [space] to restart, [e] to edit command line args (currently ''), [r] to r
 
 - all the resulted source code will be find in the branch `05-☁️-add-ovhcloud-command`
 - create the OVHcloud sub command to access to the REST API: [OVHcloudSubCommand.java](./src/main/java/fr/wilda/picocli/OVHcloudSubCommand.java)
+  - take a look to the annotions:
+    - `@Option(names = {"-m", "--me"}, description = "Display the OVHcloud account details.")`, `@Option(names = {"-k", "--kube"}, description = "Display your Managed Kubernetes Service created.")`: create boolean options activated when setted
+    - `@RestClient`: to use the API Service class [OVHcloudAPIService](./src/main/java/fr/wilda/picocli/sdk/OVHcloudAPIService.java)
+    - `@ConfigProperty(name = "ovhcloud.projectId")`: to get the value of the key `ovhcloud.projectId` from [application.properties](./src/main/resources/application.properties) file.
 - update the [JarvisCommand.java](./src/main/java/fr/wilda/picocli/JarvisCommand.java) with the `@TopCommand` annotation and the sub command list `subcommands = {OVHcloudSubCommand.class}` 
 - test the new subcommand: `ovhcloud -m -k`
