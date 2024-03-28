@@ -3,7 +3,9 @@ package fr.wilda.picocli;
 import java.util.concurrent.Callable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import fr.wilda.picocli.sdk.ai.AIEndpointMistral7bService;
 import io.quarkus.picocli.runtime.annotations.TopCommand;
+import jakarta.inject.Inject;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
@@ -13,13 +15,16 @@ public class JarvisCommand implements Callable<Integer> {
   // Logger
   private static final Logger _LOG = LoggerFactory.getLogger(JarvisCommand.class);
 
-  // Name to display
-  @Parameters(paramLabel = "<name>", defaultValue = "Tony", description = "Your name.")
-  private String name;
+  // Question to ask
+  @Parameters(paramLabel = "<question>", defaultValue = "Can you explain what are you?", description = "The question to ask to Jarvis.")
+  private String question;
+
+  @Inject
+  AIEndpointMistral7bService aiEndpointMistral7bService;
 
   @Override
   public Integer call() throws Exception {
-    _LOG.info("Hello {}, what can I do for you today?", name);
+    _LOG.info("{}", aiEndpointMistral7bService.askAQuestion(question));
 
     return 0;
   }
