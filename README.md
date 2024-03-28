@@ -124,7 +124,7 @@ quarkus.langchain4j.mistralai.chat-model.model-name=Mistral-7B-Instruct-v0.2
 quarkus.langchain4j.mistralai.log-requests=true
 quarkus.langchain4j.mistralai.log-responses=true
 ```
- ⚠️ you need to set the environment variable `QUARKUS_LANGCHAIN4J_MISTRALAI_BASE-URL` with the API URL of Mistral model. ⚠️
+ ⚠️ you need to set the environment variable `QUARKUS_LANGCHAIN4J_MISTRALAI_BASE_URL` with the API URL of Mistral model. ⚠️
 
 ## 04-🤖-create-jarvis
 
@@ -137,9 +137,30 @@ quarkus.langchain4j.mistralai.log-responses=true
 
 - all the resulted source code will be find in the branch `05-☁️-add-ovhcloud-command`
 - create the OVHcloud sub command to access to the REST API: [OVHcloudSubCommand.java](./src/main/java/fr/wilda/picocli/OVHcloudSubCommand.java)
-  - take a look to the annotions:
+  - take a look to the annotations:
     - `@Option(names = {"-m", "--me"}, description = "Display the OVHcloud account details.")`, `@Option(names = {"-k", "--kube"}, description = "Display your Managed Kubernetes Service created.")`: create boolean options activated when setted
     - `@RestClient`: to use the API Service class [OVHcloudAPIService](./src/main/java/fr/wilda/picocli/sdk/OVHcloudAPIService.java)
     - `@ConfigProperty(name = "ovhcloud.projectId")`: to get the value of the key `ovhcloud.projectId` from [application.properties](./src/main/resources/application.properties) file.
 - update the [JarvisCommand.java](./src/main/java/fr/wilda/picocli/JarvisCommand.java) with the `@TopCommand` annotation and the sub command list `subcommands = {OVHcloudSubCommand.class}` 
 - test the new subcommand: `ovhcloud -m -k`
+- to use AI Endpoints:
+  - inject the service in [JarvisCommand.java](./src/main/java/fr/wilda/picocli/JarvisCommand.java):
+```java
+@Inject
+  AIEndpointMistral7bService aiEndpointMistral7bService;
+```
+  - update the parameter name to become the question to ask:
+```java
+ // Question to ask
+  @Parameters(paramLabel = "<question>", defaultValue = "Can you explain what are you?", description = "The question to ask to Jarvis.")
+  private String question;
+```
+  - update the `call` method:
+```java
+@Override
+  public Integer call() throws Exception {
+    _LOG.info("{}", aiEndpointMistral7bService.askAQuestion(question));
+
+    return 0;
+  }
+```
