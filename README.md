@@ -124,7 +124,7 @@ quarkus.langchain4j.mistralai.chat-model.model-name=Mistral-7B-Instruct-v0.2
 quarkus.langchain4j.mistralai.log-requests=true
 quarkus.langchain4j.mistralai.log-responses=true
 ```
- ⚠️ you need to set the environment variable `QUARKUS_LANGCHAIN4J_MISTRALAI_BASE-URL` with the API URL of Mistral model. ⚠️
+ ⚠️ you need to set the environment variable `QUARKUS_LANGCHAIN4J_MISTRALAI_BASE_URL` with the API URL of Mistral model. ⚠️
 
 ## 04-🤖-create-jarvis
 
