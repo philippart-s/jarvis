@@ -111,7 +111,7 @@ Press [space] to restart, [e] to edit command line args (currently ''), [r] to r
 <dependency>
   <groupId>io.quarkiverse.langchain4j</groupId>
   <artifactId>quarkus-langchain4j-mistral-ai</artifactId>
-  <version>0.10.1</version>
+  <version>0.10.2</version>
 </dependency>
 ```
  - create the service for calling OVHcloud Mistral AI Endpoint: [AIEndpointMistral7bService](./src/main/java/fr/wilda/picocli/sdk/ai/AIEndpointMistral7bService.java) 
@@ -124,4 +124,4 @@ quarkus.langchain4j.mistralai.chat-model.model-name=Mistral-7B-Instruct-v0.2
 quarkus.langchain4j.mistralai.log-requests=true
 quarkus.langchain4j.mistralai.log-responses=true
 ```
- ⚠️ you need to set the environment variable `QUARKUS_LANGCHAIN4J_MISTRALAI_BASE-URL` with the API URL of Mistral model. ⚠️
+ ⚠️ you need to set the environment variable `QUARKUS_LANGCHAIN4J_MISTRALAI_BASE_URL` with the API URL of Mistral model. ⚠️
