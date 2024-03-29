@@ -16,7 +16,7 @@ public class JarvisCommand implements Callable<Integer> {
   private static final Logger _LOG = LoggerFactory.getLogger(JarvisCommand.class);
 
   // Question to ask
-  @Parameters(paramLabel = "<question>", defaultValue = "Can you explain what are you?", description = "The question to ask to Jarvis.")
+  @Parameters(paramLabel = "<question>", defaultValue = "What is the answer to life, the universe and everything?", description = "The question to ask to Jarvis.")
   private String question;
 
   @Inject
