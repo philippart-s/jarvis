@@ -5,7 +5,7 @@ The main steps of the project are stored each in a separate git branch chronolog
 
 ## 01-Init project
  - all the resulted source code will be find in the branch `01-🎉-Init-Project`
- - init the Quarkus project: `quarkus create cli fr.wilda.picocli:jarvis:0.0.1-SNAPSHOT`
+ - init the Quarkus project: `quarkus create cli fr.wilda.picocli:jarvis:0.0.1-SNAPSHOT --no-wrapper`
 ```bash
 $ quarkus create cli fr.wilda.picocli:jarvis:0.0.1-SNAPSHOT  
 Looking for the newly published extensions in registry.quarkus.io
