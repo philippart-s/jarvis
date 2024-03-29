@@ -5,7 +5,7 @@ The main steps of the project are stored each in a separate git branch chronolog
 
 ## 🎉 - 01-Init project
  - all the resulted source code will be find in the branch `01-🎉-Init-Project`
- - init the Quarkus project: `quarkus create cli fr.wilda.picocli:jarvis:0.0.1-SNAPSHOT`
+ - init the Quarkus project: `quarkus create cli fr.wilda.picocli:jarvis:0.0.1-SNAPSHOT --no-wrapper`
 ```bash
 $ quarkus create cli fr.wilda.picocli:jarvis:0.0.1-SNAPSHOT  
 Looking for the newly published extensions in registry.quarkus.io
@@ -111,7 +111,7 @@ Press [space] to restart, [e] to edit command line args (currently ''), [r] to r
 <dependency>
   <groupId>io.quarkiverse.langchain4j</groupId>
   <artifactId>quarkus-langchain4j-mistral-ai</artifactId>
-  <version>0.10.1</version>
+  <version>0.10.2</version>
 </dependency>
 ```
  - create the service for calling OVHcloud Mistral AI Endpoint: [AIEndpointMistral7bService](./src/main/java/fr/wilda/picocli/sdk/ai/AIEndpointMistral7bService.java) 
