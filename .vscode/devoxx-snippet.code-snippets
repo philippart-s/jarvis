@@ -1,0 +1,359 @@
+{
+  "Jarvis bash": {
+    "body": [
+      "#!/bin/bash",
+      "",
+      "java -jar ../../../target/quarkus-app/quarkus-run.jar \\$1 \\$2 \\$3",
+      ""
+    ],
+    "description": "",
+    "prefix": "jarvis-bash",
+    "scope": "shellscript"
+  },
+  "JarvisCommand AI Service": {
+    "body": [
+      "// Service to call Mistral LLM",
+      "@Inject",
+      "AIEndpointMistral7bService aiEndpointMistral7bService; ",
+      ""
+    ],
+    "description": "",
+    "prefix": "jarvis-cmd-ai-svc",
+    "scope": "java"
+  },
+  "JarvisCommand AI question param": {
+    "body": [
+      "// Question to ask",
+      "@Parameters(paramLabel = \"\u003cquestion\u003e\", defaultValue = \"What is the answer to life, the universe and everything?\", description = \"The question to ask to Jarvis.\")",
+      "private String question;",
+      ""
+    ],
+    "description": "",
+    "prefix": "jarvis-cmd-question-param",
+    "scope": "java"
+  },
+  "JarvisCommand Class Annotation": {
+    "body": [
+      "@Command(name = \"jarvis\", mixinStandardHelpOptions = true)",
+      ""
+    ],
+    "description": "",
+    "prefix": "jarvis-cmd-class-annot",
+    "scope": "java"
+  },
+  "JarvisCommand logger": {
+    "body": [
+      "// Logger",
+      "private static final Logger _LOG = LoggerFactory.getLogger(JarvisCommand.class);",
+      ""
+    ],
+    "description": "",
+    "prefix": "jarvis-cmd-logger",
+    "scope": "java"
+  },
+  "JarvisCommand param name": {
+    "body": [
+      "@Parameters(paramLabel = \"\u003cname\u003e\", defaultValue = \"picocli\", description = \"Your name.\")",
+      "String name;",
+      ""
+    ],
+    "description": "",
+    "prefix": "jarvis-cmd-name-param",
+    "scope": "java"
+  },
+  "OVHCommand Class Annotation": {
+    "body": [
+      "@Command(name = \"ovhcloud\", mixinStandardHelpOptions = true)",
+      ""
+    ],
+    "description": "",
+    "prefix": "ovh-cmd-class-annot",
+    "scope": "java"
+  },
+  "OVHCommand OVH Stuff": {
+    "body": [
+      "// OVHcloud public cloud project ID injected by environment variables in the",
+      "// application.properties file",
+      "@ConfigProperty(name = \"ovhcloud.projectId\")",
+      "String projectId;",
+      "",
+      "// Timestamp to add to each OVHcloud API call",
+      "private Long ovhTimestamp;",
+      ""
+    ],
+    "description": "",
+    "prefix": "ovh-cmd-ovh-stuff",
+    "scope": "java"
+  },
+  "OVHCommand kube": {
+    "body": [
+      "if (kube) {",
+      "  String[] kubes = apiService.getKubernetes(projectId,",
+      "      OVHcloudSignatureHelper.signature(\"cloud/project/\" + projectId + \"/kube\", ovhTimestamp),",
+      "      Long.toString(ovhTimestamp));",
+      "  _LOG.info(\"\\nNumber of Kubernetes clusters: {}\", kubes.length);",
+      "",
+      "  for (String kubeId : kubes) {",
+      "    _LOG.info(\"\\n{}\",",
+      "        apiService.getKubernete(",
+      "            projectId, kubeId, OVHcloudSignatureHelper",
+      "                .signature(\"cloud/project/\" + projectId + \"/kube/\" + kubeId, ovhTimestamp),",
+      "            Long.toString(ovhTimestamp)));",
+      "  }",
+      "}    ",
+      ""
+    ],
+    "description": "",
+    "prefix": "ovh-cmd-kube",
+    "scope": "java"
+  },
+  "OVHCommand logger": {
+    "body": [
+      "// Logger",
+      "private static final Logger _LOG = LoggerFactory.getLogger(OVHcloudSubCommand.class);",
+      ""
+    ],
+    "description": "",
+    "prefix": "ovh-cmd-logger",
+    "scope": "java"
+  },
+  "OVHCommand me": {
+    "body": [
+      "ovhTimestamp = System.currentTimeMillis() / 1000;",
+      "if (me) {",
+      "  _LOG.info(\"Me:\\n{}\", apiService.getMe(OVHcloudSignatureHelper.signature(\"me\", ovhTimestamp),",
+      "      Long.toString(ovhTimestamp)));",
+      "}",
+      ""
+    ],
+    "description": "",
+    "prefix": "ovh-cmd-me",
+    "scope": "java"
+  },
+  "OVHCommand options": {
+    "body": [
+      "// Option to activate the /me OVHcloud REST API",
+      "@Option(names = {\"-m\", \"--me\"}, description = \"Display the OVHcloud account details.\")",
+      "private boolean me;",
+      "",
+      "@Option(names = {\"-k\", \"--kube\"}, description = \"Display your Managed Kubernetes Service created.\")",
+      "private boolean kube;",
+      ""
+    ],
+    "description": "",
+    "prefix": "ovh-cmd-options",
+    "scope": "java"
+  },
+  "OVHCommand rest client": {
+    "body": [
+      "// Service to call the OVHcloud REST API",
+      "@RestClient",
+      "OVHcloudAPIService apiService;",
+      ""
+    ],
+    "description": "",
+    "prefix": "ovh-cmd-rest-client",
+    "scope": "java"
+  },
+  "OVHcloud API Service": {
+    "body": [
+      "@Path(\"/v1\")",
+      "@RegisterRestClient",
+      "@ClientHeaderParam(name = \"X-Ovh-Consumer\", value = \"\\\\${ovhcloud.consumer}\")",
+      "@ClientHeaderParam(name = \"X-Ovh-Application\", value = \"\\\\${ovhcloud.application}\")",
+      "@ClientHeaderParam(name = \"Content-Type\", value = \"application/json\")",
+      ""
+    ],
+    "description": "",
+    "prefix": "OVHcloudAPI-annot",
+    "scope": "java"
+  },
+  "OVHcloud API Service Endpoints": {
+    "body": [
+      "@GET",
+      "@Path(\"/me\")",
+      "OVHcloudUser getMe(@HeaderParam(\"X-Ovh-Signature\") String signature,",
+      "    @HeaderParam(\"X-Ovh-Timestamp\") String ovhTimestamp);",
+      "",
+      "@GET",
+      "@Path(\"/cloud/project/{projectId}/kube\")",
+      "String[] getKubernetes(@PathParam(\"projectId\") String projectId,",
+      "    @HeaderParam(\"X-Ovh-Signature\") String signature,",
+      "    @HeaderParam(\"X-Ovh-Timestamp\") String ovhTimestamp);",
+      "",
+      "@GET",
+      "@Path(\"/cloud/project\")",
+      "String[] getProjects(",
+      "    @HeaderParam(\"X-Ovh-Signature\") String signature,",
+      "    @HeaderParam(\"X-Ovh-Timestamp\") String ovhTimestamp);",
+      "",
+      "@GET",
+      "@Path(\"/cloud/project/{projectId}/kube/{kubeId}\")",
+      "OVHcloudKube getKubernete(@PathParam(\"projectId\") String projectId, @PathParam(\"kubeId\") String kubeId,",
+      "    @HeaderParam(\"X-Ovh-Signature\") String signature,",
+      "    @HeaderParam(\"X-Ovh-Timestamp\") String ovhTimestamp);",
+      ""
+    ],
+    "description": "",
+    "prefix": "OVHcloudAPI-endpoints",
+    "scope": "java"
+  },
+  "OVHcloud Kube": {
+    "body": [
+      "private String id;",
+      "private String isUpToDate;",
+      "private String name;",
+      "private String region;",
+      "private String status;",
+      "private String updatePolicy;",
+      "private String updatedAt;",
+      "private String version;",
+      ""
+    ],
+    "description": "",
+    "prefix": "OVHcloudKube-fields",
+    "scope": "java"
+  },
+  "OVHcloud Mistral Service askQuestion": {
+    "body": [
+      "@SystemMessage(\"You are Jarvis, an AI assistant.\")",
+      "  @UserMessage(\"Answer as best possible to the following question: {question}. The answer must be in a style of a virtual assistant.\")",
+      "    String askAQuestion(String question);",
+      ""
+    ],
+    "description": "",
+    "prefix": "OVHcloudMistral-ask-method",
+    "scope": "java"
+  },
+  "OVHcloud Signature Helper": {
+    "body": [
+      "public static String signature(String endPoint, Long timestamp) {",
+      "    // build signature",
+      "    String toSign = new StringBuilder(System.getenv(\"OVH_APPLICATION_SECRET\"))",
+      "            .append(\"+\")",
+      "            .append(System.getenv(\"OVH_CONSUMER_KEY\"))",
+      "            .append(\"+\")",
+      "            .append(\"GET\")",
+      "            .append(\"+\")",
+      "            .append(\"https://eu.api.ovh.com/v1/\" + endPoint)",
+      "            .append(\"+\")",
+      "            .append(\"\")",
+      "            .append(\"+\")",
+      "            .append(timestamp)",
+      "            .toString();",
+      "    try {",
+      "        return new StringBuilder(\"\\$1\\$\").append(hashSHA1(toSign)).toString();",
+      "    } catch (Exception e) {",
+      "        e.printStackTrace();",
+      "    }",
+      "    return \"\";",
+      "}",
+      "",
+      "private static String hashSHA1(String text)",
+      "        throws NoSuchAlgorithmException, UnsupportedEncodingException {",
+      "    MessageDigest md;",
+      "    md = MessageDigest.getInstance(\"SHA-1\");",
+      "    byte[] sha1hash = new byte[40];",
+      "    md.update(text.getBytes(\"iso-8859-1\"), 0, text.length());",
+      "    sha1hash = md.digest();",
+      "    StringBuffer sb = new StringBuffer();",
+      "    for (int i = 0; i \u003c sha1hash.length; i++) {",
+      "        sb.append(Integer.toString((sha1hash[i] \u0026 0xff) + 0x100, 16).substring(1));",
+      "    }",
+      "    return sb.toString();",
+      "}",
+      ""
+    ],
+    "description": "",
+    "prefix": "OVHcloudSigHelper",
+    "scope": "java"
+  },
+  "OVHcloud User": {
+    "body": [
+      "private String firstname;",
+      "private String name;",
+      "private String city;",
+      "private String country;",
+      "private String language;",
+      ""
+    ],
+    "description": "",
+    "prefix": "OVHcloudUser-fields",
+    "scope": "java"
+  },
+  "Pom Quarkus LangChain4j": {
+    "body": [
+      "\u003cdependency\u003e",
+      "      \u003cgroupId\u003eio.quarkiverse.langchain4j\u003c/groupId\u003e",
+      "      \u003cartifactId\u003equarkus-langchain4j-mistral-ai\u003c/artifactId\u003e",
+      "      \u003cversion\u003e0.10.2\u003c/version\u003e",
+      "\u003c/dependency\u003e "
+    ],
+    "description": "",
+    "prefix": "pom-langchain4j-dep",
+    "scope": "xml"
+  },
+  "Pom rest client": {
+    "body": [
+      "\u003cdependency\u003e",
+      "  \u003cgroupId\u003eio.quarkus\u003c/groupId\u003e",
+      "  \u003cartifactId\u003equarkus-rest-client-reactive-jackson\u003c/artifactId\u003e",
+      "\u003c/dependency\u003e",
+      ""
+    ],
+    "description": "",
+    "prefix": "pom-rest-dep",
+    "scope": "xml"
+  },
+  "Props Langchain4J": {
+    "body": [
+      "# Langchain4J parameters",
+      "quarkus.langchain4j.mistralai.api-key=foo",
+      "quarkus.langchain4j.mistralai.chat-model.max-tokens=150",
+      "quarkus.langchain4j.mistralai.chat-model.model-name=Mistral-7B-Instruct-v0.2",
+      "",
+      "quarkus.langchain4j.mistralai.log-requests=true",
+      "quarkus.langchain4j.mistralai.log-responses=true",
+      ""
+    ],
+    "description": "",
+    "prefix": "props-langchain4J",
+    "scope": ""
+  },
+  "Props OVHcloud env": {
+    "body": [
+      "# OVHcloud parameter",
+      "ovhcloud.consumer=\\\\${OVH_CONSUMER_KEY}",
+      "ovhcloud.application=\\\\${OVH_APPLICATION_KEY}",
+      "ovhcloud.projectId=\\\\${OVH_CLOUD_PROJECT_SERVICE}",
+      ""
+    ],
+    "description": "",
+    "prefix": "props-ovh-env",
+    "scope": ""
+  },
+  "Props RestClient": {
+    "body": [
+      "# RestClient parameter",
+      "quarkus.rest-client.\"fr.wilda.picocli.sdk.OVHcloudAPIService\".url=https://eu.api.ovh.com/",
+      "quarkus.rest-client.\"fr.wilda.picocli.sdk.OVHcloudAPIService\".scope=javax.inject.Singleton ",
+      ""
+    ],
+    "description": "",
+    "prefix": "props-rest-client",
+    "scope": ""
+  },
+  "Props logs prod": {
+    "body": [
+      "# Make outputs readable",
+      "%prod.quarkus.log.level=OFF",
+      "%prod.quarkus.banner.enabled=false",
+      "%prod.quarkus.log.category.\"fr.wilda\".level=INFO",
+      "%prod.quarkus.log.console.format=%m",
+      ""
+    ],
+    "description": "",
+    "prefix": "props-logs-prod",
+    "scope": ""
+  }
+}
