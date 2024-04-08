@@ -159,8 +159,8 @@
     "body": [
       "@Path(\"/v1\")",
       "@RegisterRestClient",
-      "@ClientHeaderParam(name = \"X-Ovh-Consumer\", value = \"\\\\${ovhcloud.consumer}\")",
-      "@ClientHeaderParam(name = \"X-Ovh-Application\", value = \"\\\\${ovhcloud.application}\")",
+      "@ClientHeaderParam(name = \"X-Ovh-Consumer\", value = \"\\${ovhcloud.consumer}\")",
+      "@ClientHeaderParam(name = \"X-Ovh-Application\", value = \"\\${ovhcloud.application}\")",
       "@ClientHeaderParam(name = \"Content-Type\", value = \"application/json\")",
       ""
     ],
@@ -286,7 +286,7 @@
       "\u003cdependency\u003e",
       "      \u003cgroupId\u003eio.quarkiverse.langchain4j\u003c/groupId\u003e",
       "      \u003cartifactId\u003equarkus-langchain4j-mistral-ai\u003c/artifactId\u003e",
-      "      \u003cversion\u003e0.10.2\u003c/version\u003e",
+      "      \u003cversion\u003e0.10.3\u003c/version\u003e",
       "\u003c/dependency\u003e "
     ],
     "description": "",
@@ -297,7 +297,7 @@
     "body": [
       "\u003cdependency\u003e",
       "  \u003cgroupId\u003eio.quarkus\u003c/groupId\u003e",
-      "  \u003cartifactId\u003equarkus-rest-client-reactive-jackson\u003c/artifactId\u003e",
+      "  \u003cartifactId\u003equarkus-rest\u003c/artifactId\u003e",
       "\u003c/dependency\u003e",
       ""
     ],
@@ -323,9 +323,9 @@
   "Props OVHcloud env": {
     "body": [
       "# OVHcloud parameter",
-      "ovhcloud.consumer=\\\\${OVH_CONSUMER_KEY}",
-      "ovhcloud.application=\\\\${OVH_APPLICATION_KEY}",
-      "ovhcloud.projectId=\\\\${OVH_CLOUD_PROJECT_SERVICE}",
+      "ovhcloud.consumer=\\${OVH_CONSUMER_KEY}",
+      "ovhcloud.application=\\${OVH_APPLICATION_KEY}",
+      "ovhcloud.projectId=\\${OVH_CLOUD_PROJECT_SERVICE}",
       ""
     ],
     "description": "",
