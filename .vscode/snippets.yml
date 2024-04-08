@@ -314,7 +314,7 @@ snippet Pom rest client:
   body: |
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-rest-client-reactive-jackson</artifactId>
+      <artifactId>quarkus-rest</artifactId>
     </dependency>
 
 snippet Pom Quarkus LangChain4j:
@@ -325,5 +325,5 @@ snippet Pom Quarkus LangChain4j:
     <dependency>
           <groupId>io.quarkiverse.langchain4j</groupId>
           <artifactId>quarkus-langchain4j-mistral-ai</artifactId>
-          <version>0.10.2</version>
+          <version>0.10.3</version>
     </dependency> 
