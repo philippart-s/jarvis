@@ -297,7 +297,7 @@
     "body": [
       "\u003cdependency\u003e",
       "  \u003cgroupId\u003eio.quarkus\u003c/groupId\u003e",
-      "  \u003cartifactId\u003equarkus-rest\u003c/artifactId\u003e",
+      "  \u003cartifactId\u003equarkus-rest-client-jackson\u003c/artifactId\u003e",
       "\u003c/dependency\u003e",
       ""
     ],
