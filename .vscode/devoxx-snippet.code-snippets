@@ -281,13 +281,26 @@
     "prefix": "OVHcloudUser-fields",
     "scope": "java"
   },
+  "Pom Jarvis SDK": {
+    "body": [
+      "\u003cdependency\u003e",
+      "  \u003cgroupId\u003efr.wilda.jarvis.sdk\u003c/groupId\u003e",
+      "  \u003cartifactId\u003ejarvis-sdk\u003c/artifactId\u003e",
+      "  \u003cversion\u003e1.0.0\u003c/version\u003e",
+      "\u003c/dependency\u003e"
+    ],
+    "description": "",
+    "prefix": "pom-jarvis-sdk-dep",
+    "scope": "xml"
+  },
   "Pom Quarkus LangChain4j": {
     "body": [
       "\u003cdependency\u003e",
       "      \u003cgroupId\u003eio.quarkiverse.langchain4j\u003c/groupId\u003e",
       "      \u003cartifactId\u003equarkus-langchain4j-mistral-ai\u003c/artifactId\u003e",
       "      \u003cversion\u003e0.10.3\u003c/version\u003e",
-      "\u003c/dependency\u003e "
+      "\u003c/dependency\u003e ",
+      ""
     ],
     "description": "",
     "prefix": "pom-langchain4j-dep",
