@@ -98,20 +98,25 @@ Press [space] to restart, [e] to edit command line args (currently ''), [r] to r
 
  - all the resulted source code will be find in the branch `03-🔗-ovhcloud-sdk`
  - add the _rest client reactive_ client: `quarkus extension add rest-client-reactive-jackson` (see it in the _dependencies_ section in the [pom.xml](./pom.xml))
- - create the two DTO classes used to store the result of the calling API: [OVHcloudUser.java](./src/main/java/fr/wilda/picocli/sdk/OVHcloudUser.java) and [OVHcloudKube.java](./src/main/java/fr/wilda/picocli/sdk/OVHcloudKube.java)
- - create the API Service that is responsible to call the OVHcloud API: [OVHcloudAPIService.java](./src/main/java/fr/wilda/picocli/sdk/OVHcloudAPIService.java)
-  - take a look to the _Jakarta_ anotations:
+ - add the `jarvis-sdk` dependency in the [pom.xml](./pom.xml):
+```xml
+    <dependency>
+      <groupId>fr.wilda.jarvis.sdk</groupId>
+      <artifactId>jarvis-sdk</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+```
+  - create the API Service that is responsible to call the OVHcloud API: [OVHcloudAPIService.java](./src/main/java/fr/wilda/picocli/sdk/OVHcloudAPIService.java)
+  - take a look to the _Jakarta_ annotations:
     - `@RegisterRestClient`: to use it as client to do API call, see [application.properties](./src/main/resources/application.properties) for parameters
     - `@Path("/v1")`: root path for the called end-point
     - `@ClientHeaderParam(name = "X-Ovh-Consumer", value = "${ovhcloud.consumer}")`, `@ClientHeaderParam(name = "X-Ovh-Application", value = "${ovhcloud.application}")`, `@ClientHeaderParam(name = "Content-Type", value = "application/json")`: header parameters, see [application.properties](./src/main/resources/application.properties) for dynamic parameters
- - create the OVHcloud helper: [OVHcloudSignatureHelper](./src/main/java/fr/wilda/picocli/sdk/OVHcloudSignatureHelper.java)
-  - the hash method is mandatory to use the OVHcloud API
  - add the following dependency in the pom.xml:
 ```xml
 <dependency>
   <groupId>io.quarkiverse.langchain4j</groupId>
   <artifactId>quarkus-langchain4j-mistral-ai</artifactId>
-  <version>0.10.2</version>
+  <version>0.10.3</version>
 </dependency>
 ```
  - create the service for calling OVHcloud Mistral AI Endpoint: [AIEndpointMistral7bService](./src/main/java/fr/wilda/picocli/sdk/ai/AIEndpointMistral7bService.java) 
