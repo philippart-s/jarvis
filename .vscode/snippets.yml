@@ -327,3 +327,14 @@ snippet Pom Quarkus LangChain4j:
           <artifactId>quarkus-langchain4j-mistral-ai</artifactId>
           <version>0.10.3</version>
     </dependency> 
+
+snippet Pom Jarvis SDK:
+  prefix: "pom-jarvis-sdk-dep"
+  scope: "xml"
+  name: "Pom Jarvis SDK"
+  body: |
+    <dependency>
+      <groupId>fr.wilda.jarvis.sdk</groupId>
+      <artifactId>jarvis-sdk</artifactId>
+      <version>1.0.0</version>
+    </dependency>
