@@ -5,8 +5,8 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import fr.wilda.jarvis.sdk.ovhcloud.OVHcloudSignatureHelper;
 import fr.wilda.picocli.sdk.OVHcloudAPIService;
-import fr.wilda.picocli.sdk.OVHcloudSignatureHelper;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
