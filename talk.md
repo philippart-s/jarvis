@@ -43,9 +43,6 @@ ovhcloud.projectId=${OVH_CLOUD_PROJECT_SERVICE}
 quarkus.rest-client."fr.wilda.picocli.sdk.OVHcloudAPIService".url=https://eu.api.ovh.com/
 quarkus.rest-client."fr.wilda.picocli.sdk.OVHcloudAPIService".scope=javax.inject.Singleton 
 ```
-  - create `fr.wilda.picocli.sdk.OVHcloudUser` (getter & setters + toString) (👨‍💻 _OVHcloudUser-fields_)
-  - create `fr.wilda.picocli.sdk.OVHcloudKube` (getter & setters + toString) (👨‍💻 _OVHcloudKube-fields_)
-  - create `fr.wilda.picocli.sdk.OVHcloudSignatureHelper` (👨‍💻 _OVHcloudSigHelper_)
   - create `fr.wilda.picocli.sdk.OVHcloudAPIService` (👨‍💻 _OVHcloudAPI-annot_ && _OVHcloudAPI-endpoints_)
   - create `fr.wilda.picocli.JarvisCommand` (👨‍💻 _ovh-cmd-class-annot_ && _ovh-cmd-logger_ && _ovh-cmd-options_)
   - delete `fr.wilda.picocli.GreetingCommand`
@@ -84,6 +81,7 @@ quarkus.langchain4j.mistralai.chat-model.model-name=Mistral-7B-Instruct-v0.2
 
 quarkus.langchain4j.mistralai.log-requests=true
 quarkus.langchain4j.mistralai.log-responses=true
+quarkus.langchain4j.mistralai.timeout=60s    
 ```
   - set env variable `export QUARKUS_LANGCHAIN4J_MISTRALAI_BASE_URL=https://mistral-7b-instruct-v02.endpoints.kepler.ai.cloud.ovh.net/api/openai_compat/v1`
      - ⛑️ B plan: 
