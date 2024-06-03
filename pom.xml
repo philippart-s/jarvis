@@ -43,7 +43,7 @@
     <dependency>
       <groupId>io.quarkiverse.langchain4j</groupId>
       <artifactId>quarkus-langchain4j-mistral-ai</artifactId>
-      <version>0.10.3</version>
+      <version>0.15.0</version>
     </dependency>    
     <dependency>
       <groupId>fr.wilda.jarvis.sdk</groupId>
