@@ -116,7 +116,7 @@ Press [space] to restart, [e] to edit command line args (currently ''), [r] to r
 <dependency>
   <groupId>io.quarkiverse.langchain4j</groupId>
   <artifactId>quarkus-langchain4j-mistral-ai</artifactId>
-  <version>0.10.3</version>
+  <version>0.15.0</version>
 </dependency>
 ```
  - create the service for calling OVHcloud Mistral AI Endpoint: [AIEndpointMistral7bService](./src/main/java/fr/wilda/picocli/sdk/ai/AIEndpointMistral7bService.java) 
