@@ -185,9 +185,9 @@ quarkus.langchain4j.mistralai.log-responses=true
 
   - all the resulted source code will be find in the branch `07-🚀-graalvm`
   - if needed install GraalVM: https://www.graalvm.org/latest/docs/getting-started/
-  - set the `GRAALVM_HOME` environment variable: `export GRAALVM_HOME=/Library/Java/JavaVirtualMachines/graalvm-jdk-17.0.8+9.1/Contents/Home`
+  - set the `GRAALVM_HOME` environment variable: `GRAALVM_HOME=/Users/sphilipp/local-bin/graalvm-jdk-21.0.2+13.1/Contents/Home`
   - ⚠️ if your `/tmp` is mounted as `noexec`: change the `java.io.tmpdir` to a folder with `exec` permission by adding the following property on your build command: `-Dquarkus.native.additional-build-args=-Djava.io.tmpdir=$HOME/tmp` or use the experimental building feature: `quarkus build --native -Dquarkus.native.container-build=true` ⚠️
   - build the binary with the command `quarkus build --native`
   - use the generated CLI: `./target/jarvis-0.0.1-SNAPSHOT-runner ovhcloud -m -k` or use the backuped one: `jarvis_bck ovhcloud -m -k`
-  - rename and move the generated CLI: `cp ./target/jarvis-0.0.1-SNAPSHOT-runner ~/bin/jarvis && mv ~/bin/jarvis-0.0.1-SNAPSHOT-runner jarvis`
+  - rename and move the generated CLI: `cp ./target/jarvis-0.0.1-SNAPSHOT-runner ~/bin/jarvis`
   - use the CLI: `jarvis ovhcloud -m`
