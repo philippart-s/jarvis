@@ -110,26 +110,6 @@ Press [space] to restart, [e] to edit command line args (currently ''), [r] to r
   - take a look to the _Jakarta_ annotations:
     - `@RegisterRestClient`: to use it as client to do API call, see [application.properties](./src/main/resources/application.properties) for parameters
     - `@Path("/v1")`: root path for the called end-point
-    - `@ClientHeaderParam(name = "X-Ovh-Consumer", value = "${ovhcloud.consumer}")`, `@ClientHeaderParam(name = "X-Ovh-Application", value = "${ovhcloud.application}")`, `@ClientHeaderParam(name = "Content-Type", value = "application/json")`: header parameters, see [application.properties](./src/main/resources/application.properties) for dynamic parameters
- - add the following dependency in the pom.xml:
-```xml
-<dependency>
-  <groupId>io.quarkiverse.langchain4j</groupId>
-  <artifactId>quarkus-langchain4j-mistral-ai</artifactId>
-  <version>0.15.0</version>
-</dependency>
-```
- - create the service for calling OVHcloud Mistral AI Endpoint: [AIEndpointMistral7bService](./src/main/java/fr/wilda/picocli/sdk/ai/AIEndpointMistral7bService.java) 
- - update the [application.properties](./src/main/resources/application.properties):
-```java
-quarkus.langchain4j.mistralai.api-key=foo
-quarkus.langchain4j.mistralai.chat-model.max-tokens=150
-quarkus.langchain4j.mistralai.chat-model.model-name=Mistral-7B-Instruct-v0.2
-
-quarkus.langchain4j.mistralai.log-requests=true
-quarkus.langchain4j.mistralai.log-responses=true
-```
- ⚠️ you need to set the environment variable `QUARKUS_LANGCHAIN4J_MISTRALAI_BASE_URL` with the API URL of Mistral model. ⚠️
 
 ## 04-🤖-create-jarvis
 
