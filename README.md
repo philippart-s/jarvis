@@ -149,3 +149,65 @@ Press [space] to restart, [e] to edit command line args (currently ''), [r] to r
   - use the generated CLI: `./target/jarvis-0.0.1-SNAPSHOT-runner ovhcloud -m -k`
   - rename and move the generated CLI: `cp ./target/jarvis-0.0.1-SNAPSHOT-runner ~/bin/jarvis`
   - use the CLI: `jarvis ovhcloud -m`
+
+## 08-🤖-add-ai
+
+ - add the following dependency in the pom.xml:
+```xml
+<dependency>
+  <groupId>io.quarkiverse.langchain4j</groupId>
+  <artifactId>quarkus-langchain4j-mistral-ai</artifactId>
+  <version>0.15.1</version>
+</dependency>
+```
+ - create the service for calling OVHcloud Mistral AI Endpoint: [AIEndpointService](./src/main/java/fr/wilda/picocli/sdk/ai/AIEndpointService.java) 
+ - update the [application.properties](./src/main/resources/application.properties):
+```java
+quarkus.langchain4j.mistralai.api-key=foo
+quarkus.langchain4j.mistralai.chat-model.max-tokens=1500
+quarkus.langchain4j.mistralai.chat-model.model-name=Mixtral-8x22B-Instruct-v0.1
+
+quarkus.langchain4j.mistralai.log-requests=true
+quarkus.langchain4j.mistralai.log-responses=true
+```
+ ⚠️ you need to set the environment variable `QUARKUS_LANGCHAIN4J_MISTRALAI_BASE_URL` with the API URL of Mixtral model. ⚠️
+ - update the [JarvisCommans](./src/main/java/fr/wilda/picocli/JarvisCommand.java) class:
+  - inject the service [AIEndpointService.java](./src/main/java/fr/wilda/picocli/sdk/ai/AIEndpointService.java):
+```java
+@Inject
+AIEndpointService aiEndpointService;
+```
+  - update the parameter name to become the question to ask:
+```java
+ // Question to ask
+  @Parameters(paramLabel = "<question>", defaultValue = "Can you explain what are you?", description = "The question to ask to Jarvis.")
+  private String question;
+```
+  - update the `call` method:
+```java
+  @Override
+  public Integer call() throws Exception {
+    _LOG.info("\n🤖:\n");
+    aiEndpointService.askAQuestion(question)
+    .subscribe()
+    .asStream()
+    .forEach(token -> {
+      try {
+        TimeUnit.MILLISECONDS.sleep(150);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+      _LOG.info(token);
+    });
+    _LOG.info("\n");
+    return 0;
+  }
+```
+ - set logs to false in [application.properties](./src/main/resources/application.properties):
+```java
+quarkus.langchain4j.mistralai.log-requests=false
+quarkus.langchain4j.mistralai.log-responses=false
+```
+ - create the new binary: `quarkus build --native`
+ - test the new CLI: `./target/jarvis-0.0.1-SNAPSHOT-runner "Who are you?"`
+
