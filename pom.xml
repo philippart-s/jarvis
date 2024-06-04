@@ -41,11 +41,6 @@
       <artifactId>quarkus-rest-client-reactive-jackson</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.quarkiverse.langchain4j</groupId>
-      <artifactId>quarkus-langchain4j-mistral-ai</artifactId>
-      <version>0.15.0</version>
-    </dependency>    
-    <dependency>
       <groupId>fr.wilda.jarvis.sdk</groupId>
       <artifactId>jarvis-sdk</artifactId>
       <version>1.0.0</version>
