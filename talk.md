@@ -11,28 +11,29 @@ snippets generate \
   - in VSCode 3 terminals:
     - `source ~/local-bin/set-ovh-env-sp-lab.sh`
     - `export GRAALVM_HOME=/Users/sphilipp/local-bin/graalvm-jdk-21.0.2+13.1/Contents/Home`
-    - `export QUARKUS_LANGCHAIN4J_MISTRALAI_BASE_URL=https://mistral-7b-instruct-v02.endpoints.kepler.ai.cloud.ovh.net/api/openai_compat/v1`
+    - `export QUARKUS_LANGCHAIN4J_MISTRALAI_BASE_URL=https://mixtral-8x22b-instruct-v01.endpoints.kepler.ai.cloud.ovh.net/api/openai_compat/v1`
   - open a terminal and go to `/tmp`
   - create the project `quarkus create cli fr.wilda.picocli:jarvis-devoxx:0.0.1-SNAPSHOT`
   - `mvn dependency:tree -Dincludes=info.picocli`
   - go to branch `01-✨-init-project`
   - launch the CLI : `quarkus dev`
-  - play with the CLI : `--help`, `"Devoxx France!!"`
-  - add jarvis-sdk (👨‍💻 _pom-jarvis-sdk-dep_)
+  - play with the CLI : `--help`, `"Voxxed Days Lux!!"`
+  - add jarvis-sdk (👨‍💻 _01-pom-jarvis-sdk-dep_)
+```xml
+<dependency>
+      <groupId>fr.wilda.jarvis.sdk</groupId>
+      <artifactId>jarvis-sdk</artifactId>
+      <version>1.0.0</version>
+</dependency>
+```
+  - add rest-client dependency (👨‍💻 _02-pom-rest-dep_)
 ```xml
 <dependency>
     <groupId>io.quarkus</groupId>
     <artifactId>quarkus-rest-client-jackson</artifactId>
 </dependency>
 ```
-  - add rest-client dependency (👨‍💻 _pom-rest-dep_)
-```xml
-<dependency>
-    <groupId>io.quarkus</groupId>
-    <artifactId>quarkus-rest-client-jackson</artifactId>
-</dependency>
-```
-  - add to application.properties (👨‍💻 _props-ovh-env_ && _props-rest-client_)
+  - add to application.properties (👨‍💻 _03-props-ovh-env_ && _04-props-rest-client_)
 ```java
 # OVHcloud parameter
 ovhcloud.consumer=${OVH_CONSUMER_KEY}
@@ -43,12 +44,12 @@ ovhcloud.projectId=${OVH_CLOUD_PROJECT_SERVICE}
 quarkus.rest-client."fr.wilda.picocli.sdk.OVHcloudAPIService".url=https://eu.api.ovh.com/
 quarkus.rest-client."fr.wilda.picocli.sdk.OVHcloudAPIService".scope=javax.inject.Singleton 
 ```
-  - create `fr.wilda.picocli.sdk.OVHcloudAPIService` (👨‍💻 _OVHcloudAPI-annot_ && _OVHcloudAPI-endpoints_)
-  - create `fr.wilda.picocli.JarvisCommand` (👨‍💻 _ovh-cmd-class-annot_ && _ovh-cmd-logger_ && _ovh-cmd-options_)
+  - create `fr.wilda.picocli.sdk.OVHcloudAPIService` (👨‍💻 _05-OVHcloudAPIService-annot_ && _06-OVHcloudAPIService-endpoints_)
+  - create `fr.wilda.picocli.JarvisCommand` (👨‍💻 _07-jarvis-cli-class-annot_ && _08-jarvis-cli-logger_ && _08-jarvis-cli-name-param_)
   - delete `fr.wilda.picocli.GreetingCommand`
-  - create `fr.wilda.picocli.OVHcloudSubCommand` (👨‍💻 _jarvis-cmd-class-annot_ && _jarvis-cmd-name-param_ && _jarvis-cmd-logger_ && _ovh-cmd-rest-client_ && _ovh-cmd-ovh-stuff_ && _ovh-cmd-me_ && _ovh-cmd-kube_) 
+  - create `fr.wilda.picocli.OVHcloudSubCommand` (👨‍💻 _09-ovh-cli-class-annot_ && _10-ovh-cli-logger_ && _11-ovh-cli-rest-client_ && _12-ovh-cli-ovh-stuff_ && _13-ovh-cli-options_ && _14-ovh-cli-me_ && _15-ovh-cli-kube_) 
   - add `@TopCommand` & `subcommands = {OVHcloudSubCommand.class}` to `fr.wilda.picocli.JarvisCommand`
-  - set log in application.properties: (👨‍💻 _props-logs-prod_)
+  - set log in application.properties: (👨‍💻 _16-props-logs-prod_)
 ```java
 # Make outputs readable
 %prod.quarkus.log.level=OFF
@@ -58,21 +59,21 @@ quarkus.rest-client."fr.wilda.picocli.sdk.OVHcloudAPIService".scope=javax.inject
 ```
   - `quarkus build`
   - `cd target/quarkus-app` && `du -h`
-  - `cd ../..` & `java -jar ./target/quarkus-app/quarkus-run.jar "Devoxx France"` && 
-  - create `src/main/script/jarvis.sh` (👨‍💻 _jarvis-bash_)
+  - `cd ../..` & `java -jar ./target/quarkus-app/quarkus-run.jar "Voxxed Days Lux France"` && `java -jar ./target/quarkus-app/quarkus-run.jar ovhcloud -mk`
+  - create `src/main/script/jarvis.sh` (👨‍💻 _17-jarvis-bash_)
   - `chmod +x jarvis.sh`
   - `export GRAALVM_HOME=/Users/sphilipp/local-bin/graalvm-jdk-21.0.2+13.1/Contents/Home`
   - `quarkus build --native`
   - `jarvis-bck ovhcloud -mk`
-  - add to pom.xml: (👨‍💻 _pom-langchain4j-dep_)
+  - add to pom.xml: (👨‍💻 _18-pom-langchain4j-dep_)
 ```xml
 <dependency>
       <groupId>io.quarkiverse.langchain4j</groupId>
       <artifactId>quarkus-langchain4j-mistral-ai</artifactId>
-      <version>0.10.3</version>
+      <version>0.15.1</version>
 </dependency>  
 ```
-  - update `application.properties`: (👨‍💻 _props-langchain4J_)
+  - update `application.properties`: (👨‍💻 _19-props-langchain4J_)
 ```java
 # Langchain4J parameters
 quarkus.langchain4j.mistralai.api-key=foo
@@ -83,7 +84,7 @@ quarkus.langchain4j.mistralai.log-requests=true
 quarkus.langchain4j.mistralai.log-responses=true
 quarkus.langchain4j.mistralai.timeout=60s    
 ```
-  - set env variable `export QUARKUS_LANGCHAIN4J_MISTRALAI_BASE_URL=https://mistral-7b-instruct-v02.endpoints.kepler.ai.cloud.ovh.net/api/openai_compat/v1`
+  - set env variable `export QUARKUS_LANGCHAIN4J_MISTRALAI_BASE_URL=https://mixtral-8x22b-instruct-v01.endpoints.kepler.ai.cloud.ovh.net/api/openai_compat/v1`
      - ⛑️ B plan: 
         - launch ollama (in `tmp` folder): `docker run -d -v ollama:/./.ollama -p 11434:11434 --name ollama ollama/ollama` or start `docker start ollama`
         - run Mistral model: `docker exec -it ollama ollama run mistral`
@@ -104,12 +105,12 @@ quarkus.langchain4j.ollama.chat-model.model-id=mistral
     <version>0.10.3</version>
 </dependency>
 ```  
-  - create interface `fr.wilda.picocli.sdk.ai.AIEndpointMistral7bService` + `@RegisterAiService` + `@ApplicationScoped`
-  - add method `askQuestion` (👨‍💻 _OVHcloudMistral-ask-method_)
+  - create interface `fr.wilda.picocli.sdk.ai.AIEndpointService` + `@RegisterAiService` + `@ApplicationScoped`
+  - add method `askQuestion` (👨‍💻 _20-OVHcloudMistral-ask-method_)
   - update `JarvisCommand`:
-    - `name` to `question` parameter (👨‍💻 _jarvis-cmd-question-param_)
-    - inject `AIEndpointMistral7bService` (👨‍💻 _jarvis-cmd-ai-svc_)
-    - new log
-  - test AI: `"Can you tell me more abour Devoxx France?"`
+    - `name` to `question` parameter (👨‍💻 _21-jarvis-cli-question-param_)
+    - inject `AIEndpointService` (👨‍💻 _22-jarvis-cli-ai-svc_)
+    - add the AI model call (👨‍💻 _23-jarvis-cli-ai-svc-call_)
+  - test AI: `"Can you tell me more about Voxxed Days Luxembourg?"`
   - turn off AI log
   - `quarkus build --native`
