@@ -12,6 +12,7 @@ snippets generate \
     - `source ~/local-bin/set-ovh-env-sp-lab.sh`
     - `export GRAALVM_HOME=/Users/sphilipp/local-bin/graalvm-jdk-21.0.2+13.1/Contents/Home`
     - `export QUARKUS_LANGCHAIN4J_MISTRALAI_BASE_URL=https://mixtral-8x22b-instruct-v01.endpoints.kepler.ai.cloud.ovh.net/api/openai_compat/v1`
+    - `export OVH_AI_ENDPOINTS_ACCESS_TOKEN=<your token here>`
   - open a terminal and go to `/tmp`
   - create the project `quarkus create cli fr.wilda.picocli:jarvis-devoxx:0.0.1-SNAPSHOT`
   - `mvn dependency:tree -Dincludes=info.picocli`
@@ -76,7 +77,7 @@ quarkus.rest-client."fr.wilda.picocli.sdk.OVHcloudAPIService".scope=javax.inject
   - update `application.properties`: (👨‍💻 _19-props-langchain4J_)
 ```java
 # Langchain4J parameters
-quarkus.langchain4j.mistralai.api-key=foo
+quarkus.langchain4j.mistralai.api-key=${OVH_AI_ENDPOINTS_ACCESS_TOKEN}
 quarkus.langchain4j.mistralai.chat-model.max-tokens=150
 quarkus.langchain4j.mistralai.chat-model.model-name=Mistral-7B-Instruct-v0.2
 
@@ -84,33 +85,43 @@ quarkus.langchain4j.mistralai.log-requests=true
 quarkus.langchain4j.mistralai.log-responses=true
 quarkus.langchain4j.mistralai.timeout=60s    
 ```
-  - set env variable `export QUARKUS_LANGCHAIN4J_MISTRALAI_BASE_URL=https://mixtral-8x22b-instruct-v01.endpoints.kepler.ai.cloud.ovh.net/api/openai_compat/v1`
-     - ⛑️ B plan: 
-        - launch ollama (in `tmp` folder): `docker run -d -v ollama:/./.ollama -p 11434:11434 --name ollama ollama/ollama` or start `docker start ollama`
-        - run Mistral model: `docker exec -it ollama ollama run mistral`
-        - add following properties:
-```java
-quarkus.langchain4j.ollama.base-url=http://localhost:11434/
-quarkus.langchain4j.ollama.log-requests=true
-quarkus.langchain4j.ollama.timeout=60s    
-quarkus.langchain4j.ollama.embedding-model.enabled=false
-quarkus.langchain4j.ollama.chat-model.enabled=true              
-quarkus.langchain4j.ollama.chat-model.model-id=mistral
-```        
-       - add the following dependency:
-```xml
-<dependency>
-    <groupId>io.quarkiverse.langchain4j</groupId>
-    <artifactId>quarkus-langchain4j-ollama</artifactId>
-    <version>0.10.3</version>
-</dependency>
-```  
+  - set env variable : 
+    - `export QUARKUS_LANGCHAIN4J_MISTRALAI_BASE_URL=https://mixtral-8x22b-instruct-v01.endpoints.kepler.ai.cloud.ovh.net/api/openai_compat/v1`
+    - export OVH_AI_ENDPOINTS_ACCESS_TOKEN=
+     
+> **⛑️ B plan**
+> - launch ollama with AI Deploy: `ovhai app start 80296e7a-caf0-4c1c-9744-a09857e0898c`
+> - export OVH_OLLAMA_API_KEY=
+> - run Mistral model: 
+>```bash
+>curl -H "Authorization: Bearer $OVH_OLLAMA_API_KEY" https://80296e7a-caf0-4c1c-9744-a09857e0898c.app.gra.ai.cloud.ovh.net/api/pull -d '{
+>"name": "mixtral"
+>}'
+>```
+> - add following properties:
+>```java
+>quarkus.langchain4j.ollama.base-url=https://80296e7a-caf0-4c1c-9744-a09857e0898c.app.gra.ai.cloud.ovh.net
+>quarkus.langchain4j.ollama.log-requests=true
+>quarkus.langchain4j.ollama.timeout=60s    
+>quarkus.langchain4j.ollama.embedding-model.enabled=false
+>quarkus.langchain4j.ollama.chat-model.enabled=true              
+>quarkus.langchain4j.ollama.chat-model.model-id=mixtral
+>quarkus.langchain4j.chat-model.provider=ollama>
+>```        
+> - add the following dependency:
+>```xml
+><dependency>
+>    <groupId>io.quarkiverse.langchain4j</groupId>
+>    <artifactId>quarkus-langchain4j-ollama</artifactId>
+>    <version>0.15.1</version>
+></dependency>
+>```  
   - create interface `fr.wilda.picocli.sdk.ai.AIEndpointService` + `@RegisterAiService` + `@ApplicationScoped`
   - add method `askQuestion` (👨‍💻 _20-OVHcloudMistral-ask-method_)
   - update `JarvisCommand`:
     - `name` to `question` parameter (👨‍💻 _21-jarvis-cli-question-param_)
     - inject `AIEndpointService` (👨‍💻 _22-jarvis-cli-ai-svc_)
     - add the AI model call (👨‍💻 _23-jarvis-cli-ai-svc-call_)
-  - test AI: `"Can you tell me more about Voxxed Days Luxembourg?"`
+  - test AI: `"Can you tell me more about Riviera Dev?"`
   - turn off AI log
   - `quarkus build --native`

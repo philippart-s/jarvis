@@ -213,8 +213,8 @@ snippet Props Langchain4J:
   name: "Props Langchain4J"
   body: |
     # Langchain4J parameters
-    quarkus.langchain4j.mistralai.api-key=foo
-    quarkus.langchain4j.mistralai.chat-model.max-tokens=150
+    quarkus.langchain4j.mistralai.api-key=\${OVH_AI_ENDPOINTS_ACCESS_TOKEN}
+    quarkus.langchain4j.mistralai.chat-model.max-tokens=1500
     quarkus.langchain4j.mistralai.chat-model.model-name=Mixtral-8x22B-Instruct-v0.1
 
     quarkus.langchain4j.mistralai.log-requests=true
