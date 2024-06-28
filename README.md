@@ -152,6 +152,10 @@ Press [space] to restart, [e] to edit command line args (currently ''), [r] to r
 
 ## 08-🤖-add-ai
 
+>**⚠️ You need to set the following environment variables: ⚠️**
+>  - `QUARKUS_LANGCHAIN4J_MISTRALAI_BASE_URL` with the API URL of Mixtral model. 
+>  - `OVH_AI_ENDPOINTS_ACCESS_TOKEN` with your OVHcloud AI Endpoint API key (see https://endpoints.ai.cloud.ovh.net/)
+
  - add the following dependency in the pom.xml:
 ```xml
 <dependency>
@@ -163,14 +167,13 @@ Press [space] to restart, [e] to edit command line args (currently ''), [r] to r
  - create the service for calling OVHcloud Mistral AI Endpoint: [AIEndpointService](./src/main/java/fr/wilda/picocli/sdk/ai/AIEndpointService.java) 
  - update the [application.properties](./src/main/resources/application.properties):
 ```java
-quarkus.langchain4j.mistralai.api-key=foo
+quarkus.langchain4j.mistralai.api-key=${OVH_AI_ENDPOINTS_ACCESS_TOKEN}
 quarkus.langchain4j.mistralai.chat-model.max-tokens=1500
 quarkus.langchain4j.mistralai.chat-model.model-name=Mixtral-8x22B-Instruct-v0.1
 
 quarkus.langchain4j.mistralai.log-requests=true
 quarkus.langchain4j.mistralai.log-responses=true
 ```
- ⚠️ you need to set the environment variable `QUARKUS_LANGCHAIN4J_MISTRALAI_BASE_URL` with the API URL of Mixtral model. ⚠️
  - update the [JarvisCommans](./src/main/java/fr/wilda/picocli/JarvisCommand.java) class:
   - inject the service [AIEndpointService.java](./src/main/java/fr/wilda/picocli/sdk/ai/AIEndpointService.java):
 ```java
