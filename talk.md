@@ -120,6 +120,7 @@ quarkus.langchain4j.mistralai.timeout=60s
 > - add the `OllamaClientAuthHeaderFilter` class:
 >```java
 >@Provider
+>@RegisterForReflection
 >public class OllamaClientAuthHeaderFilter implements ClientRequestFilter {
 >
 >    @Override
