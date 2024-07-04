@@ -13,6 +13,7 @@ snippets generate \
     - `export GRAALVM_HOME=/Users/sphilipp/local-bin/graalvm-jdk-21.0.2+13.1/Contents/Home`
     - `export QUARKUS_LANGCHAIN4J_MISTRALAI_BASE_URL=https://mixtral-8x22b-instruct-v01.endpoints.kepler.ai.cloud.ovh.net/api/openai_compat/v1`
     - `export OVH_AI_ENDPOINTS_ACCESS_TOKEN=<your token here>`
+    - `export OVH_OLLAMA_API_KEY=<your token here>`
   - open a terminal and go to `/tmp`
   - create the project `quarkus create cli fr.wilda.picocli:jarvis-devoxx:0.0.1-SNAPSHOT`
   - `mvn dependency:tree -Dincludes=info.picocli`
@@ -106,7 +107,7 @@ quarkus.langchain4j.mistralai.timeout=60s
 >quarkus.langchain4j.ollama.embedding-model.enabled=false
 >quarkus.langchain4j.ollama.chat-model.enabled=true              
 >quarkus.langchain4j.ollama.chat-model.model-id=mixtral
->quarkus.langchain4j.chat-model.provider=ollama>
+>quarkus.langchain4j.chat-model.provider=ollama
 >```        
 > - add the following dependency:
 >```xml
@@ -116,6 +117,17 @@ quarkus.langchain4j.mistralai.timeout=60s
 >    <version>0.15.1</version>
 ></dependency>
 >```  
+> - add the `OllamaClientAuthHeaderFilter` class:
+>```java
+>@Provider
+>public class OllamaClientAuthHeaderFilter implements ClientRequestFilter {
+>
+>    @Override
+>    public void filter(ClientRequestContext requestContext) {
+>        requestContext.getHeaders().add("Authorization", "Bearer " + System.getenv("OVH_OLLAMA_API_KEY"));
+>    }
+>}
+>```
   - create interface `fr.wilda.picocli.sdk.ai.AIEndpointService` + `@RegisterAiService` + `@ApplicationScoped`
   - add method `askQuestion` (👨‍💻 _20-OVHcloudMistral-ask-method_)
   - update `JarvisCommand`:
