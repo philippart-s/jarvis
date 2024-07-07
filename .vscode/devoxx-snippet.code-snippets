@@ -272,7 +272,7 @@
       "# Langchain4J parameters",
       "quarkus.langchain4j.mistralai.api-key=\\${OVH_AI_ENDPOINTS_ACCESS_TOKEN}",
       "quarkus.langchain4j.mistralai.chat-model.max-tokens=1500",
-      "quarkus.langchain4j.mistralai.chat-model.model-name=Mixtral-8x22B-Instruct-v0.1",
+      "quarkus.langchain4j.mistralai.chat-model.model-name=\\${OVH_AI_ENDPOINTS_MODEL}",
       "",
       "quarkus.langchain4j.mistralai.log-requests=true",
       "quarkus.langchain4j.mistralai.log-responses=true",

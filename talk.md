@@ -80,11 +80,11 @@ quarkus.rest-client."fr.wilda.picocli.sdk.OVHcloudAPIService".scope=javax.inject
 ```java
 # Langchain4J parameters
 quarkus.langchain4j.mistralai.api-key=${OVH_AI_ENDPOINTS_ACCESS_TOKEN}
-quarkus.langchain4j.mistralai.chat-model.max-tokens=150
-quarkus.langchain4j.mistralai.chat-model.model-name=Mistral-7B-Instruct-v0.2
+quarkus.langchain4j.mistralai.chat-model.max-tokens=1500
+quarkus.langchain4j.mistralai.chat-model.model-name=${OVH_AI_ENDPOINTS_MODEL}
 
-quarkus.langchain4j.mistralai.log-requests=true
-quarkus.langchain4j.mistralai.log-responses=true
+quarkus.langchain4j.mistralai.log-requests=false
+quarkus.langchain4j.mistralai.log-responses=false
 quarkus.langchain4j.mistralai.timeout=60s    
 ```
   - set env variable : 
