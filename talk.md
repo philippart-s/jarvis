@@ -12,6 +12,7 @@ snippets generate \
     - `source ~/local-bin/set-ovh-env-sp-lab.sh`
     - `export GRAALVM_HOME=/Users/sphilipp/local-bin/graalvm-jdk-21.0.2+13.1/Contents/Home`
     - `export QUARKUS_LANGCHAIN4J_MISTRALAI_BASE_URL=https://mixtral-8x22b-instruct-v01.endpoints.kepler.ai.cloud.ovh.net/api/openai_compat/v1`
+    - `export OVH_AI_ENDPOINTS_MODEL=Mixtral-8x22B-Instruct-v0.1`
     - `export OVH_AI_ENDPOINTS_ACCESS_TOKEN=<your token here>`
     - `export OVH_OLLAMA_API_KEY=<your token here>`
   - open a terminal and go to `/tmp`
