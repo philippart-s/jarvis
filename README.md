@@ -214,3 +214,6 @@ quarkus.langchain4j.mistralai.log-responses=false
  - create the new binary: `quarkus build --native`
  - test the new CLI: `./target/jarvis-0.0.1-SNAPSHOT-runner "Who are you?"`
 
+## 09-➡️-completion
+
+ - add the `GenerateCompletion.class` subcommand if the [JarvisCommans](./src/main/java/fr/wilda/picocli/JarvisCommand.java) class

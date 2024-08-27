@@ -7,11 +7,12 @@ import org.slf4j.LoggerFactory;
 import fr.wilda.picocli.sdk.ai.AIEndpointService;
 import io.quarkus.picocli.runtime.annotations.TopCommand;
 import jakarta.inject.Inject;
+import picocli.AutoComplete.GenerateCompletion;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @TopCommand
-@Command(name = "jarvis", mixinStandardHelpOptions = true, subcommands = {OVHcloudSubCommand.class})
+@Command(name = "jarvis", mixinStandardHelpOptions = true, subcommands = {OVHcloudSubCommand.class, GenerateCompletion.class})
 public class JarvisCommand implements Callable<Integer> {
   // Logger
   private static final Logger _LOG = LoggerFactory.getLogger(JarvisCommand.class);
