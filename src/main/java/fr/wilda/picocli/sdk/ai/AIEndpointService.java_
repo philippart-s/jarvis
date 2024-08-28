@@ -1,0 +1,6 @@
+package fr.wilda.picocli.sdk.ai;
+
+public interface AIEndpointService {
+  // 21-OVHcloudMistral-ask-method
+
+}

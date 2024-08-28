@@ -20,7 +20,7 @@ snippets generate \
   - `mvn dependency:tree -Dincludes=info.picocli`
   - go to branch `01-✨-init-project`
   - launch the CLI : `quarkus dev`
-  - play with the CLI : `--help`, `"Voxxed Days Lux!!"`
+  - play with the CLI : `--help`, `"Volcamp!!"`
   - add jarvis-sdk (👨‍💻 _01-pom-jarvis-sdk-dep_)
 ```xml
 <dependency>
@@ -48,11 +48,11 @@ quarkus.rest-client."fr.wilda.picocli.sdk.OVHcloudAPIService".url=https://eu.api
 quarkus.rest-client."fr.wilda.picocli.sdk.OVHcloudAPIService".scope=javax.inject.Singleton 
 ```
   - create `fr.wilda.picocli.sdk.OVHcloudAPIService` (👨‍💻 _05-OVHcloudAPIService-annot_ && _06-OVHcloudAPIService-endpoints_)
-  - create `fr.wilda.picocli.JarvisCommand` (👨‍💻 _07-jarvis-cli-class-annot_ && _08-jarvis-cli-logger_ && _08-jarvis-cli-name-param_)
+  - create `fr.wilda.picocli.JarvisCommand` (👨‍💻 _07-jarvis-cli-class-annot_ && _08-jarvis-cli-logger_ && _09-jarvis-cli-name-param_)
   - delete `fr.wilda.picocli.GreetingCommand`
-  - create `fr.wilda.picocli.OVHcloudSubCommand` (👨‍💻 _09-ovh-cli-class-annot_ && _10-ovh-cli-logger_ && _11-ovh-cli-rest-client_ && _12-ovh-cli-ovh-stuff_ && _13-ovh-cli-options_ && _14-ovh-cli-me_ && _15-ovh-cli-kube_) 
+  - create `fr.wilda.picocli.OVHcloudSubCommand` (👨‍💻 _10-ovh-cli-class-annot_ && _11-ovh-cli-logger_ && _12-ovh-cli-rest-client_ && _13-ovh-cli-ovh-stuff_ && _14-ovh-cli-options_ && _15-ovh-cli-me_ && _16-ovh-cli-kube_) 
   - add `@TopCommand` & `subcommands = {OVHcloudSubCommand.class}` to `fr.wilda.picocli.JarvisCommand`
-  - set log in application.properties: (👨‍💻 _16-props-logs-prod_)
+  - set log in application.properties: (👨‍💻 _17-props-logs-prod_)
 ```java
 # Make outputs readable
 %prod.quarkus.log.level=OFF
@@ -62,13 +62,13 @@ quarkus.rest-client."fr.wilda.picocli.sdk.OVHcloudAPIService".scope=javax.inject
 ```
   - `quarkus build`
   - `cd target/quarkus-app` && `du -h`
-  - `cd ../..` & `java -jar ./target/quarkus-app/quarkus-run.jar "Voxxed Days Lux France"` && `java -jar ./target/quarkus-app/quarkus-run.jar ovhcloud -mk`
-  - create `src/main/script/jarvis.sh` (👨‍💻 _17-jarvis-bash_)
+  - `cd ../..` & `java -jar ./target/quarkus-app/quarkus-run.jar "Volcamp"` && `java -jar ./target/quarkus-app/quarkus-run.jar ovhcloud -mk`
+  - create `src/main/script/jarvis.sh` (👨‍💻 _18-jarvis-bash_)
   - `chmod +x jarvis.sh`
   - `export GRAALVM_HOME=/Users/sphilipp/local-bin/graalvm-jdk-21.0.2+13.1/Contents/Home`
   - `quarkus build --native`
   - `jarvis-bck ovhcloud -mk`
-  - add to pom.xml: (👨‍💻 _18-pom-langchain4j-dep_)
+  - add to pom.xml: (👨‍💻 _19-pom-langchain4j-dep_)
 ```xml
 <dependency>
       <groupId>io.quarkiverse.langchain4j</groupId>
@@ -76,7 +76,7 @@ quarkus.rest-client."fr.wilda.picocli.sdk.OVHcloudAPIService".scope=javax.inject
       <version>0.15.1</version>
 </dependency>  
 ```
-  - update `application.properties`: (👨‍💻 _19-props-langchain4J_)
+  - update `application.properties`: (👨‍💻 _20-props-langchain4J_)
 ```java
 # Langchain4J parameters
 quarkus.langchain4j.mistralai.api-key=${OVH_AI_ENDPOINTS_ACCESS_TOKEN}
@@ -131,11 +131,15 @@ quarkus.langchain4j.mistralai.timeout=60s
 >}
 >```
   - create interface `fr.wilda.picocli.sdk.ai.AIEndpointService` + `@RegisterAiService` + `@ApplicationScoped`
-  - add method `askQuestion` (👨‍💻 _20-OVHcloudMistral-ask-method_)
+  - add method `askQuestion` (👨‍💻 _21-OVHcloudMistral-ask-method_)
   - update `JarvisCommand`:
-    - `name` to `question` parameter (👨‍💻 _21-jarvis-cli-question-param_)
-    - inject `AIEndpointService` (👨‍💻 _22-jarvis-cli-ai-svc_)
-    - add the AI model call (👨‍💻 _23-jarvis-cli-ai-svc-call_)
+    - `name` to `question` parameter (👨‍💻 _22-jarvis-cli-question-param_)
+    - inject `AIEndpointService` (👨‍💻 _23-jarvis-cli-ai-svc_)
+    - add the AI model call (👨‍💻 _24-jarvis-cli-ai-svc-call_)
   - test AI: `"Can you tell me more about Riviera Dev?"`
   - turn off AI log
   - `quarkus build --native`
+  - add `GenerateCompletion` subcommand
+  - display help on autocompletion: `jarvis generate-completion --help`
+  - activate the autocompletion: `source <(jarvis generate-completion)`
+  - test the autocompletion

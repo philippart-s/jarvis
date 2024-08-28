@@ -91,7 +91,7 @@ snippet JarvisCommand logger:
     private static final Logger _LOG = LoggerFactory.getLogger(JarvisCommand.class);
 
 snippet JarvisCommand param name:
-  prefix: "08-jarvis-cli-name-param"
+  prefix: "09-jarvis-cli-name-param"
   scope: "java"
   name: "JarvisCommand param name"
   body: |
@@ -99,14 +99,14 @@ snippet JarvisCommand param name:
     String name;
 
 snippet OVHCommand Class Annotation:
-  prefix: "09-ovh-cli-class-annot"
+  prefix: "10-ovh-cli-class-annot"
   scope: "java"
   name: "OVHCommand Class Annotation"
   body: |
     @Command(name = "ovhcloud", mixinStandardHelpOptions = true)
 
 snippet OVHCommand logger:
-  prefix: "10-ovh-cli-logger"
+  prefix: "11-ovh-cli-logger"
   scope: "java"
   name: "OVHCommand logger"
   body: |
@@ -114,7 +114,7 @@ snippet OVHCommand logger:
     private static final Logger _LOG = LoggerFactory.getLogger(OVHcloudSubCommand.class);
 
 snippet OVHCommand rest client:
-  prefix: "11-ovh-cli-rest-client"
+  prefix: "12-ovh-cli-rest-client"
   scope: "java"
   name: "OVHCommand rest client"
   body: |
@@ -123,7 +123,7 @@ snippet OVHCommand rest client:
     OVHcloudAPIService apiService;
 
 snippet OVHCommand OVH Stuff:
-  prefix: "12-ovh-cli-ovh-stuff"
+  prefix: "13-ovh-cli-ovh-stuff"
   scope: "java"
   name: "OVHCommand OVH Stuff"
   body: |
@@ -136,7 +136,7 @@ snippet OVHCommand OVH Stuff:
     private Long ovhTimestamp;
 
 snippet OVHCommand options:
-  prefix: "13-ovh-cli-options"
+  prefix: "14-ovh-cli-options"
   scope: "java"
   name: "OVHCommand options"
   body: |
@@ -148,7 +148,7 @@ snippet OVHCommand options:
     private boolean kube;
 
 snippet OVHCommand me:
-  prefix: "14-ovh-cli-me"
+  prefix: "15-ovh-cli-me"
   scope: "java"
   name: "OVHCommand me"
   body: |
@@ -159,7 +159,7 @@ snippet OVHCommand me:
     }
 
 snippet OVHCommand kube:
-  prefix: "15-ovh-cli-kube"
+  prefix: "16-ovh-cli-kube"
   scope: "java"
   name: "OVHCommand kube"
   body: |
@@ -179,7 +179,7 @@ snippet OVHCommand kube:
     }
 
 snippet Props logs prod:
-  prefix: "16-props-logs-prod"
+  prefix: "17-props-logs-prod"
   name: "Props logs prod"
   body: |
     # Make outputs readable
@@ -189,7 +189,7 @@ snippet Props logs prod:
     %prod.quarkus.log.console.format=%m
 
 snippet Jarvis bash:
-  prefix: "17-jarvis-bash"
+  prefix: "18-jarvis-bash"
   scope: "shellscript"
   name: "Jarvis bash"
   body: |
@@ -198,18 +198,18 @@ snippet Jarvis bash:
     java -jar ../../../target/quarkus-app/quarkus-run.jar \$1 \$2 \$3
 
 snippet Pom Quarkus LangChain4j:
-  prefix: "18-pom-langchain4j-dep"
+  prefix: "19-pom-langchain4j-dep"
   scope: "xml"
   name: "Pom Quarkus LangChain4j"
   body: |
     <dependency>
           <groupId>io.quarkiverse.langchain4j</groupId>
           <artifactId>quarkus-langchain4j-mistral-ai</artifactId>
-          <version>0.15.1</version>
+          <version>0.17.1</version>
     </dependency> 
 
 snippet Props Langchain4J:
-  prefix: "19-props-langchain4J"
+  prefix: "20-props-langchain4J"
   name: "Props Langchain4J"
   body: |
     # Langchain4J parameters
@@ -221,7 +221,7 @@ snippet Props Langchain4J:
     quarkus.langchain4j.mistralai.log-responses=true
 
 snippet OVHcloud Mistral Service askQuestion:
-  prefix: "20-OVHcloudMistral-ask-method"
+  prefix: "21-OVHcloudMistral-ask-method"
   name: "OVHcloud Mistral Service askQuestion"
   scope: "java"
   body: |
@@ -230,7 +230,7 @@ snippet OVHcloud Mistral Service askQuestion:
     Multi<String> askAQuestion(String question);
 
 snippet JarvisCommand AI question param:
-  prefix: "21-jarvis-cli-question-param"
+  prefix: "22-jarvis-cli-question-param"
   scope: "java"
   name: "JarvisCommand AI question param"
   body: |
@@ -239,7 +239,7 @@ snippet JarvisCommand AI question param:
     private String question;
 
 snippet JarvisCommand AI Service:
-  prefix: "22-jarvis-cli-ai-svc"
+  prefix: "23-jarvis-cli-ai-svc"
   scope: "java"
   name: "JarvisCommand AI Service"
   body: |
@@ -248,7 +248,7 @@ snippet JarvisCommand AI Service:
     AIEndpointService aiEndpointMistral7bService; 
 
 snippet JarvisCommand AI Service call:
-  prefix: "23-jarvis-cli-ai-svc-call"
+  prefix: "24-jarvis-cli-ai-svc-call"
   scope: "java"
   name: "JarvisCommand AI Service call"
   body: |
