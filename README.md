@@ -216,4 +216,4 @@ quarkus.langchain4j.mistralai.log-responses=false
 
 ## 09-➡️-completion
 
- - add the `GenerateCompletion.class` subcommand if the [JarvisCommans](./src/main/java/fr/wilda/picocli/JarvisCommand.java) class
+ - add the `GenerateCompletion.class` subcommand if the [JarvisCommand](./src/main/java/fr/wilda/picocli/JarvisCommand.java) class
