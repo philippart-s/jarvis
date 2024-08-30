@@ -217,3 +217,61 @@ quarkus.langchain4j.mistralai.log-responses=false
 ## 09-➡️-completion
 
  - add the `GenerateCompletion.class` subcommand if the [JarvisCommand](./src/main/java/fr/wilda/picocli/JarvisCommand.java) class
+
+## 10-❤️-ai-sentiment-analysis
+
+ - use the `1.1.O` version of the jarvis-sdk lib:
+```xml
+<dependency>
+  <groupId>fr.wilda.jarvis.sdk</groupId>
+  <artifactId>jarvis-sdk</artifactId>
+  <version>1.1.0</version>
+</dependency>
+```
+ - create the [AISentimentService](./src/main/java/fr/wilda/picocli/sdk/ai/AISentimentService.java) class:
+```java
+@Path("/api")
+@RegisterRestClient(baseUri = "https://roberta-base-go-emotions.endpoints.kepler.ai.cloud.ovh.net")
+@ClientHeaderParam(name = "Authorization", value = "Bearer ${ovhcloud.ai-endpoints.token}")
+@ClientHeaderParam(name = "Content-Type", value = "application/json")
+public interface AISentimentService {
+
+  @POST
+  @Path("text2emotions")
+  EmotionEvaluation text2emotions(String text);
+
+}
+```
+ - add new option to the OVHcloudSubCommand:
+```java
+@Command(name = "ovhcloud", mixinStandardHelpOptions = true)
+public class OVHcloudSubCommand implements Callable<Integer> {
+  // ...
+
+  @Option(names = {"-s", "--sentiment"}, paramLabel = "<SENTIMENT>",
+      description = "Analyze a sentiment with the OVHcloud Text to Sentiment API.",
+      defaultValue = "hello")
+  private String sentimentToAnalyze;
+
+  @RestClient
+  AISentimentService aiSentimentService;
+
+  // ...
+
+  @Override
+  public Integer call() throws Exception {
+    // ...
+
+    if (sentimentToAnalyze != null) {
+      _LOG.info("param {}", sentimentToAnalyze);
+      SortedMap<String, Double> res =
+          EmotionEvaluation.toSortedMap(aiSentimentService.text2emotions(sentimentToAnalyze));
+
+      _LOG.info("First: {}", res.firstEntry());
+      _LOG.info("Sentiment: {}", EmotionEvaluation.toEmoji(res.firstEntry().getKey()));
+    }
+    return 0;
+  }
+}
+```
+ - call the command: `ovhcloud -s "I'm happy to be here"`

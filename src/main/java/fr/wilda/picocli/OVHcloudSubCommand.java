@@ -1,12 +1,15 @@
 package fr.wilda.picocli;
 
+import java.util.SortedMap;
 import java.util.concurrent.Callable;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import fr.wilda.jarvis.sdk.ovhcloud.EmotionEvaluation;
 import fr.wilda.jarvis.sdk.ovhcloud.OVHcloudSignatureHelper;
 import fr.wilda.picocli.sdk.OVHcloudAPIService;
+import fr.wilda.picocli.sdk.ai.AISentimentService;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -20,12 +23,21 @@ public class OVHcloudSubCommand implements Callable<Integer> {
   @Option(names = {"-m", "--me"}, description = "Display the OVHcloud account details.")
   private boolean me;
 
-  @Option(names = {"-k", "--kube"}, description = "Display your Managed Kubernetes Service created.")
+  @Option(names = {"-k", "--kube"},
+      description = "Display your Managed Kubernetes Service created.")
   private boolean kube;
+
+  @Option(names = {"-s", "--sentiment"}, paramLabel = "<SENTIMENT>",
+      description = "Analyze a sentiment with the OVHcloud Text to Sentiment API.",
+      defaultValue = "hello")
+  private String sentimentToAnalyze;
 
   // Service to call the OVHcloud REST API
   @RestClient
   OVHcloudAPIService apiService;
+
+  @RestClient
+  AISentimentService aiSentimentService;
 
   // OVHcloud public cloud project ID injected by environment variables in the
   // application.properties file
@@ -58,6 +70,14 @@ public class OVHcloudSubCommand implements Callable<Integer> {
       }
     }
 
+    if (sentimentToAnalyze != null) {
+      _LOG.info("param {}", sentimentToAnalyze);
+      SortedMap<String, Double> res =
+          EmotionEvaluation.toSortedMap(aiSentimentService.text2emotions(sentimentToAnalyze));
+
+      _LOG.info("First: {}", res.firstEntry());
+      _LOG.info("Sentiment: {}", EmotionEvaluation.toEmoji(res.firstEntry().getKey()));
+    }
     return 0;
   }
 }
