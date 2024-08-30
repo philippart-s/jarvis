@@ -6,7 +6,7 @@ snippet Pom Jarvis SDK:
     <dependency>
       <groupId>fr.wilda.jarvis.sdk</groupId>
       <artifactId>jarvis-sdk</artifactId>
-      <version>1.0.0</version>
+      <version>1.1.0</version>
     </dependency>
 
 snippet Pom rest client:
@@ -265,3 +265,22 @@ snippet JarvisCommand AI Service call:
       _LOG.info(token);
     });
     _LOG.info("\n");
+
+snippet AISentimentService:
+  prefix: "25-sentiment-service"
+  scope: "java"
+  name: "AISentimentService"
+  body: |
+    @Path("/api")
+    @RegisterRestClient(baseUri = "https://roberta-base-go-emotions.endpoints.kepler.ai.cloud.ovh.net")
+    @ClientHeaderParam(name = "Authorization", value = "Bearer ${ovhcloud.ai-endpoints.token}")
+    @ClientHeaderParam(name = "Content-Type", value = "application/json")
+
+snippet text2emotion:
+  prefix: "26-text2emotion"
+  scope: "java"
+  name: "text2emotion"
+  body: |
+    @POST
+    @Path("text2emotions")
+    EmotionEvaluation text2emotions(String text);

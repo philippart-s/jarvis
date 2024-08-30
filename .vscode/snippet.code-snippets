@@ -1,4 +1,16 @@
 {
+  "AISentimentService": {
+    "body": [
+      "@Path(\"/api\")",
+      "@RegisterRestClient(baseUri = \"https://roberta-base-go-emotions.endpoints.kepler.ai.cloud.ovh.net\")",
+      "@ClientHeaderParam(name = \"Authorization\", value = \"Bearer ${ovhcloud.ai-endpoints.token}\")",
+      "@ClientHeaderParam(name = \"Content-Type\", value = \"application/json\")",
+      ""
+    ],
+    "description": "",
+    "prefix": "25-sentiment-service",
+    "scope": "java"
+  },
   "Jarvis bash": {
     "body": [
       "#!/bin/bash",
@@ -35,7 +47,8 @@
       "  }",
       "  _LOG.info(token);",
       "});",
-      "_LOG.info(\"\\n\");"
+      "_LOG.info(\"\\n\");",
+      ""
     ],
     "description": "",
     "prefix": "24-jarvis-cli-ai-svc-call",
@@ -234,7 +247,7 @@
       "\u003cdependency\u003e",
       "  \u003cgroupId\u003efr.wilda.jarvis.sdk\u003c/groupId\u003e",
       "  \u003cartifactId\u003ejarvis-sdk\u003c/artifactId\u003e",
-      "  \u003cversion\u003e1.0.0\u003c/version\u003e",
+      "  \u003cversion\u003e1.1.0\u003c/version\u003e",
       "\u003c/dependency\u003e",
       ""
     ],
@@ -317,5 +330,16 @@
     "description": "",
     "prefix": "17-props-logs-prod",
     "scope": ""
+  },
+  "text2emotion": {
+    "body": [
+      "@POST",
+      "@Path(\"text2emotions\")",
+      "EmotionEvaluation text2emotions(String text);",
+      ""
+    ],
+    "description": "",
+    "prefix": "26-text2emotion",
+    "scope": "java"
   }
 }

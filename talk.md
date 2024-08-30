@@ -26,7 +26,7 @@ snippets generate \
 <dependency>
       <groupId>fr.wilda.jarvis.sdk</groupId>
       <artifactId>jarvis-sdk</artifactId>
-      <version>1.0.0</version>
+      <version>1.1.0</version>
 </dependency>
 ```
   - add rest-client dependency (👨‍💻 _02-pom-rest-dep_)
@@ -139,6 +139,8 @@ quarkus.langchain4j.mistralai.timeout=60s
   - test AI: `"Can you tell me more about Riviera Dev?"`
   - turn off AI log
   - `quarkus build --native`
+  - create the service AISentimentService.java (👨‍💻 _25-sentiment-service_)
+  - add the `text2emotion` method (👨‍💻 _26-text2emotion_)
   - add `GenerateCompletion` subcommand
   - display help on autocompletion: `jarvis generate-completion --help`
   - activate the autocompletion: `source <(jarvis generate-completion)`
