@@ -1,74 +1,43 @@
-##########################################################################################################
-###                                                   API SDK
-##########################################################################################################
-snippet OVHcloud User:
-  prefix: "OVHcloudUser-fields"
-  name: "OVHcloud User"
-  scope: "java"
+snippet Pom Jarvis SDK:
+  prefix: "01-pom-jarvis-sdk-dep"
+  scope: "xml"
+  name: "Pom Jarvis SDK"
   body: |
-    private String firstname;
-    private String name;
-    private String city;
-    private String country;
-    private String language;
+    <dependency>
+      <groupId>fr.wilda.jarvis.sdk</groupId>
+      <artifactId>jarvis-sdk</artifactId>
+      <version>1.1.0</version>
+    </dependency>
 
-snippet OVHcloud Kube:
-  prefix: "OVHcloudKube-fields"
-  name: "OVHcloud Kube"
-  scope: "java"
+snippet Pom rest client:
+  prefix: "02-pom-rest-dep"
+  scope: "xml"
+  name: "Pom rest client"
   body: |
-    private String id;
-    private String isUpToDate;
-    private String name;
-    private String region;
-    private String status;
-    private String updatePolicy;
-    private String updatedAt;
-    private String version;
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-rest-client-jackson</artifactId>
+    </dependency>
 
-snippet OVHcloud Signature Helper:
-  prefix: "OVHcloudSigHelper"
-  name: "OVHcloud Signature Helper"
-  scope: "java"
+snippet Props OVHcloud env:
+  prefix: "03-props-ovh-env"
+  name: "Props OVHcloud env"
   body: |
-    public static String signature(String endPoint, Long timestamp) {
-        // build signature
-        String toSign = new StringBuilder(System.getenv("OVH_APPLICATION_SECRET"))
-                .append("+")
-                .append(System.getenv("OVH_CONSUMER_KEY"))
-                .append("+")
-                .append("GET")
-                .append("+")
-                .append("https://eu.api.ovh.com/v1/" + endPoint)
-                .append("+")
-                .append("")
-                .append("+")
-                .append(timestamp)
-                .toString();
-        try {
-            return new StringBuilder("\$1\$").append(hashSHA1(toSign)).toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
+   # OVHcloud parameter
+   ovhcloud.consumer=\${OVH_CONSUMER_KEY}
+   ovhcloud.application=\${OVH_APPLICATION_KEY}
+   ovhcloud.projectId=\${OVH_CLOUD_PROJECT_SERVICE}
 
-    private static String hashSHA1(String text)
-            throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        MessageDigest md;
-        md = MessageDigest.getInstance("SHA-1");
-        byte[] sha1hash = new byte[40];
-        md.update(text.getBytes("iso-8859-1"), 0, text.length());
-        sha1hash = md.digest();
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < sha1hash.length; i++) {
-            sb.append(Integer.toString((sha1hash[i] & 0xff) + 0x100, 16).substring(1));
-        }
-        return sb.toString();
-    }
+snippet Props RestClient:
+  prefix: "04-props-rest-client"
+  name: "Props RestClient"
+  body: |
+   # RestClient parameter
+   quarkus.rest-client."fr.wilda.picocli.sdk.OVHcloudAPIService".url=https://eu.api.ovh.com/
+   quarkus.rest-client."fr.wilda.picocli.sdk.OVHcloudAPIService".scope=javax.inject.Singleton 
 
 snippet OVHcloud API Service:
-  prefix: "OVHcloudAPI-annot"
+  prefix: "05-OVHcloudAPIService-annot"
   name: "OVHcloud API Service"
   scope: "java"
   body: |
@@ -79,7 +48,7 @@ snippet OVHcloud API Service:
     @ClientHeaderParam(name = "Content-Type", value = "application/json")
 
 snippet OVHcloud API Service Endpoints:
-  prefix: "OVHcloudAPI-endpoints"
+  prefix: "06-OVHcloudAPIService-endpoints"
   name: "OVHcloud API Service Endpoints"
   scope: "java"
   body: |
@@ -106,141 +75,46 @@ snippet OVHcloud API Service Endpoints:
         @HeaderParam("X-Ovh-Signature") String signature,
         @HeaderParam("X-Ovh-Timestamp") String ovhTimestamp);
 
-
-
-##########################################################################################################
-###                                        AIEndpointMistral7bService
-##########################################################################################################
-
-snippet OVHcloud Mistral Service askQuestion:
-  prefix: "OVHcloudMistral-ask-method"
-  name: "OVHcloud Mistral Service askQuestion"
-  scope: "java"
-  body: |
-    @SystemMessage("You are Jarvis, an AI assistant.")
-      @UserMessage("Answer as best possible to the following question: {question}. The answer must be in a style of a virtual assistant.")
-        String askAQuestion(String question);
- 
-
-##########################################################################################################
-###                                        application.properties
-##########################################################################################################
-snippet Props OVHcloud env:
-  prefix: "props-ovh-env"
-  name: "Props OVHcloud env"
-  body: |
-   # OVHcloud parameter
-   ovhcloud.consumer=\${OVH_CONSUMER_KEY}
-   ovhcloud.application=\${OVH_APPLICATION_KEY}
-   ovhcloud.projectId=\${OVH_CLOUD_PROJECT_SERVICE}
-
-snippet Props RestClient:
-  prefix: "props-rest-client"
-  name: "Props RestClient"
-  body: |
-   # RestClient parameter
-   quarkus.rest-client."fr.wilda.picocli.sdk.OVHcloudAPIService".url=https://eu.api.ovh.com/
-   quarkus.rest-client."fr.wilda.picocli.sdk.OVHcloudAPIService".scope=javax.inject.Singleton 
-
-snippet Props Langchain4J:
-  prefix: "props-langchain4J"
-  name: "Props Langchain4J"
-  body: |
-    # Langchain4J parameters
-    quarkus.langchain4j.mistralai.api-key=foo
-    quarkus.langchain4j.mistralai.chat-model.max-tokens=150
-    quarkus.langchain4j.mistralai.chat-model.model-name=Mistral-7B-Instruct-v0.2
-
-    quarkus.langchain4j.mistralai.log-requests=true
-    quarkus.langchain4j.mistralai.log-responses=true
-
-snippet Props logs prod:
-  prefix: "props-logs-prod"
-  name: "Props logs prod"
-  body: |
-    # Make outputs readable
-    %prod.quarkus.log.level=OFF
-    %prod.quarkus.banner.enabled=false
-    %prod.quarkus.log.category."fr.wilda".level=INFO
-    %prod.quarkus.log.console.format=%m
-
-##########################################################################################################
-###                                        JarvisCommand.java
-##########################################################################################################
 snippet JarvisCommand Class Annotation:
-  prefix: "jarvis-cmd-class-annot"
+  prefix: "07-jarvis-cli-class-annot"
   scope: "java"
   name: "JarvisCommand Class Annotation"
   body: |
     @Command(name = "jarvis", mixinStandardHelpOptions = true)
 
-
-snippet JarvisCommand param name:
-  prefix: "jarvis-cmd-name-param"
-  scope: "java"
-  name: "JarvisCommand param name"
-  body: |
-    @Parameters(paramLabel = "<name>", defaultValue = "picocli", description = "Your name.")
-    String name;
-
 snippet JarvisCommand logger:
-  prefix: "jarvis-cmd-logger"
+  prefix: "08-jarvis-cli-logger"
   scope: "java"
   name: "JarvisCommand logger"
   body: |
     // Logger
     private static final Logger _LOG = LoggerFactory.getLogger(JarvisCommand.class);
 
-snippet JarvisCommand AI Service:
-  prefix: "jarvis-cmd-ai-svc"
+snippet JarvisCommand param name:
+  prefix: "09-jarvis-cli-name-param"
   scope: "java"
-  name: "JarvisCommand AI Service"
+  name: "JarvisCommand param name"
   body: |
-    // Service to call Mistral LLM
-    @Inject
-    AIEndpointMistral7bService aiEndpointMistral7bService; 
+    @Parameters(paramLabel = "<name>", defaultValue = "picocli", description = "Your name.")
+    String name;
 
-snippet JarvisCommand AI question param:
-  prefix: "jarvis-cmd-question-param"
-  scope: "java"
-  name: "JarvisCommand AI question param"
-  body: |
-    // Question to ask
-    @Parameters(paramLabel = "<question>", defaultValue = "What is the answer to life, the universe and everything?", description = "The question to ask to Jarvis.")
-    private String question;
-
-##########################################################################################################
-###                                        OVHcloudSubCommand.java
-##########################################################################################################
 snippet OVHCommand Class Annotation:
-  prefix: "ovh-cmd-class-annot"
+  prefix: "10-ovh-cli-class-annot"
   scope: "java"
   name: "OVHCommand Class Annotation"
   body: |
     @Command(name = "ovhcloud", mixinStandardHelpOptions = true)
 
 snippet OVHCommand logger:
-  prefix: "ovh-cmd-logger"
+  prefix: "11-ovh-cli-logger"
   scope: "java"
   name: "OVHCommand logger"
   body: |
     // Logger
     private static final Logger _LOG = LoggerFactory.getLogger(OVHcloudSubCommand.class);
 
-snippet OVHCommand options:
-  prefix: "ovh-cmd-options"
-  scope: "java"
-  name: "OVHCommand options"
-  body: |
-    // Option to activate the /me OVHcloud REST API
-    @Option(names = {"-m", "--me"}, description = "Display the OVHcloud account details.")
-    private boolean me;
-
-    @Option(names = {"-k", "--kube"}, description = "Display your Managed Kubernetes Service created.")
-    private boolean kube;
-
 snippet OVHCommand rest client:
-  prefix: "ovh-cmd-rest-client"
+  prefix: "12-ovh-cli-rest-client"
   scope: "java"
   name: "OVHCommand rest client"
   body: |
@@ -249,7 +123,7 @@ snippet OVHCommand rest client:
     OVHcloudAPIService apiService;
 
 snippet OVHCommand OVH Stuff:
-  prefix: "ovh-cmd-ovh-stuff"
+  prefix: "13-ovh-cli-ovh-stuff"
   scope: "java"
   name: "OVHCommand OVH Stuff"
   body: |
@@ -261,8 +135,20 @@ snippet OVHCommand OVH Stuff:
     // Timestamp to add to each OVHcloud API call
     private Long ovhTimestamp;
 
+snippet OVHCommand options:
+  prefix: "14-ovh-cli-options"
+  scope: "java"
+  name: "OVHCommand options"
+  body: |
+    // Option to activate the /me OVHcloud REST API
+    @Option(names = {"-m", "--me"}, description = "Display the OVHcloud account details.")
+    private boolean me;
+
+    @Option(names = {"-k", "--kube"}, description = "Display your Managed Kubernetes Service created.")
+    private boolean kube;
+
 snippet OVHCommand me:
-  prefix: "ovh-cmd-me"
+  prefix: "15-ovh-cli-me"
   scope: "java"
   name: "OVHCommand me"
   body: |
@@ -273,7 +159,7 @@ snippet OVHCommand me:
     }
 
 snippet OVHCommand kube:
-  prefix: "ovh-cmd-kube"
+  prefix: "16-ovh-cli-kube"
   scope: "java"
   name: "OVHCommand kube"
   body: |
@@ -290,13 +176,20 @@ snippet OVHCommand kube:
                     .signature("cloud/project/" + projectId + "/kube/" + kubeId, ovhTimestamp),
                 Long.toString(ovhTimestamp)));
       }
-    }    
+    }
 
-##########################################################################################################
-###                                               jarvis.sh
-##########################################################################################################
+snippet Props logs prod:
+  prefix: "17-props-logs-prod"
+  name: "Props logs prod"
+  body: |
+    # Make outputs readable
+    %prod.quarkus.log.level=OFF
+    %prod.quarkus.banner.enabled=false
+    %prod.quarkus.log.category."fr.wilda".level=INFO
+    %prod.quarkus.log.console.format=%m
+
 snippet Jarvis bash:
-  prefix: "jarvis-bash"
+  prefix: "18-jarvis-bash"
   scope: "shellscript"
   name: "Jarvis bash"
   body: |
@@ -304,37 +197,90 @@ snippet Jarvis bash:
 
     java -jar ../../../target/quarkus-app/quarkus-run.jar \$1 \$2 \$3
 
-##########################################################################################################
-###                                               pom.xml
-##########################################################################################################
-snippet Pom rest client:
-  prefix: "pom-rest-dep"
-  scope: "xml"
-  name: "Pom rest client"
-  body: |
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-rest-client-jackson</artifactId>
-    </dependency>
-
 snippet Pom Quarkus LangChain4j:
-  prefix: "pom-langchain4j-dep"
+  prefix: "19-pom-langchain4j-dep"
   scope: "xml"
   name: "Pom Quarkus LangChain4j"
   body: |
     <dependency>
           <groupId>io.quarkiverse.langchain4j</groupId>
           <artifactId>quarkus-langchain4j-mistral-ai</artifactId>
-          <version>0.10.3</version>
+          <version>0.17.1</version>
     </dependency> 
 
-snippet Pom Jarvis SDK:
-  prefix: "pom-jarvis-sdk-dep"
-  scope: "xml"
-  name: "Pom Jarvis SDK"
+snippet Props Langchain4J:
+  prefix: "20-props-langchain4J"
+  name: "Props Langchain4J"
   body: |
-    <dependency>
-      <groupId>fr.wilda.jarvis.sdk</groupId>
-      <artifactId>jarvis-sdk</artifactId>
-      <version>1.0.0</version>
-    </dependency>
+    # Langchain4J parameters
+    quarkus.langchain4j.mistralai.api-key=\${OVH_AI_ENDPOINTS_ACCESS_TOKEN}
+    quarkus.langchain4j.mistralai.chat-model.max-tokens=1500
+    quarkus.langchain4j.mistralai.chat-model.model-name=\${OVH_AI_ENDPOINTS_MODEL}
+
+    quarkus.langchain4j.mistralai.log-requests=true
+    quarkus.langchain4j.mistralai.log-responses=true
+
+snippet OVHcloud Mistral Service askQuestion:
+  prefix: "21-OVHcloudMistral-ask-method"
+  name: "OVHcloud Mistral Service askQuestion"
+  scope: "java"
+  body: |
+    @SystemMessage("You are Jarvis, an AI assistant.")
+    @UserMessage("Answer as best possible to the following question: {question}. The answer must be in a style of a virtual assistant.")
+    Multi<String> askAQuestion(String question);
+
+snippet JarvisCommand AI question param:
+  prefix: "22-jarvis-cli-question-param"
+  scope: "java"
+  name: "JarvisCommand AI question param"
+  body: |
+    // Question to ask
+    @Parameters(paramLabel = "<question>", defaultValue = "What is the answer to life, the universe and everything?", description = "The question to ask to Jarvis.")
+    private String question;
+
+snippet JarvisCommand AI Service:
+  prefix: "23-jarvis-cli-ai-svc"
+  scope: "java"
+  name: "JarvisCommand AI Service"
+  body: |
+    // Service to call Mistral LLM
+    @Inject
+    AIEndpointService aiEndpointMistral7bService; 
+
+snippet JarvisCommand AI Service call:
+  prefix: "24-jarvis-cli-ai-svc-call"
+  scope: "java"
+  name: "JarvisCommand AI Service call"
+  body: |
+    _LOG.info("\n🤖:\n");
+    aiEndpointMistral7bService.askAQuestion(question)
+    .subscribe()
+    .asStream()
+    .forEach(token -> {
+      try {
+        TimeUnit.MILLISECONDS.sleep(150);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+      _LOG.info(token);
+    });
+    _LOG.info("\n");
+
+snippet AISentimentService:
+  prefix: "25-sentiment-service"
+  scope: "java"
+  name: "AISentimentService"
+  body: |
+    @Path("/api")
+    @RegisterRestClient(baseUri = "https://roberta-base-go-emotions.endpoints.kepler.ai.cloud.ovh.net")
+    @ClientHeaderParam(name = "Authorization", value = "Bearer ${ovhcloud.ai-endpoints.token}")
+    @ClientHeaderParam(name = "Content-Type", value = "application/json")
+
+snippet text2emotion:
+  prefix: "26-text2emotion"
+  scope: "java"
+  name: "text2emotion"
+  body: |
+    @POST
+    @Path("text2emotions")
+    EmotionEvaluation text2emotions(String text);
