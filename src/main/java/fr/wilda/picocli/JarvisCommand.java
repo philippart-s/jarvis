@@ -40,7 +40,7 @@ public class JarvisCommand implements Callable<Integer> {
       _LOG.info(token);
     });
     _LOG.info("\n");
-    
+  
     return 0;
   }
 }

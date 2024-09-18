@@ -1,5 +1,7 @@
 package fr.wilda.picocli;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.SortedMap;
 import java.util.concurrent.Callable;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -28,9 +30,11 @@ public class OVHcloudSubCommand implements Callable<Integer> {
   private boolean kube;
 
   @Option(names = {"-s", "--sentiment"}, paramLabel = "<SENTIMENT>",
-      description = "Analyze a sentiment with the OVHcloud Text to Sentiment API.",
-      defaultValue = "hello")
+      description = "Analyze a sentiment with the OVHcloud Text to Sentiment API.")
   private String sentimentToAnalyze;
+
+  @Option(names = {"-f", "--file"}, description = "File to analyse (sentiment analysis)")
+  private File fileToAnalyse;
 
   // Service to call the OVHcloud REST API
   @RestClient
@@ -78,6 +82,16 @@ public class OVHcloudSubCommand implements Callable<Integer> {
       _LOG.info("First: {}", res.firstEntry());
       _LOG.info("Sentiment: {}", EmotionEvaluation.toEmoji(res.firstEntry().getKey()));
     }
+
+    if (fileToAnalyse != null) {
+      SortedMap<String, Double> res =
+          EmotionEvaluation.toSortedMap(
+              aiSentimentService.text2emotions(Files.readString(fileToAnalyse.toPath())));
+
+      _LOG.info("First: {}", res.firstEntry());
+      _LOG.info("Sentiment: {}", EmotionEvaluation.toEmoji(res.firstEntry().getKey()));
+    }
+
     return 0;
   }
 }
