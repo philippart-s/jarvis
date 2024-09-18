@@ -1,4 +1,16 @@
 {
+  "AISentimentService": {
+    "body": [
+      "@Path(\"/api\")",
+      "@RegisterRestClient(baseUri = \"https://roberta-base-go-emotions.endpoints.kepler.ai.cloud.ovh.net\")",
+      "@ClientHeaderParam(name = \"Authorization\", value = \"Bearer ${ovhcloud.ai-endpoints.token}\")",
+      "@ClientHeaderParam(name = \"Content-Type\", value = \"application/json\")",
+      ""
+    ],
+    "description": "",
+    "prefix": "25-sentiment-service",
+    "scope": "java"
+  },
   "Jarvis bash": {
     "body": [
       "#!/bin/bash",
@@ -7,18 +19,39 @@
       ""
     ],
     "description": "",
-    "prefix": "jarvis-bash",
+    "prefix": "18-jarvis-bash",
     "scope": "shellscript"
   },
   "JarvisCommand AI Service": {
     "body": [
       "// Service to call Mistral LLM",
       "@Inject",
-      "AIEndpointMistral7bService aiEndpointMistral7bService; ",
+      "AIEndpointService aiEndpointMistral7bService; ",
       ""
     ],
     "description": "",
-    "prefix": "jarvis-cmd-ai-svc",
+    "prefix": "23-jarvis-cli-ai-svc",
+    "scope": "java"
+  },
+  "JarvisCommand AI Service call": {
+    "body": [
+      "_LOG.info(\"\\n🤖:\\n\");",
+      "aiEndpointMistral7bService.askAQuestion(question)",
+      ".subscribe()",
+      ".asStream()",
+      ".forEach(token -\u003e {",
+      "  try {",
+      "    TimeUnit.MILLISECONDS.sleep(150);",
+      "  } catch (InterruptedException e) {",
+      "    e.printStackTrace();",
+      "  }",
+      "  _LOG.info(token);",
+      "});",
+      "_LOG.info(\"\\n\");",
+      ""
+    ],
+    "description": "",
+    "prefix": "24-jarvis-cli-ai-svc-call",
     "scope": "java"
   },
   "JarvisCommand AI question param": {
@@ -29,7 +62,7 @@
       ""
     ],
     "description": "",
-    "prefix": "jarvis-cmd-question-param",
+    "prefix": "22-jarvis-cli-question-param",
     "scope": "java"
   },
   "JarvisCommand Class Annotation": {
@@ -38,7 +71,7 @@
       ""
     ],
     "description": "",
-    "prefix": "jarvis-cmd-class-annot",
+    "prefix": "07-jarvis-cli-class-annot",
     "scope": "java"
   },
   "JarvisCommand logger": {
@@ -48,7 +81,7 @@
       ""
     ],
     "description": "",
-    "prefix": "jarvis-cmd-logger",
+    "prefix": "08-jarvis-cli-logger",
     "scope": "java"
   },
   "JarvisCommand param name": {
@@ -58,7 +91,7 @@
       ""
     ],
     "description": "",
-    "prefix": "jarvis-cmd-name-param",
+    "prefix": "09-jarvis-cli-name-param",
     "scope": "java"
   },
   "OVHCommand Class Annotation": {
@@ -67,7 +100,7 @@
       ""
     ],
     "description": "",
-    "prefix": "ovh-cmd-class-annot",
+    "prefix": "10-ovh-cli-class-annot",
     "scope": "java"
   },
   "OVHCommand OVH Stuff": {
@@ -82,7 +115,7 @@
       ""
     ],
     "description": "",
-    "prefix": "ovh-cmd-ovh-stuff",
+    "prefix": "13-ovh-cli-ovh-stuff",
     "scope": "java"
   },
   "OVHCommand kube": {
@@ -100,11 +133,11 @@
       "                .signature(\"cloud/project/\" + projectId + \"/kube/\" + kubeId, ovhTimestamp),",
       "            Long.toString(ovhTimestamp)));",
       "  }",
-      "}    ",
+      "}",
       ""
     ],
     "description": "",
-    "prefix": "ovh-cmd-kube",
+    "prefix": "16-ovh-cli-kube",
     "scope": "java"
   },
   "OVHCommand logger": {
@@ -114,7 +147,7 @@
       ""
     ],
     "description": "",
-    "prefix": "ovh-cmd-logger",
+    "prefix": "11-ovh-cli-logger",
     "scope": "java"
   },
   "OVHCommand me": {
@@ -127,7 +160,7 @@
       ""
     ],
     "description": "",
-    "prefix": "ovh-cmd-me",
+    "prefix": "15-ovh-cli-me",
     "scope": "java"
   },
   "OVHCommand options": {
@@ -141,7 +174,7 @@
       ""
     ],
     "description": "",
-    "prefix": "ovh-cmd-options",
+    "prefix": "14-ovh-cli-options",
     "scope": "java"
   },
   "OVHCommand rest client": {
@@ -152,7 +185,7 @@
       ""
     ],
     "description": "",
-    "prefix": "ovh-cmd-rest-client",
+    "prefix": "12-ovh-cli-rest-client",
     "scope": "java"
   },
   "OVHcloud API Service": {
@@ -165,7 +198,7 @@
       ""
     ],
     "description": "",
-    "prefix": "OVHcloudAPI-annot",
+    "prefix": "05-OVHcloudAPIService-annot",
     "scope": "java"
   },
   "OVHcloud API Service Endpoints": {
@@ -195,90 +228,18 @@
       ""
     ],
     "description": "",
-    "prefix": "OVHcloudAPI-endpoints",
-    "scope": "java"
-  },
-  "OVHcloud Kube": {
-    "body": [
-      "private String id;",
-      "private String isUpToDate;",
-      "private String name;",
-      "private String region;",
-      "private String status;",
-      "private String updatePolicy;",
-      "private String updatedAt;",
-      "private String version;",
-      ""
-    ],
-    "description": "",
-    "prefix": "OVHcloudKube-fields",
+    "prefix": "06-OVHcloudAPIService-endpoints",
     "scope": "java"
   },
   "OVHcloud Mistral Service askQuestion": {
     "body": [
       "@SystemMessage(\"You are Jarvis, an AI assistant.\")",
-      "  @UserMessage(\"Answer as best possible to the following question: {question}. The answer must be in a style of a virtual assistant.\")",
-      "    String askAQuestion(String question);",
+      "@UserMessage(\"Answer as best possible to the following question: {question}. The answer must be in a style of a virtual assistant.\")",
+      "Multi\u003cString\u003e askAQuestion(String question);",
       ""
     ],
     "description": "",
-    "prefix": "OVHcloudMistral-ask-method",
-    "scope": "java"
-  },
-  "OVHcloud Signature Helper": {
-    "body": [
-      "public static String signature(String endPoint, Long timestamp) {",
-      "    // build signature",
-      "    String toSign = new StringBuilder(System.getenv(\"OVH_APPLICATION_SECRET\"))",
-      "            .append(\"+\")",
-      "            .append(System.getenv(\"OVH_CONSUMER_KEY\"))",
-      "            .append(\"+\")",
-      "            .append(\"GET\")",
-      "            .append(\"+\")",
-      "            .append(\"https://eu.api.ovh.com/v1/\" + endPoint)",
-      "            .append(\"+\")",
-      "            .append(\"\")",
-      "            .append(\"+\")",
-      "            .append(timestamp)",
-      "            .toString();",
-      "    try {",
-      "        return new StringBuilder(\"\\$1\\$\").append(hashSHA1(toSign)).toString();",
-      "    } catch (Exception e) {",
-      "        e.printStackTrace();",
-      "    }",
-      "    return \"\";",
-      "}",
-      "",
-      "private static String hashSHA1(String text)",
-      "        throws NoSuchAlgorithmException, UnsupportedEncodingException {",
-      "    MessageDigest md;",
-      "    md = MessageDigest.getInstance(\"SHA-1\");",
-      "    byte[] sha1hash = new byte[40];",
-      "    md.update(text.getBytes(\"iso-8859-1\"), 0, text.length());",
-      "    sha1hash = md.digest();",
-      "    StringBuffer sb = new StringBuffer();",
-      "    for (int i = 0; i \u003c sha1hash.length; i++) {",
-      "        sb.append(Integer.toString((sha1hash[i] \u0026 0xff) + 0x100, 16).substring(1));",
-      "    }",
-      "    return sb.toString();",
-      "}",
-      ""
-    ],
-    "description": "",
-    "prefix": "OVHcloudSigHelper",
-    "scope": "java"
-  },
-  "OVHcloud User": {
-    "body": [
-      "private String firstname;",
-      "private String name;",
-      "private String city;",
-      "private String country;",
-      "private String language;",
-      ""
-    ],
-    "description": "",
-    "prefix": "OVHcloudUser-fields",
+    "prefix": "21-OVHcloudMistral-ask-method",
     "scope": "java"
   },
   "Pom Jarvis SDK": {
@@ -286,11 +247,12 @@
       "\u003cdependency\u003e",
       "  \u003cgroupId\u003efr.wilda.jarvis.sdk\u003c/groupId\u003e",
       "  \u003cartifactId\u003ejarvis-sdk\u003c/artifactId\u003e",
-      "  \u003cversion\u003e1.0.0\u003c/version\u003e",
-      "\u003c/dependency\u003e"
+      "  \u003cversion\u003e1.1.0\u003c/version\u003e",
+      "\u003c/dependency\u003e",
+      ""
     ],
     "description": "",
-    "prefix": "pom-jarvis-sdk-dep",
+    "prefix": "01-pom-jarvis-sdk-dep",
     "scope": "xml"
   },
   "Pom Quarkus LangChain4j": {
@@ -298,12 +260,12 @@
       "\u003cdependency\u003e",
       "      \u003cgroupId\u003eio.quarkiverse.langchain4j\u003c/groupId\u003e",
       "      \u003cartifactId\u003equarkus-langchain4j-mistral-ai\u003c/artifactId\u003e",
-      "      \u003cversion\u003e0.10.3\u003c/version\u003e",
+      "      \u003cversion\u003e0.17.1\u003c/version\u003e",
       "\u003c/dependency\u003e ",
       ""
     ],
     "description": "",
-    "prefix": "pom-langchain4j-dep",
+    "prefix": "19-pom-langchain4j-dep",
     "scope": "xml"
   },
   "Pom rest client": {
@@ -315,22 +277,22 @@
       ""
     ],
     "description": "",
-    "prefix": "pom-rest-dep",
+    "prefix": "02-pom-rest-dep",
     "scope": "xml"
   },
   "Props Langchain4J": {
     "body": [
       "# Langchain4J parameters",
-      "quarkus.langchain4j.mistralai.api-key=foo",
-      "quarkus.langchain4j.mistralai.chat-model.max-tokens=150",
-      "quarkus.langchain4j.mistralai.chat-model.model-name=Mistral-7B-Instruct-v0.2",
+      "quarkus.langchain4j.mistralai.api-key=\\${OVH_AI_ENDPOINTS_ACCESS_TOKEN}",
+      "quarkus.langchain4j.mistralai.chat-model.max-tokens=1500",
+      "quarkus.langchain4j.mistralai.chat-model.model-name=\\${OVH_AI_ENDPOINTS_MODEL}",
       "",
       "quarkus.langchain4j.mistralai.log-requests=true",
       "quarkus.langchain4j.mistralai.log-responses=true",
       ""
     ],
     "description": "",
-    "prefix": "props-langchain4J",
+    "prefix": "20-props-langchain4J",
     "scope": ""
   },
   "Props OVHcloud env": {
@@ -342,7 +304,7 @@
       ""
     ],
     "description": "",
-    "prefix": "props-ovh-env",
+    "prefix": "03-props-ovh-env",
     "scope": ""
   },
   "Props RestClient": {
@@ -353,7 +315,7 @@
       ""
     ],
     "description": "",
-    "prefix": "props-rest-client",
+    "prefix": "04-props-rest-client",
     "scope": ""
   },
   "Props logs prod": {
@@ -366,7 +328,18 @@
       ""
     ],
     "description": "",
-    "prefix": "props-logs-prod",
+    "prefix": "17-props-logs-prod",
     "scope": ""
+  },
+  "text2emotion": {
+    "body": [
+      "@POST",
+      "@Path(\"text2emotions\")",
+      "EmotionEvaluation text2emotions(String text);",
+      ""
+    ],
+    "description": "",
+    "prefix": "26-text2emotion",
+    "scope": "java"
   }
 }
