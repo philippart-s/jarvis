@@ -28,7 +28,6 @@ To use it:
   - `java -jar ./target/quarkus-app/quarkus-run.jar Stéphane`, `java -jar ./target/quarkus-app/quarkus-run.jar ovhcloud -m -k`
   - `./jarvis.sh ovhcloud -m -k`
 
-  
 ## 07-🚀-graalvm
 
 > If needed, set the `GRAALVM_HOME` environment variable: `GRAALVM_HOME=/Users/sphilipp/local-bin/graalvm-jdk-21.0.2+13.1/Contents/Home`
