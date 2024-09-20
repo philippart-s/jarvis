@@ -38,7 +38,7 @@ To use it:
   - `./target/jarvis-0.0.1-SNAPSHOT-runner ovhcloud -m -k`/
   - `jarvis ovhcloud -m`
 
-## 08-🤖-add-ai
+## 07-🤖-add-ai
 
 >**⚠️ You need to set the following environment variables: ⚠️**
 >  - `QUARKUS_LANGCHAIN4J_MISTRALAI_BASE_URL` with the API URL of Mixtral model. 
