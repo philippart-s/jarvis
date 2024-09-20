@@ -50,11 +50,7 @@ To test it:
  - test the new CLI: `./target/jarvis-0.0.1-SNAPSHOT-runner "Who are you?"`
  - jarvis "Who are you?"
 
-## 09-➡️-completion
-
-This step is to add the completion on your bash for the CLI.
-
-## 10-❤️-ai-sentiment-analysis
+## 08-❤️-ai-sentiment-analysis
 
 This step is to add the sentiment analysis on the Jarvis CLI with AI Endpoints.  
 To use it: `ovhcloud -s "I'm happy to be here"`.
