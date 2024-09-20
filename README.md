@@ -57,5 +57,9 @@ This step is to add the completion on your bash for the CLI.
 ## 10-❤️-ai-sentiment-analysis
 
 This step is to add the sentiment analysis on the Jarvis CLI with AI Endpoints.  
-To use it: `ovhcloud -s "I'm happy to be here"`.
+To use it: `jarvis ovhcloud -s "I'm happy to be here"`.
 
+## 11-📜-use-file
+
+This step is to analyse the sentiment in a complete text file.  
+To test it: 'jarvis ovhcloud -f <path>/src/main/resources/fun-java-poem.txt'
