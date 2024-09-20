@@ -35,7 +35,7 @@ To use it:
 
 This step is to build a native executable with GraalVM: `quarkus build --native`.  
 To use it: 
-  - `./target/jarvis-0.0.1-SNAPSHOT-runner ovhcloud -m -k`/
+  - `./target/jarvis-0.0.1-SNAPSHOT-runner ovhcloud -m -k`
   - `jarvis ovhcloud -m`
 
 ## 07-🤖-add-ai
