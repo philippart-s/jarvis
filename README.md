@@ -16,7 +16,7 @@ This step is to create a service to call the OVHcloud API using an _SDK_.
 
 This step is to init the Jarvis CLI.
 
-## 05-☁️-add-ovhcloud-command
+## 04-☁️-add-ovhcloud-command
 
 This step is to add the OVHcloud API call to display the MKS and account details for a public cloud project.  
 To test this part: `jarvis ovhcloud -m -k`.
