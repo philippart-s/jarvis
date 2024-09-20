@@ -55,7 +55,7 @@ To test it:
 This step is to add the sentiment analysis on the Jarvis CLI with AI Endpoints.  
 To use it: `jarvis ovhcloud -s "I'm happy to be here"`.
 
-## 11-📜-use-file
+## 09-📜-use-file
 
 This step is to analyse the sentiment in a complete text file.  
 To test it: 'jarvis ovhcloud -f <path>/src/main/resources/fun-java-poem.txt'
