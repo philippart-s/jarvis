@@ -21,7 +21,7 @@ This step is to init the Jarvis CLI.
 This step is to add the OVHcloud API call to display the MKS and account details for a public cloud project.  
 To test this part: `jarvis ovhcloud -m -k`.
 
-## 06-📦-package
+## 05-📦-package
 
 This step is to package in an executable JAR the CLI: `quarkus build`.  
 To use it:
