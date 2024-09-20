@@ -12,6 +12,6 @@ To run the project: `quarkus dev`
 
 This step is to create a service to call the OVHcloud API using an _SDK_.
 
-## 04-🤖-create-jarvis
+## 03-🤖-create-jarvis
 
  This step is to init the Jarvis CLI.
