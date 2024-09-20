@@ -8,15 +8,15 @@ The main steps of the project are stored each in a separate git branch chronolog
 This step is the result of the command `quarkus create cli fr.wilda.picocli:jarvis:0.0.1-SNAPSHOT --no-wrapper`  
 To run the project: `quarkus dev` 
 
-## 03-🔗-ovhcloud-sdk
+## 02-🔗-ovhcloud-sdk
 
 This step is to create a service to call the OVHcloud API using an _SDK_.
 
-## 04-🤖-create-jarvis
+## 03-🤖-create-jarvis
 
 This step is to init the Jarvis CLI.
 
-## 05-☁️-add-ovhcloud-command
+## 04-☁️-add-ovhcloud-command
 
 This step is to add the OVHcloud API call to display the MKS and account details for a public cloud project.  
 To test this part: `jarvis ovhcloud -m -k`.
