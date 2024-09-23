@@ -58,4 +58,4 @@ To use it: `jarvis ovhcloud -s "I'm happy to be here"`.
 ## 09-📜-use-file
 
 This step is to analyse the sentiment in a complete text file.  
-To test it: 'jarvis ovhcloud -f <path>/src/main/resources/fun-java-poem.txt'
+To test it: 'jarvis ovhcloud -f "./src/main/resources/fun-java-poem.txt"
