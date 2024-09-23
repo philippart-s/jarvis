@@ -75,11 +75,11 @@ public class OVHcloudSubCommand implements Callable<Integer> {
     }
 
     if (sentimentToAnalyze != null) {
-      _LOG.info("param {}", sentimentToAnalyze);
+      _LOG.debug("param {}", sentimentToAnalyze);
       SortedMap<String, Double> res =
           EmotionEvaluation.toSortedMap(aiSentimentService.text2emotions(sentimentToAnalyze));
 
-      _LOG.info("First: {}", res.firstEntry());
+      _LOG.debug("First: {}", res.firstEntry());
       _LOG.info("Sentiment: {}", EmotionEvaluation.toEmoji(res.firstEntry().getKey()));
     }
 
@@ -88,7 +88,7 @@ public class OVHcloudSubCommand implements Callable<Integer> {
           EmotionEvaluation.toSortedMap(
               aiSentimentService.text2emotions(Files.readString(fileToAnalyse.toPath())));
 
-      _LOG.info("First: {}", res.firstEntry());
+      _LOG.debug("First: {}", res.firstEntry());
       _LOG.info("Sentiment: {}", EmotionEvaluation.toEmoji(res.firstEntry().getKey()));
     }
 
