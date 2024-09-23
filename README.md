@@ -35,7 +35,7 @@ To use it:
 
 This step is to build a native executable with GraalVM: `quarkus build --native`.  
 To use it: 
-  - `./target/jarvis-0.0.1-SNAPSHOT-runner ovhcloud -m -k`/
+  - `./target/jarvis-0.0.1-SNAPSHOT-runner ovhcloud -m -k`
   - `jarvis ovhcloud -m`
 
 ## 07-🤖-add-ai
@@ -58,8 +58,9 @@ To use it: `jarvis ovhcloud -s "I'm happy to be here"`.
 ## 09-📜-use-file
 
 This step is to analyse the sentiment in a complete text file.  
-To test it: 'jarvis ovhcloud -f <path>/src/main/resources/fun-java-poem.txt'
+To test it: 'jarvis ovhcloud -f "./src/main/resources/fun-java-poem.txt"
 
 ## 10-➡️-completion
 
-This step is to add the completion on your bash for the CLI.
+This step is to add the completion on your bash for the CLI.  
+To activate it: `source <(jarvis generate-completion)`
