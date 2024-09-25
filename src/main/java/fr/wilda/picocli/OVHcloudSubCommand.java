@@ -12,10 +12,11 @@ import fr.wilda.jarvis.sdk.ovhcloud.EmotionEvaluation;
 import fr.wilda.jarvis.sdk.ovhcloud.OVHcloudSignatureHelper;
 import fr.wilda.picocli.sdk.OVHcloudAPIService;
 import fr.wilda.picocli.sdk.ai.AISentimentService;
+import picocli.AutoComplete.GenerateCompletion;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-@Command(name = "ovhcloud", mixinStandardHelpOptions = true)
+@Command(name = "ovhcloud", mixinStandardHelpOptions = true, subcommands = {GenerateCompletion.class})
 public class OVHcloudSubCommand implements Callable<Integer> {
 
   // Logger
