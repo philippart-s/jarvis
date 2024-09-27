@@ -8,19 +8,13 @@ snippets generate \
 
 # Do the demo
 
-  - in VSCode 3 terminals:
-    - `source ~/local-bin/set-ovh-env-sp-lab.sh`
-    - `export GRAALVM_HOME=/Users/sphilipp/local-bin/graalvm-jdk-21.0.2+13.1/Contents/Home`
-    - `export QUARKUS_LANGCHAIN4J_MISTRALAI_BASE_URL=https://mixtral-8x22b-instruct-v01.endpoints.kepler.ai.cloud.ovh.net/api/openai_compat/v1`
-    - `export OVH_AI_ENDPOINTS_MODEL=Mixtral-8x22B-Instruct-v0.1`
-    - `export OVH_AI_ENDPOINTS_ACCESS_TOKEN=<your token here>`
-    - `export OVH_OLLAMA_API_KEY=<your token here>`
+  - in VSCode 3 terminals:`source .env`
   - open a terminal and go to `/tmp`
-  - create the project `quarkus create cli fr.wilda.picocli:jarvis-devoxx:0.0.1-SNAPSHOT`
+  - create the project `quarkus create cli fr.wilda.picocli:jarvis:0.0.1-SNAPSHOT`
   - `mvn dependency:tree -Dincludes=info.picocli`
   - go to branch `01-✨-init-project`
   - launch the CLI : `quarkus dev`
-  - play with the CLI : `--help`, `"Volcamp!!"`
+  - play with the CLI : `--help`, `"xxx!!"`
   - add jarvis-sdk (👨‍💻 _01-pom-jarvis-sdk-dep_)
 ```xml
 <dependency>
@@ -61,35 +55,33 @@ quarkus.rest-client."fr.wilda.picocli.sdk.OVHcloudAPIService".scope=javax.inject
 %prod.quarkus.log.console.format=%m
 ```
   - `quarkus build`
-  - `cd target/quarkus-app` && `du -h`
-  - `cd ../..` & `java -jar ./target/quarkus-app/quarkus-run.jar "Volcamp"` && `java -jar ./target/quarkus-app/quarkus-run.jar ovhcloud -mk`
+  - `du -h ./target/quarkus-app`
+  - `java -jar ./target/quarkus-app/quarkus-run.jar "xxx"` && `java -jar ./target/quarkus-app/quarkus-run.jar ovhcloud -mk`
   - create `src/main/script/jarvis.sh` (👨‍💻 _18-jarvis-bash_)
   - `chmod +x jarvis.sh`
-  - `export GRAALVM_HOME=/Users/sphilipp/local-bin/graalvm-jdk-21.0.2+13.1/Contents/Home`
+  - './jarvis.sh ovhcloud --me'
   - `quarkus build --native`
-  - `jarvis-bck ovhcloud -mk`
+  - `jarvis-api ovhcloud -mk`
   - add to pom.xml: (👨‍💻 _19-pom-langchain4j-dep_)
 ```xml
 <dependency>
       <groupId>io.quarkiverse.langchain4j</groupId>
       <artifactId>quarkus-langchain4j-mistral-ai</artifactId>
-      <version>0.15.1</version>
+      <version>0.18.0</version>
 </dependency>  
 ```
   - update `application.properties`: (👨‍💻 _20-props-langchain4J_)
 ```java
 # Langchain4J parameters
+quarkus.langchain4j.mistralai.base-url=${OVH_AI_ENDPOINTS_MODEL_URL}
 quarkus.langchain4j.mistralai.api-key=${OVH_AI_ENDPOINTS_ACCESS_TOKEN}
-quarkus.langchain4j.mistralai.chat-model.max-tokens=1500
-quarkus.langchain4j.mistralai.chat-model.model-name=${OVH_AI_ENDPOINTS_MODEL}
+quarkus.langchain4j.mistralai.chat-model.max-tokens=512
+quarkus.langchain4j.mistralai.chat-model.model-name=${OVH_AI_ENDPOINTS_MODEL_NAME}
 
 quarkus.langchain4j.mistralai.log-requests=false
 quarkus.langchain4j.mistralai.log-responses=false
 quarkus.langchain4j.mistralai.timeout=60s    
 ```
-  - set env variable : 
-    - `export QUARKUS_LANGCHAIN4J_MISTRALAI_BASE_URL=https://mixtral-8x22b-instruct-v01.endpoints.kepler.ai.cloud.ovh.net/api/openai_compat/v1`
-    - export OVH_AI_ENDPOINTS_ACCESS_TOKEN=
      
 > **⛑️ B plan**
 > - launch ollama with AI Deploy: `ovhai app start 80296e7a-caf0-4c1c-9744-a09857e0898c`
@@ -136,12 +128,21 @@ quarkus.langchain4j.mistralai.timeout=60s
     - `name` to `question` parameter (👨‍💻 _22-jarvis-cli-question-param_)
     - inject `AIEndpointService` (👨‍💻 _23-jarvis-cli-ai-svc_)
     - add the AI model call (👨‍💻 _24-jarvis-cli-ai-svc-call_)
-  - test AI: `"Can you tell me more about Riviera Dev?"`
+  - test AI: `"Can you tell me more about xxx?"`
   - turn off AI log
   - `quarkus build --native`
-  - create the service AISentimentService.java (👨‍💻 _25-sentiment-service_)
-  - add the `text2emotion` method (👨‍💻 _26-text2emotion_)
-  - add `GenerateCompletion` subcommand
+  - 'jarvis-ai "What is XXX?"'
+  - add the token for request (👨‍💻 _27-token-sentiment-service_)
+  - create the service AISentimentService.java (👨‍💻 _28-sentiment-service_)
+  - add the `textToEmotion` method (👨‍💻 _29-text2emotion-method_)
+  - add the sentiment client (👨‍💻 _30-sentiment-client_)
+  - add the sentiment option (👨‍💻 _31-sentiment-option_)
+  - add the sentiment output (👨‍💻 _32-sentiment-output_)
+  - test the emotion analysis: `ovhcloud -s "I'm happy to be here"` or `jarvis-ai-sentiment ovhcloud -s "I'm happy to be here"`
+  - add the file option (👨‍💻 _33-file-option_)
+  - add file analysis output (👨‍💻 _34-file-ouput_)
+  - test the file analysis: `ovhcloud -f "./src/main/resources/sad-java-poem.txt"` or `jarvis-ai-file ovhcloud -f "./src/main/resources/fun-java-poem.txt"`
+  - add `GenerateCompletion` subcommand on `JarvisCommand` and `OVHcloudSubCommand`
   - display help on autocompletion: `jarvis generate-completion --help`
   - activate the autocompletion: `source <(jarvis generate-completion)`
   - test the autocompletion
