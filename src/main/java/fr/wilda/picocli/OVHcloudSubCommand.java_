@@ -3,7 +3,7 @@ package fr.wilda.picocli;
 import java.util.concurrent.Callable;
 
 // 10-ovh-cli-class-annot
-public class _OVHcloudSubCommand implements Callable<Integer> {
+public class OVHcloudSubCommand implements Callable<Integer> {
   // 11-ovh-cli-logger
 
   // 12-ovh-cli-rest-client
