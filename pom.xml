@@ -44,24 +44,10 @@
       <scope>test</scope>
     </dependency>
     <!-- 01-pom-jarvis-sdk-dep -->
-    <dependency>
-      <groupId>fr.wilda.jarvis.sdk</groupId>
-      <artifactId>jarvis-sdk</artifactId>
-      <version>1.1.0</version>
-    </dependency>
 
     <!-- 02-pom-rest-dep -->
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-rest-client-jackson</artifactId>
-    </dependency>
 
-    <!-- 19-pom-langchain4j-dep -->
-    <dependency>
-      <groupId>io.quarkiverse.langchain4j</groupId>
-      <artifactId>quarkus-langchain4j-mistral-ai</artifactId>
-      <version>0.18.0</version>
-    </dependency>
+    <!-- 20-pom-langchain4j-dep -->
 
   </dependencies>
   <build>
