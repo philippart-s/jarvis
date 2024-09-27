@@ -98,15 +98,22 @@ snippet JarvisCommand param name:
     @Parameters(paramLabel = "<name>", defaultValue = "picocli", description = "Your name.")
     String name;
 
+snippet Hello from Jarvis:
+  prefix: "10-jarvis-hello"
+  scope: "java"
+  name: "JarvisCommand"
+  body: |
+    _LOG.info("👋 {}", name);
+
 snippet OVHCommand Class Annotation:
-  prefix: "10-ovh-cli-class-annot"
+  prefix: "11-ovh-cli-class-annot"
   scope: "java"
   name: "OVHCommand Class Annotation"
   body: |
     @Command(name = "ovhcloud", mixinStandardHelpOptions = true)
 
 snippet OVHCommand logger:
-  prefix: "11-ovh-cli-logger"
+  prefix: "12-ovh-cli-logger"
   scope: "java"
   name: "OVHCommand logger"
   body: |
@@ -114,7 +121,7 @@ snippet OVHCommand logger:
     private static final Logger _LOG = LoggerFactory.getLogger(OVHcloudSubCommand.class);
 
 snippet OVHCommand rest client:
-  prefix: "12-ovh-cli-rest-client"
+  prefix: "13-ovh-cli-rest-client"
   scope: "java"
   name: "OVHCommand rest client"
   body: |
@@ -123,7 +130,7 @@ snippet OVHCommand rest client:
     OVHcloudAPIService apiService;
 
 snippet OVHCommand OVH Stuff:
-  prefix: "13-ovh-cli-ovh-stuff"
+  prefix: "14-ovh-cli-ovh-stuff"
   scope: "java"
   name: "OVHCommand OVH Stuff"
   body: |
@@ -136,7 +143,7 @@ snippet OVHCommand OVH Stuff:
     private Long ovhTimestamp;
 
 snippet OVHCommand options:
-  prefix: "14-ovh-cli-options"
+  prefix: "15-ovh-cli-options"
   scope: "java"
   name: "OVHCommand options"
   body: |
@@ -148,7 +155,7 @@ snippet OVHCommand options:
     private boolean kube;
 
 snippet OVHCommand me:
-  prefix: "15-ovh-cli-me"
+  prefix: "16-ovh-cli-me"
   scope: "java"
   name: "OVHCommand me"
   body: |
@@ -159,7 +166,7 @@ snippet OVHCommand me:
     }
 
 snippet OVHCommand kube:
-  prefix: "16-ovh-cli-kube"
+  prefix: "17-ovh-cli-kube"
   scope: "java"
   name: "OVHCommand kube"
   body: |
@@ -179,7 +186,7 @@ snippet OVHCommand kube:
     }
 
 snippet Props logs prod:
-  prefix: "17-props-logs-prod"
+  prefix: "18-props-logs-prod"
   name: "Props logs prod"
   body: |
     # Make outputs readable
@@ -189,7 +196,7 @@ snippet Props logs prod:
     %prod.quarkus.log.console.format=%m
 
 snippet Jarvis bash:
-  prefix: "18-jarvis-bash"
+  prefix: "19-jarvis-bash"
   scope: "shellscript"
   name: "Jarvis bash"
   body: |
@@ -198,30 +205,39 @@ snippet Jarvis bash:
     java -jar ../../../target/quarkus-app/quarkus-run.jar \$1 \$2 \$3
 
 snippet Pom Quarkus LangChain4j:
-  prefix: "19-pom-langchain4j-dep"
+  prefix: "20-pom-langchain4j-dep"
   scope: "xml"
   name: "Pom Quarkus LangChain4j"
   body: |
     <dependency>
           <groupId>io.quarkiverse.langchain4j</groupId>
           <artifactId>quarkus-langchain4j-mistral-ai</artifactId>
-          <version>0.17.1</version>
+          <version>0.18.0</version>
     </dependency> 
 
 snippet Props Langchain4J:
-  prefix: "20-props-langchain4J"
+  prefix: "21-props-langchain4J"
   name: "Props Langchain4J"
   body: |
     # Langchain4J parameters
+    quarkus.langchain4j.mistralai.base-url=\${OVH_AI_ENDPOINTS_MODEL_URL}
     quarkus.langchain4j.mistralai.api-key=\${OVH_AI_ENDPOINTS_ACCESS_TOKEN}
-    quarkus.langchain4j.mistralai.chat-model.max-tokens=1500
-    quarkus.langchain4j.mistralai.chat-model.model-name=\${OVH_AI_ENDPOINTS_MODEL}
+    quarkus.langchain4j.mistralai.chat-model.max-tokens=512
+    quarkus.langchain4j.mistralai.chat-model.model-name=\${OVH_AI_ENDPOINTS_MODEL_NAME}
 
-    quarkus.langchain4j.mistralai.log-requests=true
-    quarkus.langchain4j.mistralai.log-responses=true
+    quarkus.langchain4j.mistralai.log-requests=false
+    quarkus.langchain4j.mistralai.log-responses=false
+
+snippet AIEndpointService annotations:
+  prefix: "22-AIEndpointService-annotation"
+  name: "AIEndpointService annotations"
+  scope: "java"
+  body: |
+    @ApplicationScoped
+    @RegisterAiService
 
 snippet OVHcloud Mistral Service askQuestion:
-  prefix: "21-OVHcloudMistral-ask-method"
+  prefix: "23-OVHcloudMistral-ask-method"
   name: "OVHcloud Mistral Service askQuestion"
   scope: "java"
   body: |
@@ -230,7 +246,7 @@ snippet OVHcloud Mistral Service askQuestion:
     Multi<String> askAQuestion(String question);
 
 snippet JarvisCommand AI question param:
-  prefix: "22-jarvis-cli-question-param"
+  prefix: "24-jarvis-cli-question-param"
   scope: "java"
   name: "JarvisCommand AI question param"
   body: |
@@ -239,7 +255,7 @@ snippet JarvisCommand AI question param:
     private String question;
 
 snippet JarvisCommand AI Service:
-  prefix: "23-jarvis-cli-ai-svc"
+  prefix: "25-jarvis-cli-ai-svc"
   scope: "java"
   name: "JarvisCommand AI Service"
   body: |
@@ -248,7 +264,7 @@ snippet JarvisCommand AI Service:
     AIEndpointService aiEndpointMistral7bService; 
 
 snippet JarvisCommand AI Service call:
-  prefix: "24-jarvis-cli-ai-svc-call"
+  prefix: "26-jarvis-cli-ai-svc-call"
   scope: "java"
   name: "JarvisCommand AI Service call"
   body: |
@@ -266,21 +282,80 @@ snippet JarvisCommand AI Service call:
     });
     _LOG.info("\n");
 
+snippet Add token for sentiment service:
+  prefix: "27-token-sentiment-service"
+  name: "Add token for sentiment service"
+  body: |
+    # AI Endpoints parameters
+    ovhcloud.ai-endpoints.token=${OVH_AI_ENDPOINTS_ACCESS_TOKEN}
+
 snippet AISentimentService:
-  prefix: "25-sentiment-service"
+  prefix: "28-sentiment-service"
   scope: "java"
   name: "AISentimentService"
   body: |
     @Path("/api")
     @RegisterRestClient(baseUri = "https://roberta-base-go-emotions.endpoints.kepler.ai.cloud.ovh.net")
-    @ClientHeaderParam(name = "Authorization", value = "Bearer ${ovhcloud.ai-endpoints.token}")
+    @ClientHeaderParam(name = "Authorization", value = "Bearer \${ovhcloud.ai-endpoints.token}")
     @ClientHeaderParam(name = "Content-Type", value = "application/json")
 
-snippet text2emotion:
-  prefix: "26-text2emotion"
+snippet AISentimentService text2emotion method:
+  prefix: "29-text2emotion-method"
   scope: "java"
-  name: "text2emotion"
+  name: "AISentimentService text2emotion method"
   body: |
     @POST
     @Path("text2emotions")
     EmotionEvaluation text2emotions(String text);
+
+snippet Add AISentimentService client:
+  prefix: "30-sentiment-client"
+  scope: "java"
+  name: "Add AISentimentService client"
+  body: |
+    @RestClient
+    AISentimentService aiSentimentService;
+
+snippet Add sentiment option:
+  prefix: "31-sentiment-option"
+  scope: "java"
+  name: "Add sentiment option"
+  body: |
+    @Option(names = {"-s", "--sentiment"}, paramLabel = "<SENTIMENT>", description = "Analyze a sentiment with the OVHcloud Text to Sentiment API.")
+    private String sentimentToAnalyze;
+
+snippet Add sentiment output:
+  prefix: "32-sentiment-output"
+  scope: "java"
+  name: "Add sentiment output"
+  body: |
+    if (sentimentToAnalyze != null) {
+      _LOG.debug("param {}", sentimentToAnalyze);
+      SortedMap<String, Double> res =
+          EmotionEvaluation.toSortedMap(aiSentimentService.text2emotions(sentimentToAnalyze));
+
+      _LOG.debug("First: {}", res.firstEntry());
+      _LOG.info("Sentiment: {}", EmotionEvaluation.toEmoji(res.firstEntry().getKey()));
+    }
+
+snippet Add file option:
+  prefix: "33-file-option"
+  scope: "java"
+  name: "Add file option"
+  body: |
+    @Option(names = {"-f", "--file"}, description = "File to analyse (sentiment analysis)")
+    private File fileToAnalyse;
+
+snippet Add file output:
+  prefix: "34-file-ouput"
+  scope: "java"
+  name: "Add file output"
+  body: |
+    if (fileToAnalyse != null) {
+      SortedMap<String, Double> res =
+          EmotionEvaluation.toSortedMap(
+              aiSentimentService.text2emotions(Files.readString(fileToAnalyse.toPath())));
+
+      _LOG.debug("First: {}", res.firstEntry());
+      _LOG.info("Sentiment: {}", EmotionEvaluation.toEmoji(res.firstEntry().getKey()));
+    }
