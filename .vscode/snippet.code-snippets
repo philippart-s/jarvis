@@ -96,7 +96,7 @@
   "Add token for sentiment service": {
     "body": [
       "# AI Endpoints parameters",
-      "ovhcloud.ai-endpoints.token=${OVH_AI_ENDPOINTS_ACCESS_TOKEN}",
+      "ovhcloud.ai-endpoints.token=\\${OVH_AI_ENDPOINTS_ACCESS_TOKEN}",
       ""
     ],
     "description": "",
