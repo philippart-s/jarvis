@@ -1,0 +1,48 @@
+/****
+ * CSS for center element
+ ****/
+ .footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: rgb(0, 0, 0);
+  text-align: center;
+  transition: all var(--animationTimer) ease;
+  z-index: 10;
+}
+
+/****
+  * CSS for OVHcloud logo
+  ****/
+.ovhcloud-footer {
+  position: absolute;
+  left: 0%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.ovhcloud-footer img {
+  padding: 2px;
+  transition: all var(--animationTimer) ease;
+}
+
+/****
+  * CSS for footer logo
+  ****/
+.slide-footer {
+  margin: 0 auto;
+  width: 100px;
+  text-align: center;
+}
+
+/****
+ * CSS for author element
+ ****/
+.author-footer {
+  position: absolute;
+  right: 0%;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.4em;
+}

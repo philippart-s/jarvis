@@ -1,0 +1,213 @@
+:root {
+  --sd-heading1-size: 6.5vw;
+  --sd-heading1-line-height: 1;
+  --sd-heading2-size: 5vw;
+  --sd-heading2-line-height: 1;
+  --sd-text-line-height: 1.2;
+  --sd-background-color: #fff;
+  --sd-heading-color: #000;
+  --sd-text-color: #000;
+  --sd-primary-color: #0097a7;
+}
+
+@font-face {
+  font-family: Amatic;
+  src: url(../fonts/Amatic_SC/AmaticSC-Bold.ttf);
+}
+
+@font-face {
+  font-family: Montserrat;
+  src: url(../fonts/Montserrat/Montserrat-VariableFont_wght.ttf);
+}
+
+* {
+  font-family: Montserrat;
+}
+
+h1,
+h2 {
+  font-family: Amatic;
+}
+
+.title {
+  justify-content: end;
+}
+
+.slide-text {
+  display: block;
+}
+
+.slide-text h2 {
+  text-align: left;
+  margin-bottom: 5rem;
+}
+
+.slide-text ul {
+  margin: 2rem;
+  width: 62%;
+}
+
+.slide-text ul li {
+  list-style: none;
+  line-height: 1.6em;
+}
+
+.slide-text .twitter {
+  color: var(--sd-primary-color);
+}
+
+.slide-text p {
+  text-align: left;
+  line-height: 1.6em;
+}
+
+/****
+ * CSS Styles for _java.sdf slide
+ ****/
+ .lego {
+  background-image: url(../images/lego.jpeg);
+  background-size: cover;
+  display: block;
+}
+
+.lego h2 {
+  color: #fff;
+}
+
+/****
+ * CSS Styles for _demos.sdf slide
+ ****/
+.demos {
+  background-image: url(../images/demos.jpg);
+  background-size: cover;
+  display: block;
+}
+
+.demos h2 {
+  color: #000;
+}
+
+.demo-image-author a {
+  color: #fff;
+}
+
+/****
+ * CSS Styles for quarkus.sdf slide
+ ****/
+ .demos {
+  background-image: url(../images/demos.jpg);
+  background-size: cover;
+  display: block;
+}
+
+.demos h2 {
+  color: #000;
+}
+
+.demo-image-author a {
+  color: #fff;
+}
+
+/****
+ * CSS Styles for _picocli-advanced.sdf slide
+ ****/
+.pico-advanced a {
+  color: black;
+}
+
+.ovhcloud-world {
+  background-image: url(../images/ovhcloud-world.png);
+  background-size: cover;
+  display: block;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: block;
+}
+
+.ovhcloud-world h2 {
+  color: #260691;
+  text-align: left;
+  position: absolute;
+  top: 5%;
+  left: 5%;
+}
+
+.graal h2 {
+  color: #000;
+  vertical-align: middle;
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  font-size: 300%;
+  backdrop-filter: blur(5px) saturate(80%);
+}
+
+/****
+ * CSS Styles for _merciii.sdf slide
+ ****/
+ .love {
+  background-image: url(../images/love.jpg);
+  background-size: cover;
+  display: block;
+}
+
+.love h2 {
+  color: #fff;
+  position: relative;
+  top: 40%;
+  left: 25%;
+  font-size: 300%;
+}
+
+.love-image-author a {
+  color: #fff;
+}
+
+/****
+ * CSS Styles for _CLI.sdf slide
+ ****/
+.cli-image-author-ubuntu a {
+  color: #fff;
+}
+
+.cli-image-author-language a {
+  color: black;
+}
+
+/****
+* CSS styles for ai-everywhere
+****/
+.buzz-ai {
+  background-image: url(../images/buzz-ai.jpg);
+  background-size: cover;
+  display: block;
+}
+
+
+/****
+ * Global styles
+ ****/
+.img-right {
+  position: absolute;
+  right: 20px;
+}
+
+.img-right-author {
+  position: absolute;
+  font-size: small;
+  bottom: 1%;
+  right: 1%;
+}
+
+.full-image-author {
+  position: absolute;
+  bottom: 30px;
+  right: 2px;
+  font-size: medium;
+}
+
+/** gestion des couleurs du footer **/
+.sd-slide.love.sd-current ~ .footer,
+.sd-slide.demos.sd-current ~ .footer {
+  color: #fff;
+}
