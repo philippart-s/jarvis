@@ -426,6 +426,7 @@
       "%prod.quarkus.log.level=OFF",
       "%prod.quarkus.banner.enabled=false",
       "%prod.quarkus.log.category.\"fr.wilda\".level=INFO",
+      "%prod.quarkus.console.color=false",
       "%prod.quarkus.log.console.format=%m",
       ""
     ],
