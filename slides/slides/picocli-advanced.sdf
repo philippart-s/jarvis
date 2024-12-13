@@ -1,0 +1,13 @@
+## ✨ Pour aller plus loin .[slide-text steps]
+
+<div class="img-right">
+  <div class="img-right-author pico-advanced"><a href="https://unsplash.com/fr/@sushioutlaw">Brian McGowan</a></div>
+
+  <img src="assets/images/buzz.jpg" alt="buzz l'éclair">
+</div>
+
+- 📦 Encapsulation automatique des types et converteurs
+- 🔡 Valeurs par défaut dynamiques, validation des valeurs, liste de choix, ...
+- ⛑️ Génération des pages __man__, coloration, </br>aide avancée
+- ⚙️ Plusieurs exécutables par OS avec GraalVM
+- ...

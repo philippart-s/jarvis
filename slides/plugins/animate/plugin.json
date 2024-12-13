@@ -1,0 +1,6 @@
+{
+  "addScripts": ["./plugins/animate/animate.js"],
+  "addStyles": ["./plugins/animate/animate.css"],
+  "onSlideChange": "window.slidesk.animateElements();",
+  "files": ["animate.js", "animate.css"]
+}

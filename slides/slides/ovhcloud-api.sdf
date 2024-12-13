@@ -1,0 +1,8 @@
+## 🧰 API OVHcloud .[slide-text steps]
+
+!image(assets/images/ovhcloud-api.png, ovhcloud-api,,, float: right)
+
+- 🖥️ Pouvoir tout faire sans l’interface graphique
+- 🧱 Base pour les CLI OVHcloud et la console d'administration
+- 🏗️ Couplé avec l’Infra As Code si besoin
+- 🔗 https://api.ovh.com/console-preview/ 
