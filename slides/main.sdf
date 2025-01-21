@@ -8,7 +8,7 @@ custom_css: assets/css/custom.css
 </br>
 </br>
 
-!image(assets/images/logo-bdx-jug.png,, )
+!image(assets/images/logo-conf.png,, )
 
 !include(slides/merciii.sdf)
 
