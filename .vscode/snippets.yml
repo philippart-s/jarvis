@@ -212,7 +212,7 @@ snippet Pom Quarkus LangChain4j:
     <dependency>
           <groupId>io.quarkiverse.langchain4j</groupId>
           <artifactId>quarkus-langchain4j-mistral-ai</artifactId>
-          <version>0.18.0</version>
+          <version>0.24.0</version>
     </dependency> 
 
 snippet Props Langchain4J:
