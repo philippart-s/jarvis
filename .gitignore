@@ -37,9 +37,11 @@ nb-configuration.xml
 
 # Local environment
 .env
+_init_/jarvis-init/
 
 # Plugin directory
 /.quarkus/cli/plugins/
 
 # SliDesk
 out/
+
