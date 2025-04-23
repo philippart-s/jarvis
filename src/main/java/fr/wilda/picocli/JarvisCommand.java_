@@ -2,21 +2,22 @@ package fr.wilda.picocli;
 
 import java.util.concurrent.Callable;
 
-// 07-jarvis-cli-class-annot
+// 09-jarvis-cli-class-annot
 public class JarvisCommand implements Callable<Integer> {
-  // 08-jarvis-cli-logger
-
-  // 09-jarvis-cli-name-param
-
-  // 24-jarvis-cli-question-param
+  // 10-jarvis-cli-logger
   
-  // 25-jarvis-cli-ai-svc
-
+  // 11-jarvis-cli-name-param
+  
+  // 30-jarvis-cli-question-param
+  
+  // 31-jarvis-cli-ai-svc
+  
   @Override
   public Integer call() throws Exception {
-    // 10-jarvis-hello
+    // 12-jarvis-hello
 
-    // 26-jarvis-cli-ai-svc-call
+    // 32-jarvis-cli-ai-svc-call
+    
     return 0;
   }
 }
