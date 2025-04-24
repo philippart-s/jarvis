@@ -14,6 +14,9 @@ A Quarkus extension is a way to add functionality through libraries to a Quarkus
 You can see that like the Spring Boot starters, but for Quarkus.
 
 As you see, the created project is a Maven project.
+
+Don't be afraid by the other files with underscore or the bash scripts there are here for my next steps of the demonstration.
+
 You can see the `pom.xml` file in the root of the project.
 You can see also the `src/main/java` directory where the Java source code is located.
 You can see also the `src/main/resources` directory where the configuration files are located.
@@ -157,6 +160,9 @@ The second option, --kube, is to get the information about the kubernetes cluste
 Now I've just to add the "business" code that will call the service and print the result.
 The first one display the information about my account.
 The second one display the information about my kubernetes cluster.
+
+The last step is to add the subcommand to the `JarvisCommand` class.
+To do this I add the `subcommand` option with the `OVHcloudSubCommand` class.
 
 ## 20-props-logs-prod
 
