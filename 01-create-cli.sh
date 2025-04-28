@@ -1,5 +1,5 @@
 # 🛠️ Load environment variables 🛠️
-source ../.env
+source .env
 
 clear
 
