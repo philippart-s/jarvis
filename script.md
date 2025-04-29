@@ -1,3 +1,51 @@
+## ## Cover
+
+Hello, welcome everyone!
+
+## Thank you
+
+I'm very proud to be here.
+Thank you for coming to this session, and thank you to the organizers for having me.
+
+
+## Me
+
+Quickly, 
+
+I'm Stéphane Philippart I'm a developer advocate at OVHcloud: a French cloud provider.
+
+I've been a Java developer for about 20 years, I've started to use Java when it was 1.0.2.
+I'll let you calculate my age.
+
+I'm the co-creator of a great meetup in Tours, just 1 hour train from Paris.
+
+And, of course, as you can hear, I'm French so forgive my terrible accent.
+
+
+## Picocli
+
+Just few slides before coding.
+
+If you are looking to create a CLI with Java, there is a high chances that you will come across Picocli, it is the most represented framework to make a CLI with Java.
+
+Not only in pure Java but also in Kotlin, Scala and Groovy.
+
+With Picocli it's a lot of annotations to simplify the writing, if you left Java 15 years ago: Java is like the others now we have annotations and syntactic sugar.
+We just make arobas and then it works by magic, it's a big summary, obviously.
+
+I will use Quarkus too.
+Who knows Quarkus, who uses Quarkus in production?
+Quarkus mantra is: subatomic, supersonic, Java.
+What I'm saying is like your Java applications take a lot of vitamines! 
+It's very efficient for cloud native development.
+But we're not going to use it on the cloud native part we're going to use if for the developer experience.
+
+You'll see it's quite magical and what I propose is, at the end of this talk, to know if I won my bet: did I make you a CLI in Java?
+
+## Demo
+
+Enough talking, let's move on the code part.
+
 ## 01-create-cli.sh
 
 Before beginning to create the CLI, we need to create the Quarkus project.
@@ -346,3 +394,38 @@ If I ask to see the help on this command it will display how to activate the aut
 Not even afraid I run the command, don't to that at home.
 
 And tada my CLI has autocompletion.
+
+## Picocli advanced
+
+If you want to go further with Picocli.
+You can manipulate more sophisticated types with Picocli, even create your own converters.
+You can use more default values with dynamic values, validation and so one.
+You can generate man pages, you can have syntax coloring, you can have advanced help.
+Again, executables are generated for the current OS, don't forget that when you want to distribute your application.
+
+## AI Endpoints
+
+If you want more information about AI endpoints, here is a brief overview:
+AI endpoints provides AI as a service, offering various models like Llama, Mistral, and more. 
+They are made for developers, making them easy to integrate and use. 
+Your data is safe and secure in our trusted cloud environment.
+Additionally, these endpoints comply with standard APIs.
+
+And for a few days it's in general availability!
+
+## OVHcloud
+
+If you want more information about OVHcloud, don't hesitate to ask me. 
+I'll be happy to answer any questions you might have.
+We can talk about our managed Kubernetes, our Databases, our AI solutions, and much more.
+
+## Links
+
+If you want to explore more about the topics discussed, here are some links that might be of interest.
+
+## Thank You and feedback
+
+Thank you for your attention. 
+I hope you enjoyed the presentation and learned something new. 
+You have all the information with the slides QR code and please, feel free to give me feedbacks. 
+Thank you again and have a great day!
