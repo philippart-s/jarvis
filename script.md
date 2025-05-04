@@ -5,7 +5,7 @@ Hello, welcome everyone!
 ## Thank you
 
 I'm very proud to be here.
-Thank you for coming to this session, and thank you to the organizers for having me.
+Thank you for coming to this session, and thank you to the organizers for selecting my conference.
 
 
 ## Me
