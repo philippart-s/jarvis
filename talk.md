@@ -31,7 +31,7 @@ snippets generate \
   - update `application.properties`: (👨‍💻 _27-props-langchain4J_)
   - create interface [AIEndpointService.java](./src/main/java/fr/wilda/picocli/sdk/ai/AIEndpointService.java) and add annotations (👨‍💻 _28-AIEndpointService-annotation_)
   - add method `askQuestion` (👨‍💻 _29-OVHcloudMistral-ask-method_)
-  - update [](./src/main/java/fr/wilda/picocli/JarvisCommand.java):
+  - update [JarvisCommand](./src/main/java/fr/wilda/picocli/JarvisCommand.java):
     - `name` to `question` parameter (👨‍💻 _30-jarvis-cli-question-param_)
     - inject `AIEndpointService` (👨‍💻 _31-jarvis-cli-ai-svc_)
     - add the AI model call (👨‍💻 _32-jarvis-cli-ai-svc-call_)

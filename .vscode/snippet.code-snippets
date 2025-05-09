@@ -6,7 +6,7 @@
       ""
     ],
     "description": "",
-    "prefix": "22-AIEndpointService-annotation",
+    "prefix": "28-AIEndpointService-annotation",
     "scope": "java"
   },
   "AISentimentService": {
@@ -18,7 +18,7 @@
       ""
     ],
     "description": "",
-    "prefix": "28-sentiment-service",
+    "prefix": "35-sentiment-service",
     "scope": "java"
   },
   "AISentimentService text2emotion method": {
@@ -29,7 +29,7 @@
       ""
     ],
     "description": "",
-    "prefix": "29-text2emotion-method",
+    "prefix": "36-text2emotion-method",
     "scope": "java"
   },
   "Add AISentimentService client": {
@@ -39,7 +39,7 @@
       ""
     ],
     "description": "",
-    "prefix": "30-sentiment-client",
+    "prefix": "37-sentiment-client",
     "scope": "java"
   },
   "Add file option": {
@@ -49,7 +49,7 @@
       ""
     ],
     "description": "",
-    "prefix": "33-file-option",
+    "prefix": "41-file-option",
     "scope": "java"
   },
   "Add file output": {
@@ -64,7 +64,7 @@
       "}"
     ],
     "description": "",
-    "prefix": "34-file-ouput",
+    "prefix": "42-file-ouput",
     "scope": "java"
   },
   "Add sentiment option": {
@@ -74,7 +74,7 @@
       ""
     ],
     "description": "",
-    "prefix": "31-sentiment-option",
+    "prefix": "38-sentiment-option",
     "scope": "java"
   },
   "Add sentiment output": {
@@ -90,7 +90,7 @@
       ""
     ],
     "description": "",
-    "prefix": "32-sentiment-output",
+    "prefix": "39-sentiment-output",
     "scope": "java"
   },
   "Add token for sentiment service": {
@@ -100,7 +100,7 @@
       ""
     ],
     "description": "",
-    "prefix": "27-token-sentiment-service",
+    "prefix": "34-token-sentiment-service",
     "scope": ""
   },
   "Jarvis bash": {
@@ -111,7 +111,7 @@
       ""
     ],
     "description": "",
-    "prefix": "19-jarvis-bash",
+    "prefix": "23-jarvis-bash",
     "scope": "shellscript"
   },
   "JarvisCommand": {
@@ -120,7 +120,7 @@
       ""
     ],
     "description": "",
-    "prefix": "10-jarvis-hello",
+    "prefix": "12-jarvis-hello",
     "scope": "java"
   },
   "JarvisCommand AI Service": {
@@ -131,7 +131,7 @@
       ""
     ],
     "description": "",
-    "prefix": "25-jarvis-cli-ai-svc",
+    "prefix": "31-jarvis-cli-ai-svc",
     "scope": "java"
   },
   "JarvisCommand AI Service call": {
@@ -152,7 +152,7 @@
       ""
     ],
     "description": "",
-    "prefix": "26-jarvis-cli-ai-svc-call",
+    "prefix": "32-jarvis-cli-ai-svc-call",
     "scope": "java"
   },
   "JarvisCommand AI question param": {
@@ -163,7 +163,7 @@
       ""
     ],
     "description": "",
-    "prefix": "24-jarvis-cli-question-param",
+    "prefix": "30-jarvis-cli-question-param",
     "scope": "java"
   },
   "JarvisCommand Class Annotation": {
@@ -172,7 +172,7 @@
       ""
     ],
     "description": "",
-    "prefix": "07-jarvis-cli-class-annot",
+    "prefix": "09-jarvis-cli-class-annot",
     "scope": "java"
   },
   "JarvisCommand logger": {
@@ -182,7 +182,7 @@
       ""
     ],
     "description": "",
-    "prefix": "08-jarvis-cli-logger",
+    "prefix": "10-jarvis-cli-logger",
     "scope": "java"
   },
   "JarvisCommand param name": {
@@ -192,7 +192,7 @@
       ""
     ],
     "description": "",
-    "prefix": "09-jarvis-cli-name-param",
+    "prefix": "11-jarvis-cli-name-param",
     "scope": "java"
   },
   "OVHCommand Class Annotation": {
@@ -201,7 +201,7 @@
       ""
     ],
     "description": "",
-    "prefix": "11-ovh-cli-class-annot",
+    "prefix": "13-ovh-cli-class-annot",
     "scope": "java"
   },
   "OVHCommand OVH Stuff": {
@@ -216,7 +216,7 @@
       ""
     ],
     "description": "",
-    "prefix": "14-ovh-cli-ovh-stuff",
+    "prefix": "16-ovh-cli-ovh-stuff",
     "scope": "java"
   },
   "OVHCommand kube": {
@@ -238,7 +238,7 @@
       ""
     ],
     "description": "",
-    "prefix": "17-ovh-cli-kube",
+    "prefix": "19-ovh-cli-kube",
     "scope": "java"
   },
   "OVHCommand logger": {
@@ -248,7 +248,7 @@
       ""
     ],
     "description": "",
-    "prefix": "12-ovh-cli-logger",
+    "prefix": "14-ovh-cli-logger",
     "scope": "java"
   },
   "OVHCommand me": {
@@ -261,7 +261,7 @@
       ""
     ],
     "description": "",
-    "prefix": "16-ovh-cli-me",
+    "prefix": "18-ovh-cli-me",
     "scope": "java"
   },
   "OVHCommand options": {
@@ -275,7 +275,7 @@
       ""
     ],
     "description": "",
-    "prefix": "15-ovh-cli-options",
+    "prefix": "17-ovh-cli-options",
     "scope": "java"
   },
   "OVHCommand rest client": {
@@ -286,7 +286,7 @@
       ""
     ],
     "description": "",
-    "prefix": "13-ovh-cli-rest-client",
+    "prefix": "15-ovh-cli-rest-client",
     "scope": "java"
   },
   "OVHcloud API Service": {
@@ -299,7 +299,7 @@
       ""
     ],
     "description": "",
-    "prefix": "05-OVHcloudAPIService-annot",
+    "prefix": "07-OVHcloudAPIService-annot",
     "scope": "java"
   },
   "OVHcloud API Service Endpoints": {
@@ -329,7 +329,7 @@
       ""
     ],
     "description": "",
-    "prefix": "06-OVHcloudAPIService-endpoints",
+    "prefix": "08-OVHcloudAPIService-endpoints",
     "scope": "java"
   },
   "OVHcloud Mistral Service askQuestion": {
@@ -340,7 +340,7 @@
       ""
     ],
     "description": "",
-    "prefix": "23-OVHcloudMistral-ask-method",
+    "prefix": "29-OVHcloudMistral-ask-method",
     "scope": "java"
   },
   "Pom Jarvis SDK": {
@@ -353,32 +353,7 @@
       ""
     ],
     "description": "",
-    "prefix": "01-pom-jarvis-sdk-dep",
-    "scope": "xml"
-  },
-  "Pom Quarkus LangChain4j": {
-    "body": [
-      "\u003cdependency\u003e",
-      "      \u003cgroupId\u003eio.quarkiverse.langchain4j\u003c/groupId\u003e",
-      "      \u003cartifactId\u003equarkus-langchain4j-mistral-ai\u003c/artifactId\u003e",
-      "      \u003cversion\u003e0.18.0\u003c/version\u003e",
-      "\u003c/dependency\u003e ",
-      ""
-    ],
-    "description": "",
-    "prefix": "20-pom-langchain4j-dep",
-    "scope": "xml"
-  },
-  "Pom rest client": {
-    "body": [
-      "\u003cdependency\u003e",
-      "  \u003cgroupId\u003eio.quarkus\u003c/groupId\u003e",
-      "  \u003cartifactId\u003equarkus-rest-client-jackson\u003c/artifactId\u003e",
-      "\u003c/dependency\u003e",
-      ""
-    ],
-    "description": "",
-    "prefix": "02-pom-rest-dep",
+    "prefix": "04-pom-jarvis-sdk-dep",
     "scope": "xml"
   },
   "Props Langchain4J": {
@@ -394,7 +369,7 @@
       ""
     ],
     "description": "",
-    "prefix": "21-props-langchain4J",
+    "prefix": "27-props-langchain4J",
     "scope": ""
   },
   "Props OVHcloud env": {
@@ -406,7 +381,7 @@
       ""
     ],
     "description": "",
-    "prefix": "03-props-ovh-env",
+    "prefix": "05-props-ovh-env",
     "scope": ""
   },
   "Props RestClient": {
@@ -417,7 +392,7 @@
       ""
     ],
     "description": "",
-    "prefix": "04-props-rest-client",
+    "prefix": "06-props-rest-client",
     "scope": ""
   },
   "Props logs prod": {
@@ -426,12 +401,11 @@
       "%prod.quarkus.log.level=OFF",
       "%prod.quarkus.banner.enabled=false",
       "%prod.quarkus.log.category.\"fr.wilda\".level=INFO",
-      "%prod.quarkus.console.color=false",
       "%prod.quarkus.log.console.format=%m",
       ""
     ],
     "description": "",
-    "prefix": "18-props-logs-prod",
+    "prefix": "20-props-logs-prod",
     "scope": ""
   }
 }
