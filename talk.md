@@ -39,7 +39,7 @@ snippets generate \
   - run [24-quarkus-build-native.sh](./24-quarkus-build-native.sh)
   - run [33-jarvis-ai-run.sh](./33-jarvis-ai-run.sh)
   - add the token for request (👨‍💻 _34-token-sentiment-service_)
-  - create the service [](./src/main/java/fr/wilda/picocli/sdk/ai/AISentimentService.java) (👨‍💻 _35-sentiment-service_ && 👨‍💻 _36-text2emotion-method_)
+  - create the service [AISentimentService](./src/main/java/fr/wilda/picocli/sdk/ai/AISentimentService.java) (👨‍💻 _35-sentiment-service_ && 👨‍💻 _36-text2emotion-method_)
   - update [SentimentSubCommand](./src/main/java/fr/wilda/picocli/SentimentSubCommand.java) (👨‍💻 _37-sentiment-sentiment-client_ && 👨‍💻 _38-sentiment-option_ && 👨‍💻 _39-sentiment-output_)
     - test the emotion analysis: `ovhcloud -s "I'm happy to be here"` or run [40-emotion-prompt.sh](./40-emotion-prompt.sh`)
   - add the file option in `OVHcloudSubCommand` (👨‍💻 _41-file-option_)
