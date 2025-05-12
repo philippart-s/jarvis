@@ -12,8 +12,7 @@ snippets generate \
   - run [02-check-dependencies.sh](./02-check-dependencies.sh)
   - run [03-quarkus-dev-mode.sh](./03-quarkus-dev-mode.sh)
   - play with the CLI : `--help`, `"xxx!!"`
-  - add jarvis-sdk (👨‍💻 _04-pom-jarvis-sdk-dep_)
-  - add to application.properties (👨‍💻 _05-props-ovh-env_ && _06-props-rest-client_)
+  - add to application.properties (👨‍💻 _04-props-ovh-env_ && _05-props-rest-client_)
   - create [OVHcloudAPIService.java](./src/main/java/fr/wilda/picocli/sdk/OVHcloudAPIService.java) (👨‍💻 _07-OVHcloudAPIService-annot_ && _08-OVHcloudAPIService-endpoints_)
   - create [JarvisCommand.java](./src/main/java/fr/wilda/picocli/JarvisCommand.java) (👨‍💻 _09-jarvis-cli-class-annot_ && _10-jarvis-cli-logger_ && _11-jarvis-cli-name-param_ && _12-jarvis-hello_)
   - delete [GreetingCommand.java](./src/main/java/fr/wilda/picocli/GreetingCommand.java)
