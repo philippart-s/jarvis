@@ -19,8 +19,8 @@ snippets generate \
   - create [OVHcloudSubCommand.java](./src/main/java/fr/wilda/picocli/OVHcloudSubCommand.java) (👨‍💻 _13-ovh-cli-class-annot_ && _14-ovh-cli-logger_ && _15-ovh-cli-rest-client_ && _16-ovh-cli-ovh-stuff_ && _17-ovh-cli-options_ && _18-ovh-cli-me_ && _19-ovh-cli-kube_) 
   - add `@TopCommand` & `subcommands = {OVHcloudSubCommand.class}` to [JarvisCommand.java](./src/main/java/fr/wilda/picocli/JarvisCommand.java)
   - set log in [application.properties](./src/main/resources/application.properties): (👨‍💻 _20-props-logs-prod_)
-  - run [21-quarkus-build.sh](./21-quarkus-build.sh)
-  - run [22-java-run.sh](./22-java-run.sh)
+  - run [21-quarkus-build.sh](./20-quarkus-build.sh)
+  - run [22-java-run.sh](./21-java-run.sh)
   - create [jarvis.sh](./src/main/script/jarvis.sh) (👨‍💻 _23-jarvis-bash_)
   - `chmod +x jarvis.sh`
   - run [23-run-script.sh](./23-run-script.sh)

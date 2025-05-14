@@ -7,5 +7,5 @@ bat -P -r 10:11 $(basename "$0")
 
 read -n 1 -p "Press any key to continue"
 
-# Run native executable with AI call 🚀
-jarvis-ai "Peux-tu me donner des informations sur la ville de Clermont-Ferrand?"
+# Add Easy RAG extension
+quarkus ext add io.quarkiverse.langchain4j:quarkus-langchain4j-easy-rag:0.26.2
