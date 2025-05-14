@@ -1,16 +1,5 @@
-snippet Pom Jarvis SDK:
-  prefix: "04-pom-jarvis-sdk-dep"
-  scope: "xml"
-  name: "Pom Jarvis SDK"
-  body: |
-    <dependency>
-      <groupId>fr.wilda.jarvis.sdk</groupId>
-      <artifactId>jarvis-sdk</artifactId>
-      <version>1.1.0</version>
-    </dependency>
-
 snippet Props OVHcloud env:
-  prefix: "05-props-ovh-env"
+  prefix: "04-props-ovh-env"
   name: "Props OVHcloud env"
   body: |
    # OVHcloud parameter
@@ -19,7 +8,7 @@ snippet Props OVHcloud env:
    ovhcloud.projectId=\${OVH_CLOUD_PROJECT_SERVICE}
 
 snippet Props RestClient:
-  prefix: "06-props-rest-client"
+  prefix: "05-props-rest-client"
   name: "Props RestClient"
   body: |
    # RestClient parameter
@@ -27,7 +16,7 @@ snippet Props RestClient:
    quarkus.rest-client."fr.wilda.picocli.sdk.OVHcloudAPIService".scope=javax.inject.Singleton 
 
 snippet OVHcloud API Service:
-  prefix: "07-OVHcloudAPIService-annot"
+  prefix: "06-OVHcloudAPIService-annot"
   name: "OVHcloud API Service"
   scope: "java"
   body: |
@@ -38,7 +27,7 @@ snippet OVHcloud API Service:
     @ClientHeaderParam(name = "Content-Type", value = "application/json")
 
 snippet OVHcloud API Service Endpoints:
-  prefix: "08-OVHcloudAPIService-endpoints"
+  prefix: "07-OVHcloudAPIService-endpoints"
   name: "OVHcloud API Service Endpoints"
   scope: "java"
   body: |
@@ -66,14 +55,14 @@ snippet OVHcloud API Service Endpoints:
         @HeaderParam("X-Ovh-Timestamp") String ovhTimestamp);
 
 snippet JarvisCommand Class Annotation:
-  prefix: "09-jarvis-cli-class-annot"
+  prefix: "08-jarvis-cli-class-annot"
   scope: "java"
   name: "JarvisCommand Class Annotation"
   body: |
     @Command(name = "jarvis", mixinStandardHelpOptions = true)
 
 snippet JarvisCommand logger:
-  prefix: "10-jarvis-cli-logger"
+  prefix: "09-jarvis-cli-logger"
   scope: "java"
   name: "JarvisCommand logger"
   body: |
@@ -81,7 +70,7 @@ snippet JarvisCommand logger:
     private static final Logger _LOG = LoggerFactory.getLogger(JarvisCommand.class);
 
 snippet JarvisCommand param name:
-  prefix: "11-jarvis-cli-name-param"
+  prefix: "10-jarvis-cli-name-param"
   scope: "java"
   name: "JarvisCommand param name"
   body: |
@@ -89,21 +78,21 @@ snippet JarvisCommand param name:
     String name;
 
 snippet Hello from Jarvis:
-  prefix: "12-jarvis-hello"
+  prefix: "11-jarvis-hello"
   scope: "java"
   name: "JarvisCommand"
   body: |
     _LOG.info("👋 {}", name);
 
 snippet OVHCommand Class Annotation:
-  prefix: "13-ovh-cli-class-annot"
+  prefix: "12-ovh-cli-class-annot"
   scope: "java"
   name: "OVHCommand Class Annotation"
   body: |
     @Command(name = "ovhcloud", mixinStandardHelpOptions = true)
 
 snippet OVHCommand logger:
-  prefix: "14-ovh-cli-logger"
+  prefix: "13-ovh-cli-logger"
   scope: "java"
   name: "OVHCommand logger"
   body: |
@@ -111,7 +100,7 @@ snippet OVHCommand logger:
     private static final Logger _LOG = LoggerFactory.getLogger(OVHcloudSubCommand.class);
 
 snippet OVHCommand rest client:
-  prefix: "15-ovh-cli-rest-client"
+  prefix: "14-ovh-cli-rest-client"
   scope: "java"
   name: "OVHCommand rest client"
   body: |
@@ -120,7 +109,7 @@ snippet OVHCommand rest client:
     OVHcloudAPIService apiService;
 
 snippet OVHCommand OVH Stuff:
-  prefix: "16-ovh-cli-ovh-stuff"
+  prefix: "15-ovh-cli-ovh-stuff"
   scope: "java"
   name: "OVHCommand OVH Stuff"
   body: |
@@ -133,7 +122,7 @@ snippet OVHCommand OVH Stuff:
     private Long ovhTimestamp;
 
 snippet OVHCommand options:
-  prefix: "17-ovh-cli-options"
+  prefix: "16-ovh-cli-options"
   scope: "java"
   name: "OVHCommand options"
   body: |
@@ -145,7 +134,7 @@ snippet OVHCommand options:
     private boolean kube;
 
 snippet OVHCommand me:
-  prefix: "18-ovh-cli-me"
+  prefix: "17-ovh-cli-me"
   scope: "java"
   name: "OVHCommand me"
   body: |
@@ -156,7 +145,7 @@ snippet OVHCommand me:
     }
 
 snippet OVHCommand kube:
-  prefix: "19-ovh-cli-kube"
+  prefix: "18-ovh-cli-kube"
   scope: "java"
   name: "OVHCommand kube"
   body: |
@@ -176,7 +165,7 @@ snippet OVHCommand kube:
     }
 
 snippet Props logs prod:
-  prefix: "20-props-logs-prod"
+  prefix: "19-props-logs-prod"
   name: "Props logs prod"
   body: |
     # Make outputs readable
@@ -186,7 +175,7 @@ snippet Props logs prod:
     %prod.quarkus.log.console.format=%m
 
 snippet Jarvis bash:
-  prefix: "23-jarvis-bash"
+  prefix: "22-jarvis-bash"
   scope: "shellscript"
   name: "Jarvis bash"
   body: |
@@ -220,8 +209,14 @@ snippet OVHcloud Mistral Service askQuestion:
   name: "OVHcloud Mistral Service askQuestion"
   scope: "java"
   body: |
-    @SystemMessage("You are Jarvis, an AI assistant.")
-    @UserMessage("Answer as best possible to the following question: {question}. The answer must be in a style of a virtual assistant.")
+    // Add some instructions to my LLM
+    @SystemMessage("""
+                    Ton nom est Jarvis. Tu es un assistant virtuel.
+                    Ton but est d'aider le mieux possible lorsque l'on te pose une question.
+                    Si tu ne sais pas répondre, réponds juste "je ne sais pas répondre à cette question".
+                    Réponds de manière concise et simple.
+                  """)
+    @UserMessage("La question posée est la suivante : {question}")
     Multi<String> askAQuestion(String question);
 
 snippet JarvisCommand AI question param:
@@ -230,7 +225,7 @@ snippet JarvisCommand AI question param:
   name: "JarvisCommand AI question param"
   body: |
     // Question to ask
-    @Parameters(paramLabel = "<question>", defaultValue = "What is the answer to life, the universe and everything?", description = "The question to ask to Jarvis.")
+    @Parameters(paramLabel = "<question>", defaultValue = "Explique ton rôle en quelques mots", description = "La question à poser à Jarvis.")
     private String question;
 
 snippet JarvisCommand AI Service:
@@ -240,7 +235,7 @@ snippet JarvisCommand AI Service:
   body: |
     // Service to call Mistral LLM
     @Inject
-    AIEndpointService aiEndpointMistral7bService; 
+    AIEndpointService aiEndpointService; 
 
 snippet JarvisCommand AI Service call:
   prefix: "32-jarvis-cli-ai-svc-call"
@@ -338,3 +333,44 @@ snippet Add file output:
       _LOG.debug("First: {}", res.firstEntry());
       _LOG.info("Sentiment: {}", EmotionEvaluation.toEmoji(res.firstEntry().getKey()));
     }
+
+snippet OVhcloud LangChain4j dep:
+  prefix: "46-add-ovh-ai-embedding-models"
+  scope: "xml"
+  name: "OVhcloud LangChain4j dep"
+  body: |
+    <dependency>
+      <groupId>dev.langchain4j</groupId>
+      <artifactId>langchain4j-ovh-ai</artifactId>
+      <version>1.0.0-beta2</version>
+    </dependency>
+
+snippet Add RAG properties:
+  prefix: "47-rag-properties"
+  name: "Add RAG properties"
+  body: |
+    # LangChain4J for RAG configuration
+    # AI Endpoints parameters
+    ovhcloud.ai-endpoints.token=\${OVH_AI_ENDPOINTS_ACCESS_TOKEN}
+
+    quarkus.langchain4j.mistralai.embedding-model.enabled=false
+    ovhcloud.ai-endpoints.embedding.base-url=\${OVH_AI_ENDPOINTS_EMBEDDING_MODEL_URL}
+    quarkus.langchain4j.embedding-model.provider=dev.langchain4j.model.ovhai.OvhAiEmbeddingModel
+
+    quarkus.langchain4j.easy-rag.path=./src/main/resources/rag
+    quarkus.langchain4j.easy-rag.max-segment-size=8000
+    quarkus.langchain4j.easy-rag.max-results=3
+    quarkus.langchain4j.easy-rag.min-score=0.1
+    quarkus.langchain4j.easy-rag.ingestion-strategy=on
+
+snippet Register embedding model:
+  prefix: "48-register-embedding-model"
+  scope: "java"
+  name: "Register embedding model"
+  body: |
+    return OvhAiEmbeddingModel.builder()
+          .baseUrl(ConfigProvider.getConfig().getValue("ovhcloud.ai-endpoints.embedding.base-url", String.class))
+          .apiKey(ConfigProvider.getConfig().getValue("ovhcloud.ai-endpoints.token", String.class))
+          .logRequests(false)
+          .logResponses(false)
+          .build();

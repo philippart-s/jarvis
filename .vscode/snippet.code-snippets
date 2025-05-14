@@ -42,6 +42,27 @@
     "prefix": "37-sentiment-client",
     "scope": "java"
   },
+  "Add RAG properties": {
+    "body": [
+      "# LangChain4J for RAG configuration",
+      "# AI Endpoints parameters",
+      "ovhcloud.ai-endpoints.token=\\${OVH_AI_ENDPOINTS_ACCESS_TOKEN}",
+      "",
+      "quarkus.langchain4j.mistralai.embedding-model.enabled=false",
+      "ovhcloud.ai-endpoints.embedding.base-url=\\${OVH_AI_ENDPOINTS_EMBEDDING_MODEL_URL}",
+      "quarkus.langchain4j.embedding-model.provider=dev.langchain4j.model.ovhai.OvhAiEmbeddingModel",
+      "",
+      "quarkus.langchain4j.easy-rag.path=./src/main/resources/rag",
+      "quarkus.langchain4j.easy-rag.max-segment-size=8000",
+      "quarkus.langchain4j.easy-rag.max-results=3",
+      "quarkus.langchain4j.easy-rag.min-score=0.1",
+      "quarkus.langchain4j.easy-rag.ingestion-strategy=on",
+      ""
+    ],
+    "description": "",
+    "prefix": "47-rag-properties",
+    "scope": ""
+  },
   "Add file option": {
     "body": [
       "@Option(names = {\"-f\", \"--file\"}, description = \"File to analyse (sentiment analysis)\")",
@@ -61,7 +82,8 @@
       "",
       "  _LOG.debug(\"First: {}\", res.firstEntry());",
       "  _LOG.info(\"Sentiment: {}\", EmotionEvaluation.toEmoji(res.firstEntry().getKey()));",
-      "}"
+      "}",
+      ""
     ],
     "description": "",
     "prefix": "42-file-ouput",
@@ -111,7 +133,7 @@
       ""
     ],
     "description": "",
-    "prefix": "23-jarvis-bash",
+    "prefix": "22-jarvis-bash",
     "scope": "shellscript"
   },
   "JarvisCommand": {
@@ -120,14 +142,14 @@
       ""
     ],
     "description": "",
-    "prefix": "12-jarvis-hello",
+    "prefix": "11-jarvis-hello",
     "scope": "java"
   },
   "JarvisCommand AI Service": {
     "body": [
       "// Service to call Mistral LLM",
       "@Inject",
-      "AIEndpointService aiEndpointMistral7bService; ",
+      "AIEndpointService aiEndpointService; ",
       ""
     ],
     "description": "",
@@ -158,7 +180,7 @@
   "JarvisCommand AI question param": {
     "body": [
       "// Question to ask",
-      "@Parameters(paramLabel = \"\u003cquestion\u003e\", defaultValue = \"What is the answer to life, the universe and everything?\", description = \"The question to ask to Jarvis.\")",
+      "@Parameters(paramLabel = \"\u003cquestion\u003e\", defaultValue = \"Explique ton rôle en quelques mots\", description = \"La question à poser à Jarvis.\")",
       "private String question;",
       ""
     ],
@@ -172,7 +194,7 @@
       ""
     ],
     "description": "",
-    "prefix": "09-jarvis-cli-class-annot",
+    "prefix": "08-jarvis-cli-class-annot",
     "scope": "java"
   },
   "JarvisCommand logger": {
@@ -182,7 +204,7 @@
       ""
     ],
     "description": "",
-    "prefix": "10-jarvis-cli-logger",
+    "prefix": "09-jarvis-cli-logger",
     "scope": "java"
   },
   "JarvisCommand param name": {
@@ -192,7 +214,7 @@
       ""
     ],
     "description": "",
-    "prefix": "11-jarvis-cli-name-param",
+    "prefix": "10-jarvis-cli-name-param",
     "scope": "java"
   },
   "OVHCommand Class Annotation": {
@@ -201,7 +223,7 @@
       ""
     ],
     "description": "",
-    "prefix": "13-ovh-cli-class-annot",
+    "prefix": "12-ovh-cli-class-annot",
     "scope": "java"
   },
   "OVHCommand OVH Stuff": {
@@ -216,7 +238,7 @@
       ""
     ],
     "description": "",
-    "prefix": "16-ovh-cli-ovh-stuff",
+    "prefix": "15-ovh-cli-ovh-stuff",
     "scope": "java"
   },
   "OVHCommand kube": {
@@ -238,7 +260,7 @@
       ""
     ],
     "description": "",
-    "prefix": "19-ovh-cli-kube",
+    "prefix": "18-ovh-cli-kube",
     "scope": "java"
   },
   "OVHCommand logger": {
@@ -248,7 +270,7 @@
       ""
     ],
     "description": "",
-    "prefix": "14-ovh-cli-logger",
+    "prefix": "13-ovh-cli-logger",
     "scope": "java"
   },
   "OVHCommand me": {
@@ -261,7 +283,7 @@
       ""
     ],
     "description": "",
-    "prefix": "18-ovh-cli-me",
+    "prefix": "17-ovh-cli-me",
     "scope": "java"
   },
   "OVHCommand options": {
@@ -275,7 +297,7 @@
       ""
     ],
     "description": "",
-    "prefix": "17-ovh-cli-options",
+    "prefix": "16-ovh-cli-options",
     "scope": "java"
   },
   "OVHCommand rest client": {
@@ -286,7 +308,7 @@
       ""
     ],
     "description": "",
-    "prefix": "15-ovh-cli-rest-client",
+    "prefix": "14-ovh-cli-rest-client",
     "scope": "java"
   },
   "OVHcloud API Service": {
@@ -299,7 +321,7 @@
       ""
     ],
     "description": "",
-    "prefix": "07-OVHcloudAPIService-annot",
+    "prefix": "06-OVHcloudAPIService-annot",
     "scope": "java"
   },
   "OVHcloud API Service Endpoints": {
@@ -329,13 +351,19 @@
       ""
     ],
     "description": "",
-    "prefix": "08-OVHcloudAPIService-endpoints",
+    "prefix": "07-OVHcloudAPIService-endpoints",
     "scope": "java"
   },
   "OVHcloud Mistral Service askQuestion": {
     "body": [
-      "@SystemMessage(\"You are Jarvis, an AI assistant.\")",
-      "@UserMessage(\"Answer as best possible to the following question: {question}. The answer must be in a style of a virtual assistant.\")",
+      "// Add some instructions to my LLM",
+      "@SystemMessage(\"\"\"",
+      "                Ton nom est Jarvis. Tu es un assistant virtuel.",
+      "                Ton but est d'aider le mieux possible lorsque l'on te pose une question.",
+      "                Si tu ne sais pas répondre, réponds juste \"je ne sais pas répondre à cette question\".",
+      "                Réponds de manière concise et simple.",
+      "              \"\"\")",
+      "@UserMessage(\"La question posée est la suivante : {question}\")",
       "Multi\u003cString\u003e askAQuestion(String question);",
       ""
     ],
@@ -343,17 +371,17 @@
     "prefix": "29-OVHcloudMistral-ask-method",
     "scope": "java"
   },
-  "Pom Jarvis SDK": {
+  "OVhcloud LangChain4j dep": {
     "body": [
       "\u003cdependency\u003e",
-      "  \u003cgroupId\u003efr.wilda.jarvis.sdk\u003c/groupId\u003e",
-      "  \u003cartifactId\u003ejarvis-sdk\u003c/artifactId\u003e",
-      "  \u003cversion\u003e1.1.0\u003c/version\u003e",
+      "  \u003cgroupId\u003edev.langchain4j\u003c/groupId\u003e",
+      "  \u003cartifactId\u003elangchain4j-ovh-ai\u003c/artifactId\u003e",
+      "  \u003cversion\u003e1.0.0-beta2\u003c/version\u003e",
       "\u003c/dependency\u003e",
       ""
     ],
     "description": "",
-    "prefix": "04-pom-jarvis-sdk-dep",
+    "prefix": "46-add-ovh-ai-embedding-models",
     "scope": "xml"
   },
   "Props Langchain4J": {
@@ -381,7 +409,7 @@
       ""
     ],
     "description": "",
-    "prefix": "05-props-ovh-env",
+    "prefix": "04-props-ovh-env",
     "scope": ""
   },
   "Props RestClient": {
@@ -392,7 +420,7 @@
       ""
     ],
     "description": "",
-    "prefix": "06-props-rest-client",
+    "prefix": "05-props-rest-client",
     "scope": ""
   },
   "Props logs prod": {
@@ -405,7 +433,21 @@
       ""
     ],
     "description": "",
-    "prefix": "20-props-logs-prod",
+    "prefix": "19-props-logs-prod",
     "scope": ""
+  },
+  "Register embedding model": {
+    "body": [
+      "return OvhAiEmbeddingModel.builder()",
+      "      .baseUrl(ConfigProvider.getConfig().getValue(\"ovhcloud.ai-endpoints.embedding.base-url\", String.class))",
+      "      .apiKey(ConfigProvider.getConfig().getValue(\"ovhcloud.ai-endpoints.token\", String.class))",
+      "      .logRequests(false)",
+      "      .logResponses(false)",
+      "      .build();",
+      ""
+    ],
+    "description": "",
+    "prefix": "48-register-embedding-model",
+    "scope": "java"
   }
 }

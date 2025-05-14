@@ -2,31 +2,23 @@ package fr.wilda.picocli;
 
 import java.util.concurrent.Callable;
 
-// 13-ovh-cli-class-annot
+
+// 12-ovh-cli-class-annot
+@Command(name = "ovhcloud", mixinStandardHelpOptions = true)
 public class OVHcloudSubCommand implements Callable<Integer> {
-  // 14-ovh-cli-logger
+  // 13-ovh-cli-logger
+    
+  // 14-ovh-cli-rest-client
   
-  // 15-ovh-cli-rest-client
+  // 15-ovh-cli-ovh-stuff
   
-  // 16-ovh-cli-ovh-stuff
-  
-  // 17-ovh-cli-options
-  
-  // 37-sentiment-client
-  
-  // 38-sentiment-option
-  
-  // 41-file-option
+  // 16-ovh-cli-options
   
   @Override
   public Integer call() throws Exception {
-    // 18-ovh-cli-me
-    
-    // 19-ovh-cli-kube
-    
-    // 39-sentiment-output    
+    // 17-ovh-cli-me
 
-    // 42-file-ouput
+    // 18-ovh-cli-kube
 
     return 0;
   }

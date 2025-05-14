@@ -5,13 +5,13 @@
   <artifactId>jarvis</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <properties>
-    <compiler-plugin.version>3.13.0</compiler-plugin.version>
+    <compiler-plugin.version>3.14.0</compiler-plugin.version>
     <maven.compiler.release>21</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-    <quarkus.platform.version>3.21.3</quarkus.platform.version>
+    <quarkus.platform.version>3.22.2</quarkus.platform.version>
     <skipITs>true</skipITs>
     <surefire-plugin.version>3.5.2</surefire-plugin.version>
   </properties>
@@ -24,6 +24,13 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <!--dependency>
+        <groupId>com.squareup.okhttp3</groupId>
+        <artifactId>okhttp-bom</artifactId>
+        <version>4.12.0</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency-->
     </dependencies>
   </dependencyManagement>
   <dependencies>
@@ -39,15 +46,16 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-rest-client-jackson</artifactId>
     </dependency>
-    
-    <!-- 04-pom-jarvis-sdk-dep -->
-     <dependency>
-       <groupId>fr.wilda.jarvis.sdk</groupId>
-       <artifactId>jarvis-sdk</artifactId>
-       <version>1.1.0</version>
-     </dependency>
-     
 
+    <dependency>
+      <groupId>fr.wilda.jarvis.sdk</groupId>
+      <artifactId>jarvis-sdk</artifactId>
+      <version>1.1.0</version>
+    </dependency>
+
+
+    <!-- 46-add-ovh-ai-embedding-models-->
+    
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-junit5</artifactId>

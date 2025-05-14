@@ -1,0 +1,30 @@
+package fr.wilda.picocli;
+
+import java.util.concurrent.Callable;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import picocli.AutoComplete.GenerateCompletion;
+import picocli.CommandLine.Command;
+
+@Command(name = "sentiment", mixinStandardHelpOptions = true)
+public class SentimentSubCommand implements Callable<Integer> {
+
+  // Logger
+  private static final Logger _LOG = LoggerFactory.getLogger(SentimentSubCommand.class);
+
+  // 37-sentiment-client
+  
+  // 38-sentiment-option
+  
+  // 41-file-option
+
+  @Override
+  public Integer call() throws Exception {
+    // 39-sentiment-output 
+    
+    // 42-file-ouput
+    return 0;
+  }
+}

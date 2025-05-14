@@ -1,0 +1,16 @@
+package fr.wilda.picocli.sdk.ai;
+
+import dev.langchain4j.model.embedding.EmbeddingModel;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+
+@ApplicationScoped
+public class RegisterOVHEmbeddedModel {
+
+  @Produces
+  public EmbeddingModel ovhAIEmbeddingModel() {
+    // 48-register-embedding-model
+    return null;
+    
+  }
+}

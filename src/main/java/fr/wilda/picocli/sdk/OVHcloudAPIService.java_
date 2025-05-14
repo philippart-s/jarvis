@@ -1,6 +1,6 @@
 package fr.wilda.picocli.sdk;
 
-// 07-OVHcloudAPIService-annot
+// 06-OVHcloudAPIService-annot
 public interface OVHcloudAPIService {
-  // 08-OVHcloudAPIService-endpoints
+  // 07-OVHcloudAPIService-endpoints
 }

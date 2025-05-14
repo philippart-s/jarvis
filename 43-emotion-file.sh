@@ -6,4 +6,4 @@ clear
 bat -P -r 8: $(basename "$0")
 
 # Run native executable with AI call 🚀
-jarvis-ai-file ovhcloud -f "./src/main/resources/sad-java-poem.txt"
+jarvis-ai-file sentiment -f "./src/main/resources/sad-java-poem.txt"
