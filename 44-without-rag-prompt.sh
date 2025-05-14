@@ -6,4 +6,4 @@ clear
 bat -P -r 8: $(basename "$0")
 
 # Run native executable with AI call 🚀
-jarvis-ai-sentiment sentiment -s "I'm happy to be here"
+jarvis-ai "Quel est le programme du Lava JUG le 22 mai ?"
