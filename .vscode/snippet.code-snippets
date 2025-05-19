@@ -45,9 +45,6 @@
   "Add RAG properties": {
     "body": [
       "# LangChain4J for RAG configuration",
-      "# AI Endpoints parameters",
-      "ovhcloud.ai-endpoints.token=\\${OVH_AI_ENDPOINTS_ACCESS_TOKEN}",
-      "",
       "quarkus.langchain4j.mistralai.embedding-model.enabled=false",
       "ovhcloud.ai-endpoints.embedding.base-url=\\${OVH_AI_ENDPOINTS_EMBEDDING_MODEL_URL}",
       "quarkus.langchain4j.embedding-model.provider=dev.langchain4j.model.ovhai.OvhAiEmbeddingModel",

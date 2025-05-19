@@ -56,5 +56,6 @@ snippets generate \
   - add EasyRAG (👨‍💻 `45-add-easyrag-ext`) and OVHcloud Embedding model dependency in [pom.xml](pom.xml) (👨‍💻 `46-add-ovh-ai-embedding-models`)
   - add RAG configurations in [application.properties](./src/main/resources/application.properties) (👨‍💻 `47-rag-properties`)
   - create [RegisterOVHEmbeddedModel](./src/main/java/fr/wilda/picocli/sdk/ai/RegisterOVHEmbeddedModel.java) (👨‍💻 `48-register-embedding-model`)
+  - run [20-quarkus-build.sh](./20-quarkus-build.sh) 
   - remove `%prod` from [application.properties](./src/main/resources/application.properties)
-  - test the new chat bot: `Quel est le programme du Lava JUG le 22 mai ?`
+  - test the new chat bot: [49-java-run-rag.sh](./49-java-run-rag.sh)
