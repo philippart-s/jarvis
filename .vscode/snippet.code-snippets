@@ -159,7 +159,7 @@
   "JarvisCommand AI Service call": {
     "body": [
       "_LOG.info(\"\\n🤖:\\n\");",
-      "aiEndpointMistral7bService.askAQuestion(question)",
+      "aiEndpointService.askAQuestion(question)",
       ".subscribe()",
       ".asStream()",
       ".forEach(token -\u003e {",

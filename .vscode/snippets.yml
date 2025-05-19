@@ -243,7 +243,7 @@ snippet JarvisCommand AI Service call:
   name: "JarvisCommand AI Service call"
   body: |
     _LOG.info("\n🤖:\n");
-    aiEndpointMistral7bService.askAQuestion(question)
+    aiEndpointService.askAQuestion(question)
     .subscribe()
     .asStream()
     .forEach(token -> {
