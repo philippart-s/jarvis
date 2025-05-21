@@ -21,9 +21,8 @@ public class JarvisCommand implements Callable<Integer> {
   AIEndpointService aiEndpointService;
 
   // Question to ask
-  @Parameters(paramLabel = "<question>", defaultValue = "Can you explain what are you?", description = "The question to ask to Jarvis.")
+  @Parameters(paramLabel = "<question>", defaultValue = "Explique ton rôle en quelques mots", description = "La question à poser à Jarvis.")
   private String question;
-
 
   @Override
   public Integer call() throws Exception {

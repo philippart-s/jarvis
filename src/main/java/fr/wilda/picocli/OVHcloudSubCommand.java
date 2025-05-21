@@ -30,19 +30,9 @@ public class OVHcloudSubCommand implements Callable<Integer> {
       description = "Display your Managed Kubernetes Service created.")
   private boolean kube;
 
-  @Option(names = {"-s", "--sentiment"}, paramLabel = "<SENTIMENT>",
-      description = "Analyze a sentiment with the OVHcloud Text to Sentiment API.")
-  private String sentimentToAnalyze;
-
-  @Option(names = {"-f", "--file"}, description = "File to analyse (sentiment analysis)")
-  private File fileToAnalyse;
-
   // Service to call the OVHcloud REST API
   @RestClient
   OVHcloudAPIService apiService;
-
-  @RestClient
-  AISentimentService aiSentimentService;
 
   // OVHcloud public cloud project ID injected by environment variables in the
   // application.properties file
@@ -73,24 +63,6 @@ public class OVHcloudSubCommand implements Callable<Integer> {
                     .signature("cloud/project/" + projectId + "/kube/" + kubeId, ovhTimestamp),
                 Long.toString(ovhTimestamp)));
       }
-    }
-
-    if (sentimentToAnalyze != null) {
-      _LOG.debug("param {}", sentimentToAnalyze);
-      SortedMap<String, Double> res =
-          EmotionEvaluation.toSortedMap(aiSentimentService.text2emotions(sentimentToAnalyze));
-
-      _LOG.debug("First: {}", res.firstEntry());
-      _LOG.info("Sentiment: {}", EmotionEvaluation.toEmoji(res.firstEntry().getKey()));
-    }
-
-    if (fileToAnalyse != null) {
-      SortedMap<String, Double> res =
-          EmotionEvaluation.toSortedMap(
-              aiSentimentService.text2emotions(Files.readString(fileToAnalyse.toPath())));
-
-      _LOG.debug("First: {}", res.firstEntry());
-      _LOG.info("Sentiment: {}", EmotionEvaluation.toEmoji(res.firstEntry().getKey()));
     }
 
     return 0;

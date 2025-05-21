@@ -15,5 +15,4 @@ public interface AISentimentService {
   @POST
   @Path("text2emotions")
   EmotionEvaluation text2emotions(String text);
-
 }

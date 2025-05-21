@@ -7,5 +7,7 @@ bat -P -r 10:11 $(basename "$0")
 
 read -n 1 -p "Press any key to continue"
 
-# Add LangChain4J extension
-quarkus ext add io.quarkiverse.langchain4j:quarkus-langchain4j-mistral-ai:1.0.0.CR2
+# Run the executable jar
+java -jar ./target/quarkus-app/quarkus-run.jar "Quel est le programme du Lava JUG le 22 mai ?"
+echo ""
+

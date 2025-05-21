@@ -9,7 +9,13 @@ import jakarta.enterprise.context.ApplicationScoped;
 @RegisterAiService
 @ApplicationScoped
 public interface AIEndpointService {
-  @SystemMessage("You are Jarvis, an AI assistant.")
-  @UserMessage("Answer as best possible to the following question: {question}. The answer must be in a style of a virtual assistant.")
+  // Add some instructions to my LLM
+  @SystemMessage("""
+                  Ton nom est Jarvis. Tu es un assistant virtuel.
+                  Ton but est d'aider le mieux possible lorsque l'on te pose une question.
+                  Si tu ne sais pas répondre, réponds juste "je ne sais pas répondre à cette question".
+                  Réponds de manière concise et simple.
+                 """)
+  @UserMessage("La question posée est la suivante : {question}")
   Multi<String> askAQuestion(String question);
 }
