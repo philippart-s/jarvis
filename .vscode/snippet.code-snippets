@@ -373,7 +373,7 @@
       "\u003cdependency\u003e",
       "  \u003cgroupId\u003edev.langchain4j\u003c/groupId\u003e",
       "  \u003cartifactId\u003elangchain4j-ovh-ai\u003c/artifactId\u003e",
-      "  \u003cversion\u003e1.0.0-beta2\u003c/version\u003e",
+      "  \u003cversion\u003e1.1.0-beta7\u003c/version\u003e",
       "\u003c/dependency\u003e",
       ""
     ],
