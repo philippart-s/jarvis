@@ -2,11 +2,15 @@ package fr.wilda.picocli;
 
 import java.util.concurrent.Callable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // 12-ovh-cli-class-annot
 @Command(name = "ovhcloud", mixinStandardHelpOptions = true)
 public class OVHcloudSubCommand implements Callable<Integer> {
   // 13-ovh-cli-logger
+  // Logger
+  private static final Logger _LOG = LoggerFactory.getLogger(OVHcloudSubCommand.class);
     
   // 14-ovh-cli-rest-client
   
