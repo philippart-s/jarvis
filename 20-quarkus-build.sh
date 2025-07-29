@@ -17,6 +17,6 @@ read -n 1 -p "Press any key to continue"
 
 clear
 
-bat -P -r 19: $(basename "$0")
+bat -P -r 20: $(basename "$0")
 
 du -h ./target/quarkus-app
