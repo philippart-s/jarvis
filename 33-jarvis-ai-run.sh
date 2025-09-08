@@ -8,6 +8,6 @@ bat -P -r 10:11 $(basename "$0")
 read -n 1 -p "Press any key to continue"
 
 # Run native executable with AI call 🚀
-jarvis-ai "Peux-tu me donner des informations sur la ville de La Rochelle ?"
+jarvis-ai "Tell me more about Anvers"
 
-#./target/jarvis-0.0.1-SNAPSHOT-runner "Peux-tu me donner des informations sur la ville de La Rochelle ?"
+#./target/jarvis-0.0.1-SNAPSHOT-runner "Tell me more about Anvers"
