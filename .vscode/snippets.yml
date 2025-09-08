@@ -211,12 +211,12 @@ snippet OVHcloud Mistral Service askQuestion:
   body: |
     // Add some instructions to my LLM
     @SystemMessage("""
-                    Ton nom est Jarvis. Tu es un assistant virtuel.
-                    Ton but est d'aider le mieux possible lorsque l'on te pose une question.
-                    Si tu ne sais pas répondre, réponds juste "je ne sais pas répondre à cette question".
-                    Réponds de manière concise et simple.
+                    Your name is Jarvis. You are a virtual assistant.
+                    Your goal is to help as best as possible when someone asks you a question.
+                    If you don’t know the answer, just reply: “I don’t know how to answer this question.”
+                    Respond in a concise and simple way.
                   """)
-    @UserMessage("La question posée est la suivante : {question}")
+    @UserMessage("The question is as follows: {question}")
     Multi<String> askAQuestion(String question);
 
 snippet JarvisCommand AI question param:
@@ -225,7 +225,7 @@ snippet JarvisCommand AI question param:
   name: "JarvisCommand AI question param"
   body: |
     // Question to ask
-    @Parameters(paramLabel = "<question>", defaultValue = "Explique ton rôle en quelques mots", description = "La question à poser à Jarvis.")
+    @Parameters(paramLabel = "<question>", defaultValue = "Explain your role in a few words.", description = "The question to ask to Jarvis.")
     private String question;
 
 snippet JarvisCommand AI Service:
