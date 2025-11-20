@@ -6,7 +6,7 @@ clear
 bat -P -r 8:9 $(basename "$0")
 
 # Run the executable jar
-java -jar ./target/quarkus-app/quarkus-run.jar "Devoxx"
+java -jar ./target/quarkus-app/quarkus-run.jar "DevFest Paris"
 echo ""
 
 read -n 1 -p "Press any key to continue"
