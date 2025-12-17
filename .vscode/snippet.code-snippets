@@ -413,7 +413,6 @@
     "body": [
       "# RestClient parameter",
       "quarkus.rest-client.\"fr.wilda.picocli.sdk.OVHcloudAPIService\".url=https://eu.api.ovh.com/",
-      "quarkus.rest-client.\"fr.wilda.picocli.sdk.OVHcloudAPIService\".scope=javax.inject.Singleton ",
       ""
     ],
     "description": "",
