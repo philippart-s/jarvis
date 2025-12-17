@@ -1,20 +1,16 @@
 package fr.wilda.picocli;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.util.SortedMap;
-import java.util.concurrent.Callable;
+import fr.wilda.jarvis.sdk.ovhcloud.OVHcloudSignatureHelper;
+import fr.wilda.picocli.sdk.OVHcloudAPIService;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import fr.wilda.jarvis.sdk.ovhcloud.EmotionEvaluation;
-import fr.wilda.jarvis.sdk.ovhcloud.OVHcloudSignatureHelper;
-import fr.wilda.picocli.sdk.OVHcloudAPIService;
-import fr.wilda.picocli.sdk.ai.AISentimentService;
 import picocli.AutoComplete.GenerateCompletion;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
+
+import java.util.concurrent.Callable;
 
 @Command(name = "ovhcloud", mixinStandardHelpOptions = true, subcommands = {GenerateCompletion.class})
 public class OVHcloudSubCommand implements Callable<Integer> {

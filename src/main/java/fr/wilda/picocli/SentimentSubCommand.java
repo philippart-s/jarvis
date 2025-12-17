@@ -5,6 +5,7 @@ import fr.wilda.picocli.sdk.ai.AISentimentService;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import picocli.AutoComplete.GenerateCompletion;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -13,7 +14,7 @@ import java.nio.file.Files;
 import java.util.SortedMap;
 import java.util.concurrent.Callable;
 
-@Command(name = "sentiment", mixinStandardHelpOptions = true)
+@Command(name = "sentiment", mixinStandardHelpOptions = true, subcommands = {GenerateCompletion.class})
 public class SentimentSubCommand implements Callable<Integer> {
     // Logger
     private static final Logger _LOG = LoggerFactory.getLogger(SentimentSubCommand.class);
