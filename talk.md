@@ -53,7 +53,7 @@ snippets generate \
   - activate the autocompletion: `source <(jarvis generate-completion)`
   - test the autocompletion
   - test the conference question (👨‍💻 `44-without-rag-prompt.sh`)
-  - add EasyRAG (👨‍💻 `45-add-easyrag-ext`) and OVHcloud Embedding model dependency in [pom.xml](pom.xml) (👨‍💻 `46-add-ovh-ai-embedding-models`)
+  - add EasyRAG (👨‍💻 `45-add-openai-for-rag`) 
   - add RAG configurations in [application.properties](./src/main/resources/application.properties) (👨‍💻 `47-rag-properties`)
   - create [RegisterOVHEmbeddedModel](./src/main/java/fr/wilda/picocli/sdk/ai/RegisterOVHEmbeddedModel.java) (👨‍💻 `48-register-embedding-model`)
   - run [20-quarkus-build.sh](./20-quarkus-build.sh) 
