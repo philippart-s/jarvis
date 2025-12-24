@@ -13,7 +13,7 @@ public class TimeAndDateTool {
   /// for more explanations.
   @Tool("Tool to give the current time and date")
   String getTimeAndDate() {
-    Log.info("⏰ Time and Date tool ⏰.");
+    Log.info("⏰ Time and Date tool ⏰.\n");
 
     return LocalDateTime.now().toString();
   }
