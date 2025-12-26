@@ -18,11 +18,9 @@ public interface AIEndpointService {
                   Ton but est d'aider le mieux possible lorsque l'on te pose une question.
                   Si tu ne sais pas répondre, réponds juste "je ne sais pas répondre à cette question".
                   Réponds de manière concise et simple.
-                  Si on te pose des questions sur OVHcloud utilise les outils à ta disposition.
                  """)
   @UserMessage("La question posée est la suivante : {question}")
   @ToolBox(TimeAndDateTool.class)
-  @McpToolBox
   Multi<String> askAQuestion(String question);
 
   // Add some instructions to my LLM
