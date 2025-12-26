@@ -37,7 +37,7 @@ public class DocumentLoader {
     List<Document> documents = FileSystemDocumentLoader.loadDocuments((ragFiles != null ? ragFiles : Path.of(defautRagResourcesPath)));
 
     for (Document document : documents) {
-      Log.info("📜 Load document: " + document.metadata().getString(Document.FILE_NAME));
+      Log.info(String.format("📜 Load document: %s%n",document.metadata().getString(Document.FILE_NAME)));
       EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor
           .builder()
           .embeddingStore(store)

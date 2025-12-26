@@ -1,7 +1,13 @@
 package fr.wilda.picocli;
 
+import java.util.Scanner;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+
+import dev.langchain4j.observability.api.event.ToolExecutedEvent;
+import fr.wilda.picocli.sdk.McpSubCommand;
+import fr.wilda.picocli.sdk.ai.McpToolsException;
+import io.quarkiverse.langchain4j.runtime.aiservice.ChatEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import fr.wilda.picocli.sdk.ai.AIEndpointService;
@@ -12,7 +18,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @TopCommand
-@Command(name = "jarvis", mixinStandardHelpOptions = true, subcommands = {OVHcloudSubCommand.class, RagSubCommand.class, GenerateCompletion.class})
+@Command(name = "jarvis", mixinStandardHelpOptions = true, subcommands = {OVHcloudSubCommand.class, SentimentSubCommand.class, McpSubCommand.class, GenerateCompletion.class})
 public class JarvisCommand implements Callable<Integer> {
   // Logger
   private static final Logger _LOG = LoggerFactory.getLogger(JarvisCommand.class);
@@ -27,6 +33,7 @@ public class JarvisCommand implements Callable<Integer> {
   @Override
   public Integer call() throws Exception {
     _LOG.info("\n🤖:\n");
+
     aiEndpointService.askAQuestion(question)
     .subscribe()
     .asStream()
@@ -38,8 +45,9 @@ public class JarvisCommand implements Callable<Integer> {
       }
       _LOG.info(token);
     });
+
     _LOG.info("\n");
-  
+
     return 0;
   }
 }
