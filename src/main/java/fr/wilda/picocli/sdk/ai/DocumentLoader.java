@@ -13,12 +13,13 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import java.nio.file.Path;
 import java.util.List;
 
 import static dev.langchain4j.data.document.splitter.DocumentSplitters.recursive;
 
 @Singleton
-@Startup
+//@Startup
 public class DocumentLoader {
 
   @Inject
@@ -28,12 +29,12 @@ public class DocumentLoader {
   EmbeddingModel embeddingModel;
 
   @ConfigProperty(name = "jarvis.rag.resources")
-  String ragResourcesPath;
+  String defautRagResourcesPath;
 
-  @PostConstruct
-  void loadDocument() {
+  //@PostConstruct
+  public void loadDocument(Path ragFiles) {
     // Load RAG files
-    List<Document> documents = FileSystemDocumentLoader.loadDocuments(ragResourcesPath);
+    List<Document> documents = FileSystemDocumentLoader.loadDocuments((ragFiles != null ? ragFiles : Path.of(defautRagResourcesPath)));
 
     for (Document document : documents) {
       Log.info("📜 Load document: " + document.metadata().getString(Document.FILE_NAME));
