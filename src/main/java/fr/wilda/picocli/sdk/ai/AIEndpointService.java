@@ -20,7 +20,6 @@ public interface AIEndpointService {
                   Réponds de manière concise et simple.
                  """)
   @UserMessage("La question posée est la suivante : {question}")
-  @ToolBox(TimeAndDateTool.class)
   Multi<String> askAQuestion(String question);
 
   // Add some instructions to my LLM
