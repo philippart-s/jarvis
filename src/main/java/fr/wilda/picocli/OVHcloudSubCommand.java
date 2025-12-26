@@ -12,7 +12,8 @@ import picocli.CommandLine.Option;
 
 import java.util.concurrent.Callable;
 
-@Command(name = "ovhcloud", mixinStandardHelpOptions = true, subcommands = {GenerateCompletion.class})
+@Command(name = "ovhcloud", description = "Ask Jarvis for OVHcloud services information.", mixinStandardHelpOptions = true,
+        subcommands = {GenerateCompletion.class})
 public class OVHcloudSubCommand implements Callable<Integer> {
 
   // Logger

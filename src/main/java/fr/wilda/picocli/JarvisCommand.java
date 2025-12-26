@@ -18,7 +18,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @TopCommand
-@Command(name = "jarvis", mixinStandardHelpOptions = true, subcommands = {OVHcloudSubCommand.class, SentimentSubCommand.class, McpSubCommand.class, GenerateCompletion.class})
+@Command(name = "jarvis", mixinStandardHelpOptions = true, subcommands = {OVHcloudSubCommand.class, RagSubCommand.class, McpSubCommand.class, GenerateCompletion.class})
 public class JarvisCommand implements Callable<Integer> {
   // Logger
   private static final Logger _LOG = LoggerFactory.getLogger(JarvisCommand.class);
