@@ -37,11 +37,6 @@
             <artifactId>quarkus-arc</artifactId>
         </dependency>
         <dependency>
-            <groupId>fr.wilda.jarvis.sdk</groupId>
-            <artifactId>jarvis-sdk</artifactId>
-            <version>1.2.0</version>
-        </dependency>
-        <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-rest-client-jackson</artifactId>
         </dependency>
