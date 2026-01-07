@@ -19,11 +19,12 @@ public class RagSubCommand implements Callable<Integer> {
     // Logger
     private static final Logger _LOG = LoggerFactory.getLogger(RagSubCommand.class);
 
-    @Option(names = {"-p", "--path-to-files"}, paramLabel = "<Path to files to add to Jarvis knowledge>",
+  // Option to add some files to Jarvis knowledge
+  @Option(names = {"-p", "--path-to-files"}, paramLabel = "<Path to files to add to Jarvis knowledge>",
             description = "Path to files to use with RAG.")
     private Path pathToFile;
 
-    @CommandLine.Parameters(paramLabel = "<question>", description = "Question to ask, Jarvis use the documents provided to ask.e")
+    @CommandLine.Parameters(paramLabel = "<question>", description = "Question to ask, Jarvis use the documents provided to ask.")
     String question;
 
     @Inject

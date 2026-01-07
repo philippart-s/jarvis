@@ -12,7 +12,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 @RegisterAiService
 @ApplicationScoped
 public interface AIEndpointService {
-  // Add some instructions to my LLM
+  // Send System prompt and user prompt to the LLM
+  // Streaming mode is activated thanks to Multi<String> return type
   @SystemMessage("""
                   Ton nom est Jarvis. Tu es un assistant virtuel.
                   Ton but est d'aider le mieux possible lorsque l'on te pose une question.
@@ -22,7 +23,9 @@ public interface AIEndpointService {
   @UserMessage("La question posée est la suivante : {question}")
   Multi<String> askAQuestion(String question);
 
-  // Add some instructions to my LLM
+  // Send System prompt and user prompt to the LLM
+  // Streaming mode is activated thanks to Multi<Event> return type
+  // Event is used to add some human action during the tools calling
   @SystemMessage("""
                   Ton nom est Jarvis. Tu es un assistant virtuel.
                   Ton but est d'aider le mieux possible lorsque l'on te pose une question.

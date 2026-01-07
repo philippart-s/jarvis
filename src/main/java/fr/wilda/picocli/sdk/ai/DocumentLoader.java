@@ -19,7 +19,6 @@ import java.util.List;
 import static dev.langchain4j.data.document.splitter.DocumentSplitters.recursive;
 
 @Singleton
-//@Startup
 public class DocumentLoader {
 
   @Inject
@@ -29,13 +28,13 @@ public class DocumentLoader {
   EmbeddingModel embeddingModel;
 
   @ConfigProperty(name = "jarvis.rag.resources")
-  String defautRagResourcesPath;
+  String defaultRagResourcesPath;
 
-  //@PostConstruct
   public void loadDocument(Path ragFiles) {
     // Load RAG files
-    List<Document> documents = FileSystemDocumentLoader.loadDocuments((ragFiles != null ? ragFiles : Path.of(defautRagResourcesPath)));
+    List<Document> documents = FileSystemDocumentLoader.loadDocuments((ragFiles != null ? ragFiles : Path.of(defaultRagResourcesPath)));
 
+    // Ingest documents in embedding store
     for (Document document : documents) {
       Log.info(String.format("📜 Load document: %s%n",document.metadata().getString(Document.FILE_NAME)));
       EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor
