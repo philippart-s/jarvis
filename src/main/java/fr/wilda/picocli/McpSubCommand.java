@@ -34,6 +34,7 @@ public class McpSubCommand implements Callable<Integer> {
                             }
                             case ChatEvent.BeforeToolExecutionEvent e -> {
                                 Log.info(String.format("⚠️ Please valid the tool usage: %s ⚠️%n", e.getRequest().name()));
+                                Log.info("Please type 'ok' to confirm the use of the tool: ");
                                 Scanner scanner = new Scanner(System.in);
                                 if (scanner.next()
                                         .equals("ok")) {
