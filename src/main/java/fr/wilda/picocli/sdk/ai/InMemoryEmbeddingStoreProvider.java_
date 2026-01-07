@@ -1,0 +1,7 @@
+package fr.wilda.picocli.sdk.ai;
+
+@ApplicationScoped
+public class InMemoryEmbeddingStoreProvider {
+
+  // 36-in-memory-embedding-store
+}

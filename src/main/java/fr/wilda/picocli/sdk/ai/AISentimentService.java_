@@ -1,6 +1,0 @@
-package fr.wilda.picocli.sdk.ai;
-
-// 35-sentiment-service
-public interface AISentimentService {
-    // 36-text2emotion-method
-}

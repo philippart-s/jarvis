@@ -1,0 +1,16 @@
+package fr.wilda.picocli.sdk.ai;
+
+
+@ApplicationScoped
+public class DocumentRetriever implements RetrievalAugmentor {
+
+  private final RetrievalAugmentor augmentor;
+
+  // 40-retriever
+
+  @Override
+  public AugmentationResult augment(AugmentationRequest augmentationRequest) {
+    return augmentor.augment(augmentationRequest);
+  }
+
+}

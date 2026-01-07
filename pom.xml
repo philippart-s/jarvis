@@ -46,9 +46,6 @@
       <version>1.2.0</version>
     </dependency>
 
-
-    <!-- 46-add-ovh-ai-embedding-models-->
-    
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-junit5</artifactId>

@@ -1,0 +1,11 @@
+package fr.wilda.picocli.sdk.ai;
+
+@Singleton
+public class DocumentLoader {
+
+  // 37-rag-resources
+
+  public void loadDocument(Path ragFiles) {
+    // 38-load-rag-files
+  }
+}

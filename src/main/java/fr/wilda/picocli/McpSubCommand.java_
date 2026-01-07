@@ -1,0 +1,24 @@
+package fr.wilda.picocli;
+
+import fr.wilda.picocli.sdk.ai.AIEndpointService;
+import io.quarkus.logging.Log;
+import jakarta.inject.Inject;
+import picocli.AutoComplete;
+import picocli.CommandLine;
+
+@CommandLine.Command(name = "mcp", description = "Use MCP to add knowledge to Jarvis.", mixinStandardHelpOptions = true)
+public class McpSubCommand implements Callable<Integer> {
+
+    @Inject
+    AIEndpointService aiEndpointService;
+
+    @CommandLine.Parameters(paramLabel = "<question>", description = "Question to ask to augmented Jarvis thanks to MCP.")
+    String question;
+
+    @Override
+    public Integer call() throws Exception {
+        // 51-call-llm-with-mcp
+
+        return 0;
+    }
+}
