@@ -1,13 +1,8 @@
 package fr.wilda.picocli;
 
-import java.util.Scanner;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import dev.langchain4j.observability.api.event.ToolExecutedEvent;
-import fr.wilda.picocli.sdk.McpSubCommand;
-import fr.wilda.picocli.sdk.ai.McpToolsException;
-import io.quarkiverse.langchain4j.runtime.aiservice.ChatEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import fr.wilda.picocli.sdk.ai.AIEndpointService;

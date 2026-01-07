@@ -1,4 +1,4 @@
-package fr.wilda.picocli.sdk;
+package fr.wilda.picocli;
 
 import fr.wilda.picocli.sdk.ai.AIEndpointService;
 import fr.wilda.picocli.sdk.ai.McpToolsException;
@@ -23,6 +23,7 @@ public class McpSubCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
+        // Call the LLM and ask for human validation before toll calling
         try {
             aiEndpointService.askAQuestionEvent(question)
                     .onItem()

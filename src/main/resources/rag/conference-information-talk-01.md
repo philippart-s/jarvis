@@ -1,12 +1,23 @@
 # Nom et information sur la conférence
-Depuis sa création en 2010, le JUG Summer Camp passionne les développeuses et développeurs par ses speakers engagés et ses sujets riches.
-
+Le Mars JUG réunit régulièrement la communauté Java de Marseille et de sa région autour d'intervenants qui viennent nous parler de la plateforme Java et de son écosystème.
 Le temps d’une journée, la communauté se rassemble sous le soleil de La Rochelle pour se rencontrer, échanger et apprendre ensemble.
 
 ## Dates, lieux et contenus des événements
 
-### Evènement du 5 Septembre 2025
-La conférence se déroule à l'Espace Encan à La Rochelle, à proximité de la gare.
+### Évènement du 21 janvier 2026
+
+#### Sujet
+Mister WIP & Miss VSM in Factory Town©️
+
+#### Intervenant 
+Fanny Klauk
+
+#### Détails du sujet
+Charly WIP est un fermier solitaire de l’Amérique de l’ouest habitant Factory Town©️. Le jour où plusieurs familles s’installent dans sa ville, il doit soudainement faire face à l’augmentation des besoins en nourriture, en eau et en transports. Installé depuis longtemps dans les environs, il est catapulté chef des opérations et doit assurer la pérennité de Factory Town©️.
+
+Sur la seule base de sa logique, du peu de moyens qu’il possède et avec l'aide de Miss Lean VSM, première cartographe des processus de l'histoire, WIP invente alors un système d’optimisation de process à qui il donnera leur nom : le Value Stream Mapping et le Work In Progress.
+
+Venez découvrir une explication et une illustration décalée de ce qu’est l’optimisation de process grâce à mon jeu favori du moment : Factory Town©️.
 
 #### Sujet
 ☕️ Picocli : mets du Java dans ton terminal ! 🖥️
