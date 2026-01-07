@@ -12,7 +12,9 @@ release.properties
 .settings/
 
 # IntelliJ
-.idea
+.idea/codeStyles/
+.idea/*.xml
+.idea/.gitignore
 *.ipr
 *.iml
 *.iws

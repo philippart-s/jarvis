@@ -1,0 +1,267 @@
+<templateSet group="Talk - Jarvis">
+  <template name="04-props-ovh-env" value="# OVHcloud parameter&#10;ovhcloud.consumer=${OVH_CONSUMER_KEY}&#10;ovhcloud.application=${OVH_APPLICATION_KEY}&#10;ovhcloud.projectId=${OVH_CLOUD_PROJECT_SERVICE}&#10;ovhcloud.pat=${OVH_CLOUD_PAT}" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="Properties" value="true" />
+    </context>
+  </template>
+  <template name="05-props-rest-client" value="quarkus.rest-client.&quot;fr.wilda.picocli.sdk.OVHcloudAPIService&quot;.url=https://eu.api.ovh.com/" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="Properties" value="true" />
+    </context>
+  </template>
+  <template name="06-OVHcloudAPIService-annot" value="@jakarta.ws.rs.Path(&quot;/v1&quot;)&#10;@org.eclipse.microprofile.rest.client.inject.RegisterRestClient&#10;@org.eclipse.microprofile.rest.client.annotation.ClientHeaderParam(name = &quot;X-Ovh-Consumer&quot;, value = &quot;${ovhcloud.consumer}&quot;)&#10;@org.eclipse.microprofile.rest.client.annotation.ClientHeaderParam(name = &quot;X-Ovh-Application&quot;, value = &quot;${ovhcloud.application}&quot;)&#10;@org.eclipse.microprofile.rest.client.annotation.ClientHeaderParam(name = &quot;Content-Type&quot;, value = &quot;application/json&quot;)" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="07-OVHcloudAPIService-endpoints" value="@jakarta.ws.rs.GET&#10;&#9;@jakarta.ws.rs.Path(&quot;/me&quot;)&#10;&#9;fr.wilda.jarvis.sdk.ovhcloud.OVHcloudUser getMe(@jakarta.ws.rs.HeaderParam(&quot;X-Ovh-Signature&quot;) java.lang.String signature,&#10;&#9;&#9;&#9;@jakarta.ws.rs.HeaderParam(&quot;X-Ovh-Timestamp&quot;) java.lang.String ovhTimestamp);&#10;&#10;&#9;@jakarta.ws.rs.GET&#10;&#9;@jakarta.ws.rs.Path(&quot;/cloud/project/{projectId}/kube&quot;)&#10;&#9;java.lang.String[] getKubernetes(@jakarta.ws.rs.PathParam(&quot;projectId&quot;) java.lang.String projectId,&#10;&#9;&#9;&#9;@jakarta.ws.rs.HeaderParam(&quot;X-Ovh-Signature&quot;) java.lang.String signature,&#10;&#9;&#9;&#9;@jakarta.ws.rs.HeaderParam(&quot;X-Ovh-Timestamp&quot;) java.lang.String ovhTimestamp);&#10;&#10;&#9;@jakarta.ws.rs.GET&#10;&#9;@jakarta.ws.rs.Path(&quot;/cloud/project&quot;)&#10;&#9;java.lang.String[] getProjects(&#10;&#9;&#9;&#9;@jakarta.ws.rs.HeaderParam(&quot;X-Ovh-Signature&quot;) java.lang.String signature,&#10;&#9;&#9;&#9;@jakarta.ws.rs.HeaderParam(&quot;X-Ovh-Timestamp&quot;) java.lang.String ovhTimestamp);&#10;&#10;&#9;@jakarta.ws.rs.GET&#10;&#9;@jakarta.ws.rs.Path(&quot;/cloud/project/{projectId}/kube/{kubeId}&quot;)&#10;&#9;fr.wilda.jarvis.sdk.ovhcloud.OVHcloudKube getKubernete(@jakarta.ws.rs.PathParam(&quot;projectId&quot;) java.lang.String projectId, @jakarta.ws.rs.PathParam(&quot;kubeId&quot;) java.lang.String kubeId,&#10;&#9;&#9;&#9;@jakarta.ws.rs.HeaderParam(&quot;X-Ovh-Signature&quot;) java.lang.String signature,&#10;&#9;&#9;&#9;@jakarta.ws.rs.HeaderParam(&quot;X-Ovh-Timestamp&quot;) java.lang.String ovhTimestamp);" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="08-jarvis-cli-class-annot" value="@picocli.CommandLine.Command(name = &quot;jarvis&quot;, mixinStandardHelpOptions = true)" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="09-jarvis-cli-logger" value="  // Logger&#10;  private static final org.slf4j.Logger _LOG = org.slf4j.LoggerFactory.getLogger(fr.wilda.picocli.JarvisCommand.class);" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="10-jarvis-cli-name-param" value="    @Parameters(paramLabel = &quot;&lt;name&gt;&quot;, defaultValue = &quot;picocli&quot;, description = &quot;Your name.&quot;)&#10;    String name;" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="ANY_OPENAPI_JSON_FILE" value="false" />
+      <option name="ANY_OPENAPI_YAML_FILE" value="false" />
+      <option name="Angular" value="false" />
+      <option name="CSS" value="false" />
+      <option name="GENERAL_JSON_FILE" value="false" />
+      <option name="GENERAL_YAML_FILE" value="false" />
+      <option name="GROOVY" value="false" />
+      <option name="HAS_SPRING" value="false" />
+      <option name="HAS_SPRING_DATA" value="false" />
+      <option name="HAS_SPRING_DATA_KT" value="false" />
+      <option name="HAS_SPRING_KT" value="false" />
+      <option name="HAS_SPRING_WEB" value="false" />
+      <option name="HAS_SPRING_WEB_KT" value="false" />
+      <option name="HTML" value="false" />
+      <option name="HTTP_CLIENT_ENVIRONMENT" value="false" />
+      <option name="IS_SPRING_CONFIGURATION" value="false" />
+      <option name="IS_SPRING_CONFIGURATION_KT" value="false" />
+      <option name="JAVA_SCRIPT" value="false" />
+      <option name="JSON" value="false" />
+      <option name="JSP" value="false" />
+      <option name="KOTLIN" value="false" />
+      <option name="KOTLIN_NOTEBOOK" value="false" />
+      <option name="KUBERNETES_RESOURCE" value="false" />
+      <option name="MAVEN" value="false" />
+      <option name="OTHER" value="true" />
+      <option name="PROTO" value="false" />
+      <option name="PROTOTEXT" value="false" />
+      <option name="Properties" value="false" />
+      <option name="QUTE" value="false" />
+      <option name="REQUEST" value="false" />
+      <option name="SHELL_SCRIPT" value="false" />
+      <option name="SQL" value="false" />
+      <option name="SpringCoRouterDslKt" value="false" />
+      <option name="SpringController" value="false" />
+      <option name="SpringControllerAdvice" value="false" />
+      <option name="SpringControllerAdviceKt" value="false" />
+      <option name="SpringControllerKt" value="false" />
+      <option name="SpringRouterDslKt" value="false" />
+      <option name="TypeScript" value="false" />
+      <option name="Vue" value="false" />
+      <option name="XML" value="false" />
+    </context>
+  </template>
+  <template name="11-jarvis-hello" value="_LOG.info(&quot;👋 {}&quot;, name);" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="ANY_OPENAPI_JSON_FILE" value="false" />
+      <option name="ANY_OPENAPI_YAML_FILE" value="false" />
+      <option name="Angular" value="false" />
+      <option name="CSS" value="false" />
+      <option name="GENERAL_JSON_FILE" value="false" />
+      <option name="GENERAL_YAML_FILE" value="false" />
+      <option name="GROOVY" value="false" />
+      <option name="HAS_SPRING" value="false" />
+      <option name="HAS_SPRING_DATA" value="false" />
+      <option name="HAS_SPRING_DATA_KT" value="false" />
+      <option name="HAS_SPRING_KT" value="false" />
+      <option name="HAS_SPRING_WEB" value="false" />
+      <option name="HAS_SPRING_WEB_KT" value="false" />
+      <option name="HTML" value="false" />
+      <option name="HTTP_CLIENT_ENVIRONMENT" value="false" />
+      <option name="IS_SPRING_CONFIGURATION" value="false" />
+      <option name="IS_SPRING_CONFIGURATION_KT" value="false" />
+      <option name="JAVA_SCRIPT" value="false" />
+      <option name="JSON" value="false" />
+      <option name="JSP" value="false" />
+      <option name="KOTLIN" value="false" />
+      <option name="KOTLIN_NOTEBOOK" value="false" />
+      <option name="KUBERNETES_RESOURCE" value="false" />
+      <option name="MAVEN" value="false" />
+      <option name="OTHER" value="true" />
+      <option name="PROTO" value="false" />
+      <option name="PROTOTEXT" value="false" />
+      <option name="Properties" value="false" />
+      <option name="QUTE" value="false" />
+      <option name="REQUEST" value="false" />
+      <option name="SHELL_SCRIPT" value="false" />
+      <option name="SQL" value="false" />
+      <option name="SpringCoRouterDslKt" value="false" />
+      <option name="SpringController" value="false" />
+      <option name="SpringControllerAdvice" value="false" />
+      <option name="SpringControllerAdviceKt" value="false" />
+      <option name="SpringControllerKt" value="false" />
+      <option name="SpringRouterDslKt" value="false" />
+      <option name="TypeScript" value="false" />
+      <option name="Vue" value="false" />
+      <option name="XML" value="false" />
+    </context>
+  </template>
+  <template name="12-ovh-cli-class-annot" value="@Command(name = &quot;ovhcloud&quot;, description = &quot;Ask Jarvis for OVHcloud services information.&quot;, mixinStandardHelpOptions = true)" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="13-ovh-cli-logger" value="  // Logger&#10;  private static final org.slf4j.Logger _LOG = org.slf4j.LoggerFactory.getLogger(fr.wilda.picocli.OVHcloudSubCommand.class);" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="14-ovh-cli-rest-client" value="  // Service to call the OVHcloud REST API&#10;  @org.eclipse.microprofile.rest.client.inject.RestClient&#10;  fr.wilda.picocli.sdk.OVHcloudAPIService apiService;" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="15-ovh-cli-ovh-stuff" value="// OVHcloud public cloud project ID injected by environment variables in the&#10;  // application.properties file&#10;  @org.eclipse.microprofile.config.inject.ConfigProperty(name = &quot;ovhcloud.projectId&quot;)&#10;  java.lang.String projectId;&#10;&#10;  // Timestamp to add to each OVHcloud API call&#10;  private java.lang.Long ovhTimestamp;" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="16-ovh-cli-options" value="  // Option to activate the /me OVHcloud REST API&#10;  @picocli.CommandLine.Option(names = {&quot;-m&quot;, &quot;--me&quot;}, description = &quot;Display the OVHcloud account details.&quot;)&#10;  private boolean me;&#10;&#10;  @picocli.CommandLine.Option(names = {&quot;-k&quot;, &quot;--kube&quot;},&#10;      description = &quot;Display your Managed Kubernetes Service created.&quot;)&#10;  private boolean kube;" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="17-ovh-cli-me" value="    ovhTimestamp = java.lang.System.currentTimeMillis() / 1000;&#10;    if (me) {&#10;      _LOG.info(&quot;Me:{}&quot;, apiService.getMe(fr.wilda.jarvis.sdk.ovhcloud.OVHcloudSignatureHelper.signature(&quot;me&quot;, ovhTimestamp), java.lang.Long.toString(ovhTimestamp)));&#10;    }" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="19-props-logs-prod" value="%prod.quarkus.log.level=OFF&#10;%prod.quarkus.banner.enabled=false&#10;%prod.quarkus.log.category.&quot;fr.wilda&quot;.level=INFO&#10;%prod.quarkus.console.color=false&#10;%prod.quarkus.log.console.format=%m" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="Properties" value="true" />
+    </context>
+  </template>
+  <template name="18-ovh-cli-kube" value="  if (kube) {&#10;      java.lang.String[] kubes = apiService.getKubernetes(projectId,&#10;          fr.wilda.jarvis.sdk.ovhcloud.OVHcloudSignatureHelper.signature(&quot;cloud/project/&quot; + projectId + &quot;/kube&quot;, ovhTimestamp),&#10;          java.lang.Long.toString(ovhTimestamp));&#10;      _LOG.info(&quot;\nNumber of Kubernetes clusters: {}&quot;, kubes.length);&#10;&#10;      for (java.lang.String kubeId : kubes) {&#10;        _LOG.info(&quot;\n{}&quot;,&#10;            apiService.getKubernete(&#10;                projectId, kubeId, fr.wilda.jarvis.sdk.ovhcloud.OVHcloudSignatureHelper&#10;                    .signature(&quot;cloud/project/&quot; + projectId + &quot;/kube/&quot; + kubeId, ovhTimestamp),&#10;                java.lang.Long.toString(ovhTimestamp)));&#10;      }&#10;    }" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="22-jarvis-bash" value="#!/bin/bash&#10;&#10;java -jar ../../../target/quarkus-app/quarkus-run.jar $1 $2 $3" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="SHELL_SCRIPT" value="true" />
+    </context>
+  </template>
+  <template name="27-props-langchain4J" value="# LangChain4J for OpenAI model configuration&#10;quarkus.langchain4j.openai.base-url=${OVH_AI_ENDPOINTS_MODEL_URL}&#10;quarkus.langchain4j.openai.chat-model.model-name=${OVH_AI_ENDPOINTS_MODEL_NAME}&#10;quarkus.langchain4j.openai.api-key=${OVH_AI_ENDPOINTS_ACCESS_TOKEN}&#10;quarkus.langchain4j.openai.embedding-model.model-name=${OVH_AI_ENDPOINTS_EMBEDDING_MODEL_NAME}&#10;quarkus.langchain4j.openai.chat-model.temperature=0&#10;quarkus.langchain4j.openai.timeout=3600&#10;quarkus.langchain4j.openai.log-requests=false&#10;quarkus.langchain4j.openai.log-responses=false" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="Properties" value="true" />
+    </context>
+  </template>
+  <template name="28-AIEndpointService-annotation" value="@io.quarkiverse.langchain4j.RegisterAiService&#10;@jakarta.enterprise.context.ApplicationScoped" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="30-jarvis-cli-question-param" value="  // Question to ask&#10;  @picocli.CommandLine.Parameters(paramLabel = &quot;&lt;question&gt;&quot;, defaultValue = &quot;Explique ton rôle en quelques mots&quot;, description = &quot;La question à poser à Jarvis.&quot;)&#10;  private java.lang.String question;" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="31-jarvis-cli-ai-svc" value="  @jakarta.inject.Inject&#10;  fr.wilda.picocli.sdk.ai.AIEndpointService aiEndpointService;" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="29-OVHcloudMistral-ask-method" value="  // Add some instructions to my LLM&#10;  @dev.langchain4j.service.SystemMessage(&quot;&quot;&quot;&#10;                   Ton nom est Jarvis. Tu es un assistant virtuel.&#10; Ton but est d'aider le mieux possible lorsque l'on te pose une question.&#10; Si tu ne sais pas répondre, réponds juste &quot;je ne sais pas répondre à cette question&quot;.&#10; Réponds de manière concise et simple.&#10;                 &quot;&quot;&quot;)&#10;  @dev.langchain4j.service.UserMessage(&quot;La question posée est la suivante : {question}&quot;)&#10;  io.smallrye.mutiny.Multi&lt;java.lang.String&gt; askAQuestion(java.lang.String question);" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="32-jarvis-cli-ai-svc-call" value="    _LOG.info(&quot;\n🤖:\n&quot;);&#10;&#10;    aiEndpointService.askAQuestion(question)&#10;    .subscribe()&#10;    .asStream()&#10;    .forEach(token -&gt; {&#10;      try {&#10;        java.util.concurrent.TimeUnit.MILLISECONDS.sleep(150);&#10;      } catch (java.lang.InterruptedException e) {&#10;        e.printStackTrace();&#10;      }&#10;      _LOG.info(token);&#10;    });&#10;&#10;    _LOG.info(&quot;\n&quot;);" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="35-rag-parameters" value="## RAG parameters&#10;jarvis.rag.resources=${JARVIS_RAG_RESOURCES}" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="Properties" value="true" />
+    </context>
+  </template>
+  <template name="36-in-memory-embedding-store" value="  @jakarta.enterprise.inject.Produces&#10;  @jakarta.enterprise.context.ApplicationScoped&#10;  public dev.langchain4j.store.embedding.EmbeddingStore&lt;dev.langchain4j.data.segment.TextSegment&gt; embeddingStore() {&#10;    return new dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore&lt;&gt;();&#10;  }" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="37-rag-resources" value="  @jakarta.inject.Inject&#10;  dev.langchain4j.store.embedding.EmbeddingStore&lt;dev.langchain4j.data.segment.TextSegment&gt; store;&#10;&#10;  @jakarta.inject.Inject&#10;  dev.langchain4j.model.embedding.EmbeddingModel embeddingModel;&#10;&#10;  @org.eclipse.microprofile.config.inject.ConfigProperty(name = &quot;jarvis.rag.resources&quot;)&#10;  java.lang.String defaultRagResourcesPath;" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="39-ingest-docs" value="    // Ingest documents in embedding store&#10;    for (dev.langchain4j.data.document.Document document : documents) {&#10;      io.quarkus.logging.Log.info(java.lang.String.format(&quot;📜 Load document: %s%n&quot;,document.metadata().getString(dev.langchain4j.data.document.Document.FILE_NAME)));&#10;      dev.langchain4j.store.embedding.EmbeddingStoreIngestor ingestor = dev.langchain4j.store.embedding.EmbeddingStoreIngestor&#10;          .builder()&#10;          .embeddingStore(store)&#10;          .embeddingModel(embeddingModel)&#10;          .documentSplitter(recursive(800, 0))&#10;          .build();&#10;      ingestor.ingest(document);&#10;    }" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="41-rag-option" value="    // Option to add some files to Jarvis knowledge&#10;    @picocli.CommandLine.Option(names = {&quot;-p&quot;, &quot;--path-to-files&quot;}, paramLabel = &quot;&lt;Path to files to add to Jarvis knowledge&gt;&quot;,&#10;            description = &quot;Path to files to use with RAG.&quot;)&#10;    private java.nio.file.Path pathToFile;" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="43-inject-services" value="    @jakarta.inject.Inject&#10;    fr.wilda.picocli.sdk.ai.AIEndpointService aiEndpointService;&#10;&#10;    @jakarta.inject.Inject&#10;    fr.wilda.picocli.sdk.ai.DocumentLoader documentLoader;" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="42-question-with-rag" value="    @picocli.CommandLine.Parameters(paramLabel = &quot;&lt;question&gt;&quot;, description = &quot;Question to ask, Jarvis use the documents provided to ask.&quot;)&#10;    java.lang.String question;" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="40-retriever" value="  // Create the retriever for embedding search&#10;  DocumentRetriever(dev.langchain4j.store.embedding.EmbeddingStore&lt;dev.langchain4j.data.segment.TextSegment&gt; store, dev.langchain4j.model.embedding.EmbeddingModel model) {&#10;    dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever contentRetriever = dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever.builder()&#10;        .embeddingModel(model)&#10;        .embeddingStore(store)&#10;        .maxResults(3)&#10;        .minScore(0.1)&#10;        .build();&#10;    augmentor = dev.langchain4j.rag.DefaultRetrievalAugmentor.builder()&#10;        .contentRetriever(contentRetriever)&#10;        .build();&#10;  }" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="44-call-with-rag" value="      if (question != null &amp;&amp; !question.isEmpty()) {&#10;            documentLoader.loadDocument(pathToFile);&#10;&#10;            _LOG.info(&quot;\n🤖:\n&quot;);&#10;            aiEndpointService.askAQuestion(question)&#10;                    .subscribe()&#10;                    .asStream()&#10;                    .forEach(token -&gt; {&#10;                        try {&#10;                            java.util.concurrent.TimeUnit.MILLISECONDS.sleep(150);&#10;                        } catch (java.lang.InterruptedException e) {&#10;                            e.printStackTrace();&#10;                        }&#10;                        _LOG.info(token);&#10;                    });&#10;            _LOG.info(&quot;\n&quot;);&#10;        } else {&#10;            _LOG.info(&quot;⁉️ Ask a question to use RAG feature ⁉️.&quot;);&#10;        }" description="" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="47-mcp-parameters" value="## MCP parameters&#10;quarkus.langchain4j.mcp.ovhcloud.transport-type=streamable-http&#10;quarkus.langchain4j.mcp.ovhcloud.url=https://mcp.eu.ovhcloud.com/mcp&#10;quarkus.langchain4j.mcp.ovhcloud.log-requests=false&#10;quarkus.langchain4j.mcp.ovhcloud.log-responses=false" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="Properties" value="true" />
+    </context>
+  </template>
+  <template name="48-OVHcloud-MCP-PAT" value="@org.eclipse.microprofile.config.inject.ConfigProperty(name = &quot;ovhcloud.pat&quot;)&#10;  java.lang.String ovhcloudPAT;" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="49-bearer-for-mcp" value="  @java.lang.Override&#10;  public java.lang.String getAuthorization(io.quarkiverse.langchain4j.mcp.auth.McpClientAuthProvider.Input input) {&#10;    return &quot;Bearer &quot; + ovhcloudPAT;&#10;  }" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="50-question-event" value="  @dev.langchain4j.service.SystemMessage(&quot;&quot;&quot;&#10;                   Ton nom est Jarvis. Tu es un assistant virtuel.&#10; Ton but est d'aider le mieux possible lorsque l'on te pose une question.&#10; Si tu ne sais pas répondre, réponds juste &quot;je ne sais pas répondre à cette question&quot;.&#10; Réponds de manière concise et simple.&#10; Si on te pose des questions sur OVHcloud utilise les outils à ta disposition.&#10;&#10;                 &quot;&quot;&quot;)&#10;  @dev.langchain4j.service.UserMessage(&quot;La question posée est la suivante : {question}&quot;)&#10;  @io.quarkiverse.langchain4j.ToolBox(fr.wilda.picocli.sdk.ai.TimeAndDateTool.class)&#10;  @io.quarkiverse.langchain4j.mcp.runtime.McpToolBox&#10;  io.smallrye.mutiny.Multi&lt;io.quarkiverse.langchain4j.runtime.aiservice.ChatEvent&gt; askAQuestionEvent(java.lang.String question);" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="51-call-llm-with-mcp" value="// Call the LLM and ask for human validation before toll calling&#10;        try {&#10;            aiEndpointService.askAQuestionEvent(question)&#10;                    .onItem()&#10;                    .invoke(event -&gt; {&#10;                        switch (event) {&#10;                            case io.quarkiverse.langchain4j.runtime.aiservice.ChatEvent.PartialResponseEvent e -&gt; {&#10;                                io.quarkus.logging.Log.info(e.getChunk());&#10;                            }&#10;                            case io.quarkiverse.langchain4j.runtime.aiservice.ChatEvent.BeforeToolExecutionEvent e -&gt; {&#10;                                io.quarkus.logging.Log.info(java.lang.String.format(&quot;⚠️ Please valid the tool usage: %s ⚠️%n&quot;, e.getRequest().name()));&#10;                                java.util.Scanner scanner = new java.util.Scanner(java.lang.System.in);&#10;                                if (scanner.next()&#10;                                        .equals(&quot;ok&quot;)) {&#10;                                    io.quarkus.logging.Log.info(java.lang.String.format(&quot;🔧 Using tool: %s&quot;, e.getRequest().name()));&#10;                                } else {&#10;                                    throw new fr.wilda.picocli.sdk.ai.McpToolsException();&#10;                                }&#10;                            }&#10;                            default -&gt; {&#10;                            }&#10;                        }&#10;                    })&#10;                    .collect()&#10;                    .asList()&#10;                    .await()&#10;                    .indefinitely();&#10;&#10;            io.quarkus.logging.Log.info(&quot;\n&quot;);&#10;        } catch (fr.wilda.picocli.sdk.ai.McpToolsException e) {&#10;            io.quarkus.logging.Log.info(&quot;⛔️ User did not validate the use of the tool ⛔️!&quot;);&#10;        }" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+</templateSet>
