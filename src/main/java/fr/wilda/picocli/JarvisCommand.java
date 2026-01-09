@@ -13,7 +13,14 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @TopCommand
-@Command(name = "jarvis", mixinStandardHelpOptions = true, subcommands = {OVHcloudSubCommand.class, RagSubCommand.class, McpSubCommand.class, GenerateCompletion.class})
+@Command(name = "jarvis", mixinStandardHelpOptions = true, subcommands = {
+    OVHcloudSubCommand.class,
+    RagSubCommand.class,
+    McpSubCommand.class,
+    WorkflowSubCommand.class,  // Approche Workflow Agentique
+    AgentSubCommand.class,     // Approche Agent ReAct
+    GenerateCompletion.class
+})
 public class JarvisCommand implements Callable<Integer> {
   // Logger
   private static final Logger _LOG = LoggerFactory.getLogger(JarvisCommand.class);

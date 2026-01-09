@@ -56,6 +56,12 @@
             <version>${quarkus.langchain4j.version}</version>
         </dependency>
         <dependency>
+            <groupId>io.quarkiverse.langchain4j</groupId>
+            <artifactId>quarkus-langchain4j-agentic</artifactId>
+            <version>${quarkus.langchain4j.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-junit5</artifactId>
             <scope>test</scope>
