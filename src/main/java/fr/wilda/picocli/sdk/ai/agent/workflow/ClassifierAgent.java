@@ -1,7 +1,6 @@
-package fr.wilda.picocli.sdk.ai;
+package fr.wilda.picocli.sdk.ai.agent.workflow;
 
 import dev.langchain4j.agentic.Agent;
-import dev.langchain4j.agentic.declarative.ConditionalAgent;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 import io.quarkiverse.langchain4j.RegisterAiService;
@@ -27,8 +26,8 @@ public interface ClassifierAgent {
     }
 
     @SystemMessage("""
-        Tu es un classificateur d'intentions. Analyse la question et retourne UNIQUEMENT
-        l'un des mots suivants: OVHCLOUD_API, RAG, MCP, TIME, CHAT
+        Tu es un classificateur qui permet de déterminer quel type de sous commande il faut appeler dans Jarvis. 
+        Analyse la question et retourne UNIQUEMENT l'un des mots suivants: OVHCLOUD_API, RAG, MCP, TIME, CHAT
         
         Règles de classification:
         - OVHCLOUD_API: demande explicite d'utiliser l'API pour accéder aux informations de compte OVHcloud ou des clusters Kubernetes
@@ -37,7 +36,7 @@ public interface ClassifierAgent {
         - TIME: heure, date, "quelle heure", aujourd'hui, maintenant
         - CHAT: tout le reste (conversation générale, questions sans rapport avec les autres catégories)
         
-        IMPORTANT: Réponds UNIQUEMENT par le mot de l'intention en majuscules, rien d'autre.
+        IMPORTANT: Réponds UNIQUEMENT par le mot représentant la sous-commande en majuscules, rien d'autre.
         Pas d'explication, pas de phrase, juste le mot.
         
         Exemples:
@@ -48,7 +47,7 @@ public interface ClassifierAgent {
         - "Raconte-moi une blague" → CHAT
         """)
     @UserMessage("{question}")
-    @ConditionalAgent(outputKey = "subCommand", subAgents = {})
+    @Agent(outputKey = "subCommand")
     SubCommand classify(String question);
 }
 
