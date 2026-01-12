@@ -8,6 +8,7 @@ import dev.langchain4j.rag.DefaultRetrievalAugmentor;
 import dev.langchain4j.rag.RetrievalAugmentor;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.store.embedding.EmbeddingStore;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
@@ -29,6 +30,7 @@ public class DocumentRetriever implements RetrievalAugmentor {
 
   @Override
   public AugmentationResult augment(AugmentationRequest augmentationRequest) {
+    Log.info("🔍 Retrieving relevant documents for augmentation request.");
     return augmentor.augment(augmentationRequest);
   }
 

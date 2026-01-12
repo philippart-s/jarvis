@@ -1,15 +1,15 @@
 package fr.wilda.picocli.sdk.ai.agent.workflow;
 
 import dev.langchain4j.agentic.declarative.SequenceAgent;
-import dev.langchain4j.agentic.declarative.SubAgent;
 
 public interface JarvisWorkflow {
 
-  @SequenceAgent(description = "Jarvis Workflow", subAgents =
+  @SequenceAgent(outputKey = "response", description = "Jarvis Workflow", subAgents =
       {
-          @SubAgent(type = ClassifierAgent.class),
-          @SubAgent(type = AvailableAgents.class)
+          ClassifierAgent.class,
+          AvailableAgents.class
       })
-  void executeJarvisWorkflow(String userInput);
+  String executeJarvisWorkflow(String userInput);
+
 }
 

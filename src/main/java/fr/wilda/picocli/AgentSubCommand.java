@@ -14,18 +14,6 @@ import java.util.Scanner;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
-/**
- * Sous-commande illustrant l'approche Agent ReAct.
- *
- * L'agent utilise une boucle autonome:
- * 1. 🤔 THINK - Le LLM analyse et décide
- * 2. 🎯 ACT - Exécution de l'outil choisi
- * 3. 👁️ OBSERVE - Analyse du résultat
- * 4. 🔄 REPEAT - Jusqu'à la réponse finale
- *
- * La boucle est gérée automatiquement par LangChain4j.
- * Les événements ChatEvent permettent de visualiser chaque étape.
- */
 @Command(name = "agent",
         description = "Mode agent ReAct - L'agent décide autonomement des actions (Think → Act → Observe → Repeat)",
         mixinStandardHelpOptions = true,
@@ -34,10 +22,6 @@ public class AgentSubCommand implements Callable<Integer> {
 
     @Inject
     AgentAIService agentService;
-
-    @Inject
-    AgentChatMemoryProvider chatMemoryProvider;
-
     @Parameters(paramLabel = "<question>",
                 description = "Question à poser à l'agent",
                 defaultValue = "")
@@ -56,7 +40,11 @@ public class AgentSubCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-        String sessionId = UUID.randomUUID().toString();
+      // ie: donne moi le programme du Mars JUG contenu dans le document en ta disposition
+      Log.info("💬: " + question);
+      Log.info("🤖: " + agentService.chatSync(question));
+
+        /*String sessionId = UUID.randomUUID().toString();
 
         Log.info("\n🤖 Mode Agent ReAct\n");
         Log.info("━".repeat(50));
@@ -75,8 +63,8 @@ public class AgentSubCommand implements Callable<Integer> {
         }
 
         // Nettoyer la mémoire à la fin
-        chatMemoryProvider.clear(sessionId);
-
+        //chatMemoryProvider.clear(sessionId);
+*/
         return 0;
     }
 
@@ -123,12 +111,12 @@ public class AgentSubCommand implements Callable<Integer> {
      * Utilise ChatEvent pour afficher la boucle ReAct en mode verbose.
      */
     private void processMessage(String sessionId, String message) {
-        Log.info("\n🤖 Jarvis:\n");
+        /*Log.info("\n🤖 Jarvis:\n");
 
         int[] toolCallCount = {0}; // Compteur d'appels d'outils
 
         try {
-            agentService.chat(sessionId, message)
+            agentService.chatSync((message)
                     .onItem()
                     .invoke(event -> handleChatEvent(event, toolCallCount))
                     .collect()
@@ -147,7 +135,7 @@ public class AgentSubCommand implements Callable<Integer> {
             }
         }
 
-        Log.info("\n");
+        Log.info("\n");*/
     }
 
     /**
