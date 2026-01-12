@@ -2,7 +2,9 @@ package fr.wilda.picocli.sdk.ai.agent.workflow;
 
 import dev.langchain4j.agentic.declarative.ActivationCondition;
 import dev.langchain4j.agentic.declarative.ConditionalAgent;
+import io.quarkiverse.langchain4j.runtime.aiservice.ChatEvent;
 import io.quarkus.logging.Log;
+import io.smallrye.mutiny.Multi;
 
 public interface AvailableAgents {
 
@@ -12,9 +14,9 @@ public interface AvailableAgents {
           RagAgent.class,
           JarvisAgent.class,
       },
-      outputKey = "response"
+      outputKey = "WFresponse"
   )
-  String executeAgent(String userInput, ClassifierAgent.SubCommand subCommand);
+  Multi<ChatEvent> executeAgent(String userInput, ClassifierAgent.SubCommand subCommand);
 
   @ActivationCondition(OVHcloudAgent.class)
   static boolean activateOVHcloudAgent(ClassifierAgent.SubCommand subCommand) {

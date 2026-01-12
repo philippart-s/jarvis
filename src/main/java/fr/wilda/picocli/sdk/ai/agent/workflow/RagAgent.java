@@ -4,6 +4,8 @@ import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 import io.quarkiverse.langchain4j.ToolBox;
+import io.quarkiverse.langchain4j.runtime.aiservice.ChatEvent;
+import io.smallrye.mutiny.Multi;
 
 public interface RagAgent {
 
@@ -19,5 +21,5 @@ public interface RagAgent {
   @UserMessage("{userInput}")
   @Agent(description = "This agent should be use when data are a document.")
   @ToolBox({RagTool.class})
-  String askAQuestionEvent(String userInput);
+  Multi<ChatEvent> askAQuestionEvent(String userInput);
 }

@@ -19,7 +19,7 @@ public interface JarvisAgent {
                   If you don’t know how to answer, just reply “I don’t know how to answer this question.”
                   Answer in a concise and simple way.
                  """)
-  @Agent(description = "Agent à utiliser lorsque la demande générale.", outputKey = "response")
+  @Agent(description = "Agent à utiliser lorsque la demande générale.", outputKey = "WFresponse")
   @UserMessage("{userInput}")
-  String askAQuestion(String userInput);
+  Multi<ChatEvent> askAQuestion(String userInput);
 }

@@ -6,6 +6,8 @@ import dev.langchain4j.service.UserMessage;
 import fr.wilda.picocli.sdk.ai.TimeAndDateTool;
 import io.quarkiverse.langchain4j.ToolBox;
 import io.quarkiverse.langchain4j.mcp.runtime.McpToolBox;
+import io.quarkiverse.langchain4j.runtime.aiservice.ChatEvent;
+import io.smallrye.mutiny.Multi;
 
 public interface OVHcloudAgent {
 
@@ -16,7 +18,7 @@ public interface OVHcloudAgent {
                  """)
   @UserMessage("La question posée est la suivante : {userInput}")
   @ToolBox(TimeAndDateTool.class)
-  //@McpToolBox
-  @Agent(description = "Agent à utiliser lorsque la demande concerne OVHcloud",outputKey = "response")
-  String askAQuestionEvent(String userInput);
+  @McpToolBox
+  @Agent(description = "Agent à utiliser lorsque la demande concerne OVHcloud", outputKey = "WFresponse")
+  Multi<ChatEvent> askAQuestion(String userInput);
 }
