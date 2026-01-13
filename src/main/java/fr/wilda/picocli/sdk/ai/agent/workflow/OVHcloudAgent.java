@@ -1,18 +1,11 @@
 package fr.wilda.picocli.sdk.ai.agent.workflow;
 
 import dev.langchain4j.agentic.Agent;
-import dev.langchain4j.agentic.declarative.HumanInTheLoop;
-import dev.langchain4j.agentic.declarative.HumanInTheLoopResponseSupplier;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
-import dev.langchain4j.service.V;
-import fr.wilda.picocli.sdk.ai.McpToolsException;
-import fr.wilda.picocli.sdk.ai.TimeAndDateTool;
+import fr.wilda.picocli.sdk.ai.tool.TimeAndDateTool;
 import io.quarkiverse.langchain4j.ToolBox;
 import io.quarkiverse.langchain4j.mcp.runtime.McpToolBox;
-import io.quarkus.logging.Log;
-
-import java.util.Scanner;
 
 public interface OVHcloudAgent {
 

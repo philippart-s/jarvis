@@ -1,7 +1,7 @@
 package fr.wilda.picocli;
 
 import fr.wilda.picocli.sdk.ai.AIEndpointService;
-import fr.wilda.picocli.sdk.ai.McpToolsException;
+import fr.wilda.picocli.sdk.ai.mcp.McpToolsException;
 import io.quarkiverse.langchain4j.runtime.aiservice.ChatEvent;
 import io.quarkus.logging.Log;
 import jakarta.inject.Inject;

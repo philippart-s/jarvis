@@ -1,8 +1,6 @@
 package fr.wilda.picocli;
 
-import fr.wilda.picocli.sdk.ai.McpToolsException;
 import fr.wilda.picocli.sdk.ai.agent.workflow.JarvisWorkflow;
-import io.quarkiverse.langchain4j.runtime.aiservice.ChatEvent;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.control.ActivateRequestContext;
@@ -38,9 +36,10 @@ public class WorkflowSubCommand implements Callable<Integer> {
     // workflow "donne moi le détail de mon compte ovhcloud"
     // workflow "en te basant sur les documents en ta procession donne moi le programme du Mars JUG"
 
-    Log.info("━".repeat(50));
-    Log.info("🔄 Mode Workflow Agentique");
-    Log.info("━".repeat(50));
+    Log.info(String.format("━".repeat(50) + "%n"));
+    Log.info(String.format("🔀 Agentic workflow 🔀%n"));
+    Log.info(String.format("ℹ️ Enter exit to quit ℹ️%n"));
+    Log.info(String.format("━".repeat(50) + "%n"));
 
     if (!interactive) {
       processResponse(jarvisWorkflow.executeJarvisWorkflow(question));
@@ -70,6 +69,7 @@ public class WorkflowSubCommand implements Callable<Integer> {
           }
           Log.info(token);
         });
+    Log.info("\n");
   }
 }
 

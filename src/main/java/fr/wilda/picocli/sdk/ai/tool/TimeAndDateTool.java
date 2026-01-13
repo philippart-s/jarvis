@@ -1,4 +1,4 @@
-package fr.wilda.picocli.sdk.ai;
+package fr.wilda.picocli.sdk.ai.tool;
 
 import dev.langchain4j.agent.tool.Tool;
 import io.quarkus.logging.Log;

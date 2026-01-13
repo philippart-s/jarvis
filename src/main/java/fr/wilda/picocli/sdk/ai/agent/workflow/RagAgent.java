@@ -3,6 +3,7 @@ package fr.wilda.picocli.sdk.ai.agent.workflow;
 import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
+import fr.wilda.picocli.sdk.ai.tool.RagTool;
 import io.quarkiverse.langchain4j.ToolBox;
 
 public interface RagAgent {

@@ -2,6 +2,7 @@ package fr.wilda.picocli.sdk.ai;
 
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
+import fr.wilda.picocli.sdk.ai.tool.TimeAndDateTool;
 import io.quarkiverse.langchain4j.RegisterAiService;
 import io.quarkiverse.langchain4j.ToolBox;
 import io.quarkiverse.langchain4j.mcp.runtime.McpToolBox;

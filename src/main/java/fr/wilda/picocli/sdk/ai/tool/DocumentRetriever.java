@@ -1,4 +1,4 @@
-package fr.wilda.picocli.sdk.ai;
+package fr.wilda.picocli.sdk.ai.tool;
 
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
@@ -30,7 +30,7 @@ public class DocumentRetriever implements RetrievalAugmentor {
 
   @Override
   public AugmentationResult augment(AugmentationRequest augmentationRequest) {
-    Log.info("🔍 Retrieving relevant documents for augmentation request.");
+    Log.info(String.format("🔍 Retrieving relevant documents for augmentation request.%n"));
     return augmentor.augment(augmentationRequest);
   }
 

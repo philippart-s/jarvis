@@ -18,23 +18,29 @@ public interface AvailableAgents {
 
   @ActivationCondition(OVHcloudAgent.class)
   static boolean activateOVHcloudAgent(ClassifierAgent.SubCommand subCommand) {
-    Log.info("Activation of OVHcloudAgent: " + subCommand);
-    Log.info(subCommand.equals(ClassifierAgent.SubCommand.MCP));
-    return subCommand.equals(ClassifierAgent.SubCommand.MCP);
+    var isActivated = subCommand.equals(ClassifierAgent.SubCommand.MCP);
+    if (isActivated) {
+      Log.info(String.format("Agent to activate: %s%n",  subCommand));
+    }
+    return isActivated;
   }
 
   @ActivationCondition(RagAgent.class)
   static boolean activateRagAgent(ClassifierAgent.SubCommand subCommand) {
-    Log.info("Activation of RagAgent : " + subCommand);
-    Log.info(subCommand.equals(ClassifierAgent.SubCommand.RAG));
-    return subCommand.equals(ClassifierAgent.SubCommand.RAG);
+    var isActivated = subCommand.equals(ClassifierAgent.SubCommand.RAG);
+    if (isActivated) {
+      Log.info(String.format("Agent to activate: %s%n",  subCommand));
+    }
+    return isActivated;
   }
 
   @ActivationCondition(JarvisAgent.class)
   static boolean activateJarvisAgent(ClassifierAgent.SubCommand subCommand) {
-    Log.info("Activation of Jarvis : " + subCommand);
-    Log.info(subCommand.equals(ClassifierAgent.SubCommand.CHAT));
-    return subCommand.equals(ClassifierAgent.SubCommand.CHAT);
+    var isActivated = subCommand.equals(ClassifierAgent.SubCommand.CHAT);
+    if (isActivated) {
+      Log.info(String.format("Agent to activate: %s%n",  subCommand));
+    }
+    return isActivated;
   }
 
 }

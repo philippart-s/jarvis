@@ -1,11 +1,9 @@
 package fr.wilda.picocli;
 
-import fr.wilda.picocli.sdk.ai.McpToolsException;
 import fr.wilda.picocli.sdk.ai.agent.manual.ClassifierAgent;
 import fr.wilda.picocli.sdk.ai.agent.manual.OVHcloudAgent;
 import fr.wilda.picocli.sdk.ai.agent.manual.RagAgent;
 import fr.wilda.picocli.sdk.ai.agent.manual.JarvisAgent;
-import io.quarkiverse.langchain4j.runtime.aiservice.ChatEvent;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.control.ActivateRequestContext;
 import jakarta.inject.Inject;
@@ -13,7 +11,6 @@ import picocli.AutoComplete.GenerateCompletion;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
-import java.util.Scanner;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
