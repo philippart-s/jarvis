@@ -1,4 +1,4 @@
-package fr.wilda.picocli.sdk.ai.agent.manual;
+package fr.wilda.picocli.sdk.ai.agent.common;
 
 import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.service.SystemMessage;
@@ -17,7 +17,7 @@ public interface RagAgent {
                  Call the tool that help you to load document in the RAG system.
                  """)
   @UserMessage("{userInput}")
-  @Agent(description = "This agent should be use when data are a document.")
+  @Agent(description = "This agent should be use when data are a document.", outputKey = "agentResponse")
   @ToolBox({RagTool.class})
   String askAQuestionEvent(String userInput);
 }

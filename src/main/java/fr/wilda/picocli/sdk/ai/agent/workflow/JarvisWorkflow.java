@@ -1,7 +1,8 @@
 package fr.wilda.picocli.sdk.ai.agent.workflow;
 
 import dev.langchain4j.agentic.declarative.SequenceAgent;
-import io.quarkiverse.langchain4j.runtime.aiservice.ChatEvent;
+import fr.wilda.picocli.sdk.ai.agent.common.ClassifierAgent;
+import fr.wilda.picocli.sdk.ai.agent.common.JarvisAgent;
 import io.smallrye.mutiny.Multi;
 
 public interface JarvisWorkflow {
@@ -10,7 +11,7 @@ public interface JarvisWorkflow {
       {
           ClassifierAgent.class,
           AvailableAgents.class,
-          JarvisLastAgent.class
+          JarvisAgent.class
       })
   Multi<String> executeJarvisWorkflow(String userInput);
 

@@ -1,9 +1,9 @@
 package fr.wilda.picocli;
 
-import fr.wilda.picocli.sdk.ai.agent.manual.ClassifierAgent;
-import fr.wilda.picocli.sdk.ai.agent.manual.OVHcloudAgent;
-import fr.wilda.picocli.sdk.ai.agent.manual.RagAgent;
-import fr.wilda.picocli.sdk.ai.agent.manual.JarvisAgent;
+import fr.wilda.picocli.sdk.ai.agent.common.RagAgent;
+import fr.wilda.picocli.sdk.ai.agent.common.ClassifierAgent;
+import fr.wilda.picocli.sdk.ai.agent.common.OVHcloudAgent;
+import fr.wilda.picocli.sdk.ai.agent.common.JarvisAgent;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.control.ActivateRequestContext;
 import jakarta.inject.Inject;
@@ -23,7 +23,6 @@ public class ManualWorkflowSubCommand implements Callable<Integer> {
   @Parameters(paramLabel = "<question>", description = "Question à poser à Jarvis mode workflow agentique")
   String question;
 
-
   @Inject
   ClassifierAgent classifierAgent;
 
@@ -40,7 +39,7 @@ public class ManualWorkflowSubCommand implements Callable<Integer> {
   public Integer call() throws Exception {
     // manual-workflow "pourquoi le ciel est bleu?"
     // manual-workflow "donne moi le détail de mon compte ovhcloud"
-    // manual-workflow "en te basant sur les documents en ta procession donne moi le programme du Mars JUG de janvier 2026"
+    // manual-workflow "en te basant sur les documents en ta procession donne-moi le programme du Mars JUG de janvier 2026"
 
     String agentResponse = "";
 

@@ -1,15 +1,11 @@
-package fr.wilda.picocli.sdk.ai.agent.workflow;
+package fr.wilda.picocli.sdk.ai.agent.common;
 
 import dev.langchain4j.agentic.Agent;
-import dev.langchain4j.agentic.declarative.ActivationCondition;
-import dev.langchain4j.agentic.declarative.ConditionalAgent;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
-import io.quarkiverse.langchain4j.runtime.aiservice.ChatEvent;
-import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Multi;
 
-public interface JarvisLastAgent {
+public interface JarvisAgent {
   @SystemMessage("""
                   You are a virtual assistant.
                   Your goal is to help as best as possible when you are asked a question.

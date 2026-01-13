@@ -2,6 +2,9 @@ package fr.wilda.picocli.sdk.ai.agent.workflow;
 
 import dev.langchain4j.agentic.declarative.ActivationCondition;
 import dev.langchain4j.agentic.declarative.ConditionalAgent;
+import fr.wilda.picocli.sdk.ai.agent.common.ClassifierAgent;
+import fr.wilda.picocli.sdk.ai.agent.common.OVHcloudAgent;
+import fr.wilda.picocli.sdk.ai.agent.common.RagAgent;
 import io.quarkus.logging.Log;
 
 public interface AvailableAgents {
@@ -10,7 +13,7 @@ public interface AvailableAgents {
       subAgents = {
           OVHcloudAgent.class,
           RagAgent.class,
-          JarvisAgent.class
+          ChatAgent.class
       },
       outputKey = "agentResponse"
   )
@@ -34,7 +37,7 @@ public interface AvailableAgents {
     return isActivated;
   }
 
-  @ActivationCondition(JarvisAgent.class)
+  @ActivationCondition(ChatAgent.class)
   static boolean activateJarvisAgent(ClassifierAgent.SubCommand subCommand) {
     var isActivated = subCommand.equals(ClassifierAgent.SubCommand.CHAT);
     if (isActivated) {

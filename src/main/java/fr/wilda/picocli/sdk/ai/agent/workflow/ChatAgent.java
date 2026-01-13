@@ -4,7 +4,7 @@ import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 
-public interface JarvisAgent {
+public interface ChatAgent {
   @SystemMessage("""
                   You are a virtual assistant.
                   Your goal is to help as best as possible when you are asked a question.
