@@ -9,7 +9,8 @@ public interface JarvisWorkflow {
   @SequenceAgent(outputKey = "WFresponse", description = "Jarvis Workflow", subAgents =
       {
           ClassifierAgent.class,
-          AvailableAgents.class
+          AvailableAgents.class,
+          JarvisLastAgent.class
       })
   Multi<ChatEvent> executeJarvisWorkflow(String userInput);
 

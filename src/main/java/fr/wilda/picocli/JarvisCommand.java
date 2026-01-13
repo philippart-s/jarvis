@@ -19,7 +19,8 @@ import picocli.CommandLine.Parameters;
     McpSubCommand.class,
     WorkflowSubCommand.class,  // Approche Workflow Agentique
     AgentSubCommand.class,     // Approche Agent ReAct
-    GenerateCompletion.class
+    GenerateCompletion.class,
+    ManualWorkflowSubCommand.class
 })
 public class JarvisCommand implements Callable<Integer> {
   // Logger

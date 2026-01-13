@@ -4,6 +4,7 @@ import fr.wilda.picocli.sdk.ai.McpToolsException;
 import fr.wilda.picocli.sdk.ai.agent.workflow.JarvisWorkflow;
 import io.quarkiverse.langchain4j.runtime.aiservice.ChatEvent;
 import io.quarkus.logging.Log;
+import jakarta.enterprise.context.control.ActivateRequestContext;
 import jakarta.inject.Inject;
 import picocli.AutoComplete.GenerateCompletion;
 import picocli.CommandLine.Command;
@@ -12,6 +13,7 @@ import picocli.CommandLine.Parameters;
 import java.util.Scanner;
 import java.util.concurrent.Callable;
 
+@ActivateRequestContext
 @Command(name = "workflow",
     description = "Mode workflow agentique - Orchestration explicite des étapes (Classification → Routage → Exécution)",
     mixinStandardHelpOptions = true,
@@ -25,9 +27,13 @@ public class WorkflowSubCommand implements Callable<Integer> {
 
   @Override
   public Integer call() throws Exception {
+    // workflow "pourquoi le ciel est bleu?"
+    // workflow "donne moi le détail de mon compte ovhcloud"
+    // workflow "en te basant sur les documents en ta procession donne moi le programme du Mars JUG"
+
     Log.info("━".repeat(50));
-    Log.info("\n🔄 Mode Workflow Agentique\n");
-    Log.info("━".repeat(50) + "\n");
+    Log.info("🔄 Mode Workflow Agentique");
+    Log.info("━".repeat(50));
 
     jarvisWorkflow.executeJarvisWorkflow(question).onItem()
         .invoke(event -> {

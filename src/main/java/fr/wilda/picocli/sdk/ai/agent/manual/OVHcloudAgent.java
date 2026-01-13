@@ -1,30 +1,24 @@
-package fr.wilda.picocli.sdk.ai.agent.workflow;
+package fr.wilda.picocli.sdk.ai.agent.manual;
 
 import dev.langchain4j.agentic.Agent;
-import dev.langchain4j.agentic.declarative.HumanInTheLoop;
-import dev.langchain4j.agentic.declarative.HumanInTheLoopResponseSupplier;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
-import dev.langchain4j.service.V;
-import fr.wilda.picocli.sdk.ai.McpToolsException;
 import fr.wilda.picocli.sdk.ai.TimeAndDateTool;
 import io.quarkiverse.langchain4j.ToolBox;
 import io.quarkiverse.langchain4j.mcp.runtime.McpToolBox;
-import io.quarkus.logging.Log;
-
-import java.util.Scanner;
 
 public interface OVHcloudAgent {
 
   @SystemMessage("""
                  You are specialized in OVHcloud products and account access.
                  If a request about OVHcloud resources is asked, use the tools provided for answser.
+                 Please just answer what the tools provide.
                  
                  If you don't know how to answer, just reply “⁉️ No data found for {userInput} on OVHcloud project ⁉️”
                  """)
-  @UserMessage("{userInput}")
+  @UserMessage("La question posée est la suivante : {userInput}")
   @ToolBox(TimeAndDateTool.class)
   @McpToolBox
-  @Agent(description = "Agent à utiliser lorsque la demande concerne OVHcloud", outputKey = "agentResponse")
+  @Agent(description = "Use this agent to have OVHcloud public cloud account information.")
   String askAQuestion(String userInput);
 }
