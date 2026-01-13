@@ -4,9 +4,11 @@ import fr.wilda.picocli.sdk.ai.AgentAIService;
 import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
 import picocli.AutoComplete.GenerateCompletion;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
+import java.util.Scanner;
 import java.util.concurrent.Callable;
 
 @Command(name = "agent",
@@ -17,10 +19,14 @@ public class AgentSubCommand implements Callable<Integer> {
 
   @Inject
   AgentAIService agentService;
+
   @Parameters(paramLabel = "<question>",
       description = "Question à poser à l'agent",
       defaultValue = "")
   String question;
+
+  @CommandLine.Option(names = {"-i", "--interactive"})
+  boolean interactive;
 
 
   @Override
@@ -29,9 +35,21 @@ public class AgentSubCommand implements Callable<Integer> {
     // agent "donne moi le détail de mon compte ovhcloud"
     // agent "en te basant sur les documents en ta procession donne moi le programme du Mars JUG"
     // ie: donne moi le programme du Mars JUG contenu dans le document en ta disposition
-    Log.info("💬: " + question);
-    Log.info("🤖: " + agentService.chatSync(question));
-
+    if (!interactive) {
+      Log.info("💬: " + question);
+      Log.info("🤖: " + agentService.chatSync(question));
+    } else {
+      while (true) {
+        Log.info("💬> ");
+        Scanner scanner = new Scanner(System.in);
+        var prompt = scanner.nextLine();
+        if (prompt.equals("exit")) {
+          break;
+        } else {
+          Log.info("🤖> " + agentService.chatSync(prompt) + "\\n");
+        }
+      }
+    }
     return 0;
   }
 }

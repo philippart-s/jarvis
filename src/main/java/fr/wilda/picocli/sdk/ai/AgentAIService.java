@@ -27,7 +27,7 @@ public interface AgentAIService {
 
     @SupervisorRequest
     static String request(@V("userInput") String userInput) {
-      Log.info("Request received: " + userInput);
+      //Log.info("Request received: " + userInput);
       return "Answer to the following question: " + userInput;
     }
 }

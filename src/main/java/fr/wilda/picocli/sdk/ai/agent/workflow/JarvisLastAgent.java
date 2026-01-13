@@ -20,7 +20,7 @@ public interface JarvisLastAgent {
                  """)
   @Agent(description = "Agent à utiliser lorsque la demande générale.", outputKey = "WFresponse")
   @UserMessage("{userInput}")
-  Multi<ChatEvent> askAQuestion(String userInput, String agentResponse);
+  Multi<String> askAQuestion(String userInput, String agentResponse);
 }
 
 

@@ -12,7 +12,7 @@ public interface JarvisWorkflow {
           AvailableAgents.class,
           JarvisLastAgent.class
       })
-  Multi<ChatEvent> executeJarvisWorkflow(String userInput);
+  Multi<String> executeJarvisWorkflow(String userInput);
 
 }
 
