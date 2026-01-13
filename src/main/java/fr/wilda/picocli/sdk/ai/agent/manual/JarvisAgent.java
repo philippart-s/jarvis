@@ -17,5 +17,5 @@ public interface JarvisAgent {
                  """)
   @Agent(description = "Agent à utiliser lorsque la demande générale.")
   @UserMessage("{userInput}")
-  Multi<ChatEvent> askAQuestion(String userInput, String agentResponse);
+  Multi<String> askAQuestion(String userInput, String agentResponse);
 }

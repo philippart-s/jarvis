@@ -11,9 +11,9 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Provider de mémoire de conversation pour l'agent ReAct.
  * Permet de maintenir le contexte de la conversation entre les échanges.
- * Utilisé avec @MemoryId dans AgentAIService.
+ * Utilisé avec @MemoryId dans AutonomousAgent.
  */
-@ApplicationScoped
+//@ApplicationScoped
 public class AgentChatMemoryProvider implements ChatMemoryProvider {
 
     /**

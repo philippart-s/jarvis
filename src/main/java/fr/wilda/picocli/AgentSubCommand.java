@@ -1,6 +1,6 @@
 package fr.wilda.picocli;
 
-import fr.wilda.picocli.sdk.ai.AgentAIService;
+import fr.wilda.picocli.sdk.ai.agent.AutonomousAgent;
 import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
 import picocli.AutoComplete.GenerateCompletion;
@@ -18,7 +18,7 @@ import java.util.concurrent.Callable;
 public class AgentSubCommand implements Callable<Integer> {
 
   @Inject
-  AgentAIService agentService;
+  AutonomousAgent agentService;
 
   @Parameters(paramLabel = "<question>",
       description = "Question à poser à l'agent",
@@ -46,7 +46,7 @@ public class AgentSubCommand implements Callable<Integer> {
         if (prompt.equals("exit")) {
           break;
         } else {
-          Log.info("🤖> " + agentService.chatSync(prompt) + "\\n");
+          Log.info(String.format("🤖> %s %n", agentService.chatSync(prompt)));
         }
       }
     }

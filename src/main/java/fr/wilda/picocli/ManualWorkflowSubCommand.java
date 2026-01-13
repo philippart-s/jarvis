@@ -2,9 +2,9 @@ package fr.wilda.picocli;
 
 import fr.wilda.picocli.sdk.ai.McpToolsException;
 import fr.wilda.picocli.sdk.ai.agent.manual.ClassifierAgent;
-import fr.wilda.picocli.sdk.ai.agent.manual.JarvisAgent;
 import fr.wilda.picocli.sdk.ai.agent.manual.OVHcloudAgent;
 import fr.wilda.picocli.sdk.ai.agent.manual.RagAgent;
+import fr.wilda.picocli.sdk.ai.agent.manual.JarvisAgent;
 import io.quarkiverse.langchain4j.runtime.aiservice.ChatEvent;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.control.ActivateRequestContext;
@@ -15,6 +15,7 @@ import picocli.CommandLine.Parameters;
 
 import java.util.Scanner;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 @ActivateRequestContext
 @Command(name = "manual-workflow",
@@ -42,7 +43,7 @@ public class ManualWorkflowSubCommand implements Callable<Integer> {
   public Integer call() throws Exception {
     // manual-workflow "pourquoi le ciel est bleu?"
     // manual-workflow "donne moi le détail de mon compte ovhcloud"
-    // manual-workflow "en te basant sur les documents en ta procession donne moi le programme du Mars JUG"
+    // manual-workflow "en te basant sur les documents en ta procession donne moi le programme du Mars JUG de janvier 2026"
 
     String agentResponse = "";
 
@@ -69,33 +70,17 @@ public class ManualWorkflowSubCommand implements Callable<Integer> {
       }
     }
       Log.info("🤖 Call Jarvis Agent after agents 🤖");
-      jarvisAgent.askAQuestion(question, agentResponse).onItem()
-          .invoke(event -> {
-            switch (event) {
-              case ChatEvent.PartialResponseEvent e -> {
-                Log.info(e.getChunk());
-              }
-              case ChatEvent.BeforeToolExecutionEvent e -> {
-                Log.info(String.format("⚠️ Please valid the tool usage: %s ⚠️%n", e.getRequest().name()));
-                Log.info("Please type 'ok' to confirm the use of the tool: ");
-                Scanner scanner = new Scanner(System.in);
-                if (scanner.next()
-                    .equals("ok")) {
-                  Log.info(String.format("🔧 Using tool: %s", e.getRequest().name()));
-                } else {
-                  throw new McpToolsException();
-                }
-              }
-              default -> {
-              }
-            }
-          })
-          .collect()
-          .asList()
-          .await()
-          .indefinitely();
-
-
+      jarvisAgent.askAQuestion(question, agentResponse)
+          .subscribe()
+        .asStream()
+        .forEach(token -> {
+          try {
+            TimeUnit.MILLISECONDS.sleep(150);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
+          Log.info(token);
+        });
 
     return 0;
   }
