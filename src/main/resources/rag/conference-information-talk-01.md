@@ -1,13 +1,14 @@
 # Nom et information sur la conférence
 Le Mars JUG réunit régulièrement la communauté Java de Marseille et de sa région autour d'intervenants qui viennent nous parler de la plateforme Java et de son écosystème.
-Le temps d’une journée, la communauté se rassemble sous le soleil de La Rochelle pour se rencontrer, échanger et apprendre ensemble.
 
 ## Dates, lieux et contenus des événements
 
 ### Évènement du 21 janvier 2026
+Dans les locaux de Tricentis à Gemenos
 
 #### Sujet
 Mister WIP & Miss VSM in Factory Town©️
+19h - 20h
 
 #### Intervenant 
 Fanny Klauk
@@ -21,6 +22,7 @@ Venez découvrir une explication et une illustration décalée de ce qu’est l�
 
 #### Sujet
 ☕️ Picocli : mets du Java dans ton terminal ! 🖥️
+20h - 21h
 
 #### Intervenant
 Stéphane Philippart
