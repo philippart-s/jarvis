@@ -25,6 +25,9 @@ public class AgentSubCommand implements Callable<Integer> {
 
   @Override
   public Integer call() throws Exception {
+    // agent "pourquoi le ciel est bleu?"
+    // agent "donne moi le détail de mon compte ovhcloud"
+    // agent "en te basant sur les documents en ta procession donne moi le programme du Mars JUG"
     // ie: donne moi le programme du Mars JUG contenu dans le document en ta disposition
     Log.info("💬: " + question);
     Log.info("🤖: " + agentService.chatSync(question));

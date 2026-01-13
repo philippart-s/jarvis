@@ -40,6 +40,10 @@ public class ManualWorkflowSubCommand implements Callable<Integer> {
 
   @Override
   public Integer call() throws Exception {
+    // manual-workflow "pourquoi le ciel est bleu?"
+    // manual-workflow "donne moi le détail de mon compte ovhcloud"
+    // manual-workflow "en te basant sur les documents en ta procession donne moi le programme du Mars JUG"
+
     String agentResponse = "";
 
     Log.info("━".repeat(50));
