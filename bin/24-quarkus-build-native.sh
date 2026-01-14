@@ -6,10 +6,14 @@ export JDK_JAVA_OPTIONS='--add-opens java.base/java.lang=ALL-UNNAMED --enable-na
 
 clear
 
-bat -P -r 14: $(basename "$0")
+bat -P -r 14:15 $(basename "$0")
 
 read -n 1 -p "Press any key to continue"
 
 cd ..
 # Make the native executable
 quarkus build --native
+
+read -n 1 -p "Press any key to continue"
+
+du -h ./target/
