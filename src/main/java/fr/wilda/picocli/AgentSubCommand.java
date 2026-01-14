@@ -1,5 +1,6 @@
 package fr.wilda.picocli;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import fr.wilda.picocli.sdk.ai.agent.AutonomousAgent;
 import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
@@ -12,22 +13,13 @@ import java.util.Scanner;
 import java.util.concurrent.Callable;
 
 @Command(name = "agent",
-    description = "Mode agent ReAct - L'agent décide autonomement des actions (Think → Act → Observe → Repeat)",
+    description = "⚠️ YOLO mode!!! Autonomous agent selection. ⚠️",
     mixinStandardHelpOptions = true,
     subcommands = {GenerateCompletion.class})
-public class AgentSubCommand implements Callable<Integer> {
+public class AgentSubCommand extends BaseCommand implements Callable<Integer> {
 
   @Inject
   AutonomousAgent agentService;
-
-  @Parameters(paramLabel = "<question>",
-      description = "Question à poser à l'agent",
-      defaultValue = "")
-  String question;
-
-  @CommandLine.Option(names = {"-i", "--interactive"})
-  boolean interactive;
-
 
   @Override
   public Integer call() throws Exception {
@@ -35,9 +27,12 @@ public class AgentSubCommand implements Callable<Integer> {
     // agent "donne moi le détail de mon compte ovhcloud"
     // agent "en te basant sur les documents en ta procession donne moi le programme du Mars JUG"
     // ie: donne moi le programme du Mars JUG contenu dans le document en ta disposition
+    welcomeMessage();
+
     if (!interactive) {
-      Log.info("💬: " + question);
-      Log.info("🤖: " + agentService.chatSync(question));
+      if (!question.isEmpty()) {
+        Log.info(String.format("🤖> %s%n", agentService.ask(question)));
+      }
     } else {
       while (true) {
         Log.info("💬> ");
@@ -46,7 +41,7 @@ public class AgentSubCommand implements Callable<Integer> {
         if (prompt.equals("exit")) {
           break;
         } else {
-          Log.info(String.format("🤖> %s %n", agentService.chatSync(prompt)));
+          Log.info(String.format("🤖> %s%n", agentService.ask(question)));
         }
       }
     }

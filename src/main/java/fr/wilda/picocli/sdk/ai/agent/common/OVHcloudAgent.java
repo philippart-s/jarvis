@@ -18,6 +18,6 @@ public interface OVHcloudAgent {
   @UserMessage("{userInput}")
   @ToolBox(TimeAndDateTool.class)
   @McpToolBox
-  @Agent(description = "Agent à utiliser lorsque la demande concerne OVHcloud", outputKey = "agentResponse")
+  @Agent(description = "Use this agent to have details about OVHcloud products.", outputKey = "agentResponse")
   String askAQuestion(String userInput);
 }

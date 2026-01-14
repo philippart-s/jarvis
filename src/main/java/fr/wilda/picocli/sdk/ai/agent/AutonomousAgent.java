@@ -7,11 +7,12 @@ import dev.langchain4j.service.V;
 import fr.wilda.picocli.sdk.ai.agent.common.OVHcloudAgent;
 import fr.wilda.picocli.sdk.ai.agent.common.RagAgent;
 import fr.wilda.picocli.sdk.ai.agent.workflow.ChatAgent;
+import io.smallrye.mutiny.Multi;
 
 public interface AutonomousAgent {
     @SupervisorAgent(subAgents = {ChatAgent.class, RagAgent.class, OVHcloudAgent.class}, outputKey = "response",
         maxAgentsInvocations = 3, responseStrategy = SupervisorResponseStrategy.LAST)
-    String chatSync(@V("userInput") String userInput);
+    String ask(@V("userInput") String userInput);
 
     @SupervisorRequest
     static String request(@V("userInput") String userInput) {

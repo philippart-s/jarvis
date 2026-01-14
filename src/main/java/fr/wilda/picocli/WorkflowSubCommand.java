@@ -2,31 +2,21 @@ package fr.wilda.picocli;
 
 import fr.wilda.picocli.sdk.ai.agent.workflow.JarvisWorkflow;
 import io.quarkus.logging.Log;
-import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.control.ActivateRequestContext;
 import jakarta.inject.Inject;
 import picocli.AutoComplete.GenerateCompletion;
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Parameters;
 
 import java.util.Scanner;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 @ActivateRequestContext
 @Command(name = "workflow",
-    description = "Mode workflow agentique - Orchestration explicite des étapes (Classification → Routage → Exécution)",
+    description = "🔀 Agentic workflow - (Classification → Routing → Execution) 🔀",
     mixinStandardHelpOptions = true,
+    usageHelpAutoWidth=true,
     subcommands = {GenerateCompletion.class})
-public class WorkflowSubCommand implements Callable<Integer> {
-
-  @Parameters(paramLabel = "<question>", description = "Question à poser à Jarvis mode workflow agentique", defaultValue = "")
-  String question;
-
-  @CommandLine.Option(names = {"-i", "--interactive"})
-  boolean interactive;
-
+public class WorkflowSubCommand extends BaseCommand implements Callable<Integer> {
   @Inject
   JarvisWorkflow jarvisWorkflow;
 
@@ -35,14 +25,12 @@ public class WorkflowSubCommand implements Callable<Integer> {
     // workflow "pourquoi le ciel est bleu?"
     // workflow "donne moi le détail de mon compte ovhcloud"
     // workflow "en te basant sur les documents en ta procession donne moi le programme du Mars JUG"
-
-    Log.info(String.format("━".repeat(50) + "%n"));
-    Log.info(String.format("🔀 Agentic workflow 🔀%n"));
-    Log.info(String.format("ℹ️ Enter exit to quit ℹ️%n"));
-    Log.info(String.format("━".repeat(50) + "%n"));
+    welcomeMessage();
 
     if (!interactive) {
-      processResponse(jarvisWorkflow.executeJarvisWorkflow(question));
+      if (!question.isEmpty()) {
+        processResponse(jarvisWorkflow.executeJarvisWorkflow(question));
+      }
     } else {
       while (true) {
         Log.info("💬> ");
@@ -56,20 +44,6 @@ public class WorkflowSubCommand implements Callable<Integer> {
       }
     }
     return 0;
-  }
-
-  private void processResponse(Multi<String> response) {
-    response.subscribe()
-        .asStream()
-        .forEach(token -> {
-          try {
-            TimeUnit.MILLISECONDS.sleep(150);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-          Log.info(token);
-        });
-    Log.info("\n");
   }
 }
 

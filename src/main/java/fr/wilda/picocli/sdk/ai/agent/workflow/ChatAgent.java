@@ -11,7 +11,7 @@ public interface ChatAgent {
                   If you don’t know how to answer, just reply “I don’t know how to answer this question.”
                   Answer in a concise and simple way.
                  """)
-  @Agent(description = "Agent à utiliser lorsque la demande générale.", outputKey = "agentResponse")
+  @Agent(description = "Generalist agent for common questions.", outputKey = "agentResponse")
   @UserMessage("{userInput}")
   String askAQuestion(String userInput);
 }

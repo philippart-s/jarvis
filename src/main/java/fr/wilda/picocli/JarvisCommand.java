@@ -1,56 +1,49 @@
 package fr.wilda.picocli;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import fr.wilda.picocli.sdk.ai.AIEndpointService;
+import io.quarkus.logging.Log;
 import io.quarkus.picocli.runtime.annotations.TopCommand;
 import jakarta.inject.Inject;
 import picocli.AutoComplete.GenerateCompletion;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Parameters;
+
+import java.util.Scanner;
+import java.util.concurrent.Callable;
 
 @TopCommand
-@Command(name = "jarvis", mixinStandardHelpOptions = true, subcommands = {
+@Command(name = "jarvis", usageHelpAutoWidth = true, mixinStandardHelpOptions = true, subcommands = {
     OVHcloudSubCommand.class,
     RagSubCommand.class,
     McpSubCommand.class,
-    WorkflowSubCommand.class,  // Approche Workflow Agentique
-    AgentSubCommand.class,     // Approche Agent ReAct
+    WorkflowSubCommand.class,
+    AgentSubCommand.class,
     GenerateCompletion.class,
     ManualWorkflowSubCommand.class
 })
-public class JarvisCommand implements Callable<Integer> {
-  // Logger
-  private static final Logger _LOG = LoggerFactory.getLogger(JarvisCommand.class);
-
+public class JarvisCommand extends BaseCommand implements Callable<Integer> {
   @Inject
   AIEndpointService aiEndpointService;
 
-  // Question to ask
-  @Parameters(paramLabel = "<question>", defaultValue = "Explique ton rôle en quelques mots", description = "La question à poser à Jarvis.")
-  private String question;
-
   @Override
   public Integer call() throws Exception {
-    _LOG.info("\n🤖:\n");
+    welcomeMessage();
 
-    aiEndpointService.askAQuestion(question)
-    .subscribe()
-    .asStream()
-    .forEach(token -> {
-      try {
-        TimeUnit.MILLISECONDS.sleep(150);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
+    if (!interactive) {
+      if (!question.isEmpty()) {
+        processResponse(aiEndpointService.askAQuestion(question));
       }
-      _LOG.info(token);
-    });
-
-    _LOG.info("\n");
-
+    } else {
+      while (true) {
+        Log.info("💬> ");
+        Scanner scanner = new Scanner(System.in);
+        var prompt = scanner.nextLine();
+        if (prompt.equals("exit")) {
+          break;
+        } else {
+          processResponse(aiEndpointService.askAQuestion(prompt));
+        }
+      }
+    }
     return 0;
   }
 }

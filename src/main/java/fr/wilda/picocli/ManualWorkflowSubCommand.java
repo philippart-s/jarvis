@@ -1,5 +1,6 @@
 package fr.wilda.picocli;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import fr.wilda.picocli.sdk.ai.agent.common.RagAgent;
 import fr.wilda.picocli.sdk.ai.agent.common.ClassifierAgent;
 import fr.wilda.picocli.sdk.ai.agent.common.OVHcloudAgent;
@@ -11,6 +12,7 @@ import picocli.AutoComplete.GenerateCompletion;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
+import java.util.Scanner;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
@@ -19,9 +21,7 @@ import java.util.concurrent.TimeUnit;
     description = "Mode workflow agentique - Orchestration explicite des étapes (Classification → Routage → Exécution)",
     mixinStandardHelpOptions = true,
     subcommands = {GenerateCompletion.class})
-public class ManualWorkflowSubCommand implements Callable<Integer> {
-  @Parameters(paramLabel = "<question>", description = "Question à poser à Jarvis mode workflow agentique")
-  String question;
+public class ManualWorkflowSubCommand extends BaseCommand implements Callable<Integer> {
 
   @Inject
   ClassifierAgent classifierAgent;
@@ -41,23 +41,38 @@ public class ManualWorkflowSubCommand implements Callable<Integer> {
     // manual-workflow "donne moi le détail de mon compte ovhcloud"
     // manual-workflow "en te basant sur les documents en ta procession donne-moi le programme du Mars JUG de janvier 2026"
 
-    String agentResponse = "";
+    welcomeMessage();
 
-    Log.info("━".repeat(50));
-    Log.info("🔄 Mode Workflow Manuel");
-    Log.info("━".repeat(50));
+    if (!interactive) {
+      if (!question.isEmpty()) {
+        workflow(question);
+      }
+    } else {
+      while (true) {
+        Log.info("💬> ");
+        Scanner scanner = new Scanner(System.in);
+        var prompt = scanner.nextLine();
+        if (prompt.equals("exit")) {
+          break;
+        } else {
+          workflow(prompt);
+        }
+      }
+    }
+    return 0;
+  }
 
-    Log.info("🔀 Choose the right agent given the user prompt.");
-
-    var agentToCall = classifierAgent.classify(question);
+  private void workflow(String input) {
+    var agentResponse = "";
+    var agentToCall = classifierAgent.classify(input);
     switch (agentToCall) {
       case MCP -> {
         Log.info("☁️ MCP Agent selected ☁️");
-        agentResponse = ovhcloudAgent.askAQuestion(question);
+        agentResponse = ovhcloudAgent.askAQuestion(input);
       }
       case RAG -> {
         Log.info("📜 RAG Agent selected 📜");
-        ragAgent.askAQuestionEvent(question);
+        ragAgent.askAQuestionEvent(input);
 
       }
       case CHAT -> Log.info("Chat Agent selected");
@@ -65,20 +80,9 @@ public class ManualWorkflowSubCommand implements Callable<Integer> {
 
       }
     }
-      Log.info("🤖 Call Jarvis Agent after agents 🤖");
-      jarvisAgent.askAQuestion(question, agentResponse)
-          .subscribe()
-        .asStream()
-        .forEach(token -> {
-          try {
-            TimeUnit.MILLISECONDS.sleep(150);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-          Log.info(token);
-        });
 
-    return 0;
+    processResponse(jarvisAgent.askAQuestion(input, agentResponse));
+
   }
 }
 
