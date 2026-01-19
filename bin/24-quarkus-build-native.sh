@@ -16,4 +16,4 @@ quarkus build --native
 
 read -n 1 -p "Press any key to continue"
 
-du -h ./target/
+ll ../target/
