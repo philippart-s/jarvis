@@ -9,7 +9,7 @@ import io.quarkus.logging.Log;
 
 public interface AvailableAgents {
 
-  @ConditionalAgent(description = "Agent à utiliser pour savoir de quel type d'agent on a besoin : CHAT, MCP ou RAG.",
+  @ConditionalAgent(description = "Agent used to determine which type of agent is needed: CHAT, MCP, or RAG.",
       subAgents = {
           OVHcloudAgent.class,
           RagAgent.class,

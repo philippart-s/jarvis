@@ -4,15 +4,8 @@ import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 
-/**
- * Service de classification d'intentions pour l'approche Workflow.
- * Le LLM analyse la question et retourne l'intention correspondante.
- */
 public interface ClassifierAgent {
 
-  /**
-   * Énumération des intentions possibles.
-   */
   enum SubCommand {
     RAG,
     MCP,
@@ -20,27 +13,32 @@ public interface ClassifierAgent {
   }
 
   @SystemMessage("""
-      Tu es un classificateur qui permet de déterminer quel type de sous commande il faut appeler dans Jarvis. 
-      Analyse la question et retourne UNIQUEMENT l'un des mots suivants: RAG, MCP ou CHAT
-      
-      Règles de classification:
-      - RAG: questions mentionnant documents, fichiers, PDF, "dans le document", "selon le fichier"
-      - MCP: questions sur services OVHcloud via MCP, projets cloud, resources cloud
-      - CHAT: toutes les autres questions ne relevant pas des deux catégories précédentes.
-      
-      IMPORTANT: Réponds UNIQUEMENT par le mot représentant la sous-commande en majuscules, rien d'autre.
-      Pas d'explication, pas de phrase, juste le mot.
-      
-      Exemples:
-      - "Montre-moi mes infos OVHcloud" → MCP
-      - "Que dit le document sur X?" → RAG
-      - "Quel temps fait-il?" → CHAT
-      - "Comment créer un projet cloud?" → MCP
-      - "Résume le contenu du fichier PDF" → RAG
-      - "Qui est le président de la France?" → CHAT
+          You are a classification system that selects which Jarvis sub-command to call.
+           Given a user question, return ONLY ONE of the following tokens:
+           RAG, MCP, or CHAT
+  
+           Classification rules
+              - RAG → The question refers to documents, files, PDFs, or phrases like “in the document”, “according to the file”
+              - MCP → The question is about OVHcloud services, MCP usage, cloud projects, or cloud resources
+              - CHAT → Any question that does not match RAG or MCP
+  
+           STRICT OUTPUT RULES
+              - Output ONLY the token: RAG, MCP, or CHAT
+              - No explanations
+              - No punctuation
+              - No additional text
+              - No markdown
+  
+           Examples
+              - "Show me my OVHcloud information" → MCP
+              - "What does the document say about X?" → RAG
+              - "What's the weather like?" → CHAT
+              - "How do I create a cloud project?" → MCP
+              - "Summarize the PDF content" → RAG
+              - "Who is the President of France?" → CHAT
       """)
   @UserMessage("{userInput}")
-  @Agent(description = "Agent à utiliser pour classifier / identifier la demande utilisateur.",outputKey = "subCommand")
+  @Agent(description = "Agent to be used to classify / identify the user request.",outputKey = "subCommand")
   SubCommand classify(String userInput);
 }
 

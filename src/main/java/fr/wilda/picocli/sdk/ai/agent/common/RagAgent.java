@@ -17,7 +17,7 @@ public interface RagAgent {
                  Call the tool that help you to load document in the RAG system.
                  """)
   @UserMessage("{userInput}")
-  @Agent(description = "This agent should be use when data are a document.", outputKey = "agentResponse")
+  @Agent(description = "This agent should be use when prompt is about to get some information thanks to documents.", outputKey = "agentResponse")
   @ToolBox({RagTool.class})
   String askAQuestionEvent(String userInput);
 }

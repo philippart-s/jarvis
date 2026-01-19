@@ -41,7 +41,7 @@ public class AgentSubCommand extends BaseCommand implements Callable<Integer> {
         if (prompt.equals("exit")) {
           break;
         } else {
-          Log.info(String.format("🤖> %s%n", agentService.ask(question)));
+          Log.info(String.format("🤖> %s%n", agentService.ask(prompt)));
         }
       }
     }

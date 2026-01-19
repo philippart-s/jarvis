@@ -14,7 +14,7 @@ public class RagTool {
   @Inject
   DocumentLoader loader;
 
-  @Tool("Load document from given path into RAG system")
+  @Tool("Load document from the given path into the RAG system")
   void loadDocument(@V("Path to document to load into RAG system") String path) {
     Log.info(String.format("📜 Loading RAG document from %s%n", path));
 

@@ -14,7 +14,7 @@ public interface JarvisAgent {
                   
                   If you need more information, you can use information from agents: {agentResponse}
                  """)
-  @Agent(description = "Agent à utiliser lorsque la demande générale.", outputKey = "WFresponse")
+  @Agent(description = "Chatbot agent that uses data from other agent to have accuracy response.", outputKey = "WFresponse")
   @UserMessage("{userInput}")
   Multi<String> askAQuestion(String userInput, String agentResponse);
 }
