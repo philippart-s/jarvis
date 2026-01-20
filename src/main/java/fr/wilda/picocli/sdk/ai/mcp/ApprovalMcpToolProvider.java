@@ -28,7 +28,7 @@ public class ApprovalMcpToolProvider implements ToolProvider {
     Map<ToolSpecification, ToolExecutor> tools = new HashMap<>();
       for (ToolSpecification spec : mcpClient.listTools()) {
         tools.put(spec, (toolRequest, memoryId) -> {
-          // Validationdon
+          // Validation
           Log.info(String.format("⚠️ Please valid the tool usage: %s ⚠️%n", toolRequest.name()));
           Log.info("Please type 'ok' to confirm the use of the tool: ");
           Scanner scanner = new Scanner(System.in);

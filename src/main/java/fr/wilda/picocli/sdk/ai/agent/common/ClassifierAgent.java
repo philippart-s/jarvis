@@ -1,6 +1,8 @@
 package fr.wilda.picocli.sdk.ai.agent.common;
 
 import dev.langchain4j.agentic.Agent;
+import dev.langchain4j.agentic.declarative.RetrievalAugmentorSupplier;
+import dev.langchain4j.rag.RetrievalAugmentor;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 
@@ -38,7 +40,7 @@ public interface ClassifierAgent {
               - "Who is the President of France?" → CHAT
       """)
   @UserMessage("{userInput}")
-  @Agent(description = "Agent to be used to classify / identify the user request.",outputKey = "subCommand")
+  @Agent(description = "Agent to be used to classify / identify the user request.", outputKey = "subCommand")
   SubCommand classify(String userInput);
 }
 
