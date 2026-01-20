@@ -16,4 +16,4 @@ quarkus build --native
 
 read -n 1 -p "Press any key to continue"
 
-ll ../target/
+ls -larth ./target/jarvis-0.0.1-SNAPSHOT-runner
