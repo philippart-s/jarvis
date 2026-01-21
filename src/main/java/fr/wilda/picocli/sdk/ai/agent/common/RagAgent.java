@@ -13,7 +13,6 @@ import fr.wilda.picocli.sdk.ai.tool.RagTool;
 import io.quarkiverse.langchain4j.ToolBox;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.inject.spi.CDI;
-import jakarta.inject.Inject;
 
 public interface RagAgent {
 
@@ -30,9 +29,9 @@ public interface RagAgent {
   @ToolBox({RagTool.class})
   String askAQuestionEvent(String userInput);
 
-  //@RetrievalAugmentorSupplier
+  @RetrievalAugmentorSupplier
   static RetrievalAugmentor ragSupplier() {
-    Log.info("⚙️ Setting up Retrieval Augmentor for RAGAgent...\\n");
+    Log.infof("⚙️ Setting up Retrieval Augmentor for RAGAgent...%n");
     EmbeddingStoreContentRetriever contentRetriever = EmbeddingStoreContentRetriever.builder()
         .embeddingModel(CDI.current().select(EmbeddingModel.class).get())
         .embeddingStore(new InMemoryEmbeddingStore<>())
@@ -42,6 +41,5 @@ public interface RagAgent {
     return DefaultRetrievalAugmentor.builder()
         .contentRetriever(contentRetriever)
         .build();
-
   }
 }

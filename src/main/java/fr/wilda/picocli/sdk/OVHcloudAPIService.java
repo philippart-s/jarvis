@@ -1,14 +1,14 @@
 package fr.wilda.picocli.sdk;
 
 
-import org.eclipse.microprofile.rest.client.annotation.ClientHeaderParam;
-import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import fr.wilda.jarvis.sdk.ovhcloud.OVHcloudKube;
 import fr.wilda.jarvis.sdk.ovhcloud.OVHcloudUser;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import org.eclipse.microprofile.rest.client.annotation.ClientHeaderParam;
+import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 @Path("/v1")
 @RegisterRestClient

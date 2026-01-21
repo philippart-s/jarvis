@@ -1,8 +1,6 @@
 package fr.wilda.picocli.sdk.ai.agent.common;
 
 import dev.langchain4j.agentic.Agent;
-import dev.langchain4j.agentic.declarative.RetrievalAugmentorSupplier;
-import dev.langchain4j.rag.RetrievalAugmentor;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 

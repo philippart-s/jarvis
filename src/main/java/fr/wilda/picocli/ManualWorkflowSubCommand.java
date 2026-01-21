@@ -1,20 +1,17 @@
 package fr.wilda.picocli;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
-import fr.wilda.picocli.sdk.ai.agent.common.RagAgent;
 import fr.wilda.picocli.sdk.ai.agent.common.ClassifierAgent;
-import fr.wilda.picocli.sdk.ai.agent.common.OVHcloudAgent;
 import fr.wilda.picocli.sdk.ai.agent.common.JarvisAgent;
+import fr.wilda.picocli.sdk.ai.agent.common.OVHcloudAgent;
+import fr.wilda.picocli.sdk.ai.agent.common.RagAgent;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.control.ActivateRequestContext;
 import jakarta.inject.Inject;
 import picocli.AutoComplete.GenerateCompletion;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Parameters;
 
 import java.util.Scanner;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 @ActivateRequestContext
 @Command(name = "manual-workflow",
@@ -67,15 +64,15 @@ public class ManualWorkflowSubCommand extends BaseCommand implements Callable<In
     var agentToCall = classifierAgent.classify(input);
     switch (agentToCall) {
       case MCP -> {
-        Log.info("☁️ MCP Agent selected ☁️");
+        Log.infof("☁️ MCP Agent selected ☁️%n");
         agentResponse = ovhcloudAgent.askAQuestion(input);
       }
       case RAG -> {
-        Log.info("📜 RAG Agent selected 📜");
+        Log.infof("📜 RAG Agent selected 📜%n");
         ragAgent.askAQuestionEvent(input);
 
       }
-      case CHAT -> Log.info("Chat Agent selected");
+      case CHAT -> Log.infof("💬 Chat Agent selected 💬%n");
       default -> {
 
       }

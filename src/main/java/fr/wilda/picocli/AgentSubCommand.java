@@ -1,13 +1,10 @@
 package fr.wilda.picocli;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import fr.wilda.picocli.sdk.ai.agent.AutonomousAgent;
 import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
 import picocli.AutoComplete.GenerateCompletion;
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Parameters;
 
 import java.util.Scanner;
 import java.util.concurrent.Callable;

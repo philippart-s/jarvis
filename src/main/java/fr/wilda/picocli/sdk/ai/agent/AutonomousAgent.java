@@ -7,7 +7,6 @@ import dev.langchain4j.service.V;
 import fr.wilda.picocli.sdk.ai.agent.common.OVHcloudAgent;
 import fr.wilda.picocli.sdk.ai.agent.common.RagAgent;
 import fr.wilda.picocli.sdk.ai.agent.workflow.ChatAgent;
-import io.smallrye.mutiny.Multi;
 
 public interface AutonomousAgent {
     @SupervisorAgent(subAgents = {ChatAgent.class, RagAgent.class, OVHcloudAgent.class}, outputKey = "response",
