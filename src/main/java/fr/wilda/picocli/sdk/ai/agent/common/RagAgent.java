@@ -29,9 +29,9 @@ public interface RagAgent {
   @ToolBox({RagTool.class})
   String askAQuestionEvent(String userInput);
 
-  @RetrievalAugmentorSupplier
+  //@RetrievalAugmentorSupplier
   static RetrievalAugmentor ragSupplier() {
-    Log.infof("⚙️ Setting up Retrieval Augmentor for RAGAgent...%n");
+    Log.info("⚙️ Setting up Retrieval Augmentor for RAGAgent...\n");
     EmbeddingStoreContentRetriever contentRetriever = EmbeddingStoreContentRetriever.builder()
         .embeddingModel(CDI.current().select(EmbeddingModel.class).get())
         .embeddingStore(new InMemoryEmbeddingStore<>())

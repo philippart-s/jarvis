@@ -64,15 +64,15 @@ public class ManualWorkflowSubCommand extends BaseCommand implements Callable<In
     var agentToCall = classifierAgent.classify(input);
     switch (agentToCall) {
       case MCP -> {
-        Log.infof("☁️ MCP Agent selected ☁️%n");
+        Log.info("☁️ MCP Agent selected ☁️\n");
         agentResponse = ovhcloudAgent.askAQuestion(input);
       }
       case RAG -> {
-        Log.infof("📜 RAG Agent selected 📜%n");
+        Log.info("📜 RAG Agent selected 📜\n");
         ragAgent.askAQuestionEvent(input);
 
       }
-      case CHAT -> Log.infof("💬 Chat Agent selected 💬%n");
+      case CHAT -> Log.info("💬 Chat Agent selected 💬\n");
       default -> {
 
       }

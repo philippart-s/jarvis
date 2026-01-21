@@ -43,7 +43,6 @@ public class ApprovalMcpToolProvider implements ToolProvider {
         });
       }
 
-
     return ToolProviderResult.builder().addAll(tools).build();
   }
 }

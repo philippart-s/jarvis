@@ -6,7 +6,6 @@ import fr.wilda.picocli.sdk.ai.tool.TimeAndDateTool;
 import io.quarkiverse.langchain4j.RegisterAiService;
 import io.quarkiverse.langchain4j.ToolBox;
 import io.quarkiverse.langchain4j.mcp.runtime.McpToolBox;
-import io.quarkiverse.langchain4j.runtime.aiservice.ChatEvent;
 import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -37,5 +36,5 @@ public interface AIEndpointService {
   @UserMessage("La question posée est la suivante : {question}")
   @ToolBox(TimeAndDateTool.class)
   @McpToolBox
-  Multi<ChatEvent> askAQuestionEvent(String question);
+  Multi<String> askAQuestionAboutOVHcloud(String question);
 }

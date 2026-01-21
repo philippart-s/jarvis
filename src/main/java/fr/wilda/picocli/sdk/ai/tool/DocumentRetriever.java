@@ -30,8 +30,8 @@ public class DocumentRetriever implements RetrievalAugmentor {
 
   @Override
   public AugmentationResult augment(AugmentationRequest augmentationRequest) {
-    Log.infof("🔍 Retrieving relevant documents for augmentation request.%n");
-    Log.infof("🤖 Agent request: %s%n", augmentationRequest.metadata().invocationContext().interfaceName());
+    Log.info("🔍 Retrieving relevant documents for augmentation request.\n");
+    Log.infof("🤖 Agent request: %s\n", augmentationRequest.metadata().invocationContext().interfaceName());
     return augmentor.augment(augmentationRequest);
   }
 
