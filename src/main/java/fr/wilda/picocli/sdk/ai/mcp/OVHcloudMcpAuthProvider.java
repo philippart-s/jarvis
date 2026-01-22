@@ -1,4 +1,4 @@
-package fr.wilda.picocli.sdk.ai;
+package fr.wilda.picocli.sdk.ai.mcp;
 
 
 import io.quarkiverse.langchain4j.mcp.auth.McpClientAuthProvider;

@@ -1,7 +1,7 @@
 package fr.wilda.picocli;
 
 import fr.wilda.picocli.sdk.ai.AIEndpointService;
-import fr.wilda.picocli.sdk.ai.DocumentLoader;
+import fr.wilda.picocli.sdk.ai.tool.DocumentLoader;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

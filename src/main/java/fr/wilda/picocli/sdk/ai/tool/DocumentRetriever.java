@@ -1,4 +1,4 @@
-package fr.wilda.picocli.sdk.ai;
+package fr.wilda.picocli.sdk.ai.tool;
 
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
@@ -8,6 +8,7 @@ import dev.langchain4j.rag.DefaultRetrievalAugmentor;
 import dev.langchain4j.rag.RetrievalAugmentor;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.store.embedding.EmbeddingStore;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
@@ -29,6 +30,8 @@ public class DocumentRetriever implements RetrievalAugmentor {
 
   @Override
   public AugmentationResult augment(AugmentationRequest augmentationRequest) {
+    Log.info("🔍 Retrieving relevant documents for augmentation request.\n");
+    Log.infof("🤖 Agent request: %s\n", augmentationRequest.metadata().invocationContext().interfaceName());
     return augmentor.augment(augmentationRequest);
   }
 

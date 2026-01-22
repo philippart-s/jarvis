@@ -1,6 +1,5 @@
 # Nom et information sur la conférence
 Le Mars JUG réunit régulièrement la communauté Java de Marseille et de sa région autour d'intervenants qui viennent nous parler de la plateforme Java et de son écosystème.
-Le temps d’une journée, la communauté se rassemble sous le soleil de La Rochelle pour se rencontrer, échanger et apprendre ensemble.
 
 ## Dates, lieux et contenus des événements
 
