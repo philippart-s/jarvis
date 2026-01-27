@@ -17,7 +17,7 @@ public class McpSubCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-        // 51-call-llm-with-mcp
+        // 53-call-llm-with-mcp
 
         return 0;
     }

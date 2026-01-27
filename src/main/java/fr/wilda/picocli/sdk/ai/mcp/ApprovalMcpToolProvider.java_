@@ -1,0 +1,29 @@
+package fr.wilda.picocli.sdk.ai.mcp;
+
+import dev.langchain4j.agent.tool.ToolSpecification;
+import dev.langchain4j.mcp.McpToolExecutor;
+import dev.langchain4j.mcp.client.McpClient;
+import dev.langchain4j.service.tool.ToolExecutor;
+import dev.langchain4j.service.tool.ToolProvider;
+import dev.langchain4j.service.tool.ToolProviderRequest;
+import dev.langchain4j.service.tool.ToolProviderResult;
+import io.quarkus.logging.Log;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Any;
+import jakarta.inject.Inject;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+@ApplicationScoped
+public class ApprovalMcpToolProvider implements ToolProvider {
+
+  // 50-MCP-client
+
+  @Override
+  public ToolProviderResult provideTools(ToolProviderRequest request) {
+    // 51-approval-tool
+    
+  }
+}

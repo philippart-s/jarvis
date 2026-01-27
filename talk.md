@@ -30,7 +30,7 @@ snippets generate \
   - run [26-add-langchain-4j.sh](bin/26-add-langchain-4j.sh)
   - update `application.properties`: (👨‍💻 _27-props-langchain4J_)
   - create interface [AIEndpointService.java](./src/main/java/fr/wilda/picocli/sdk/ai/AIEndpointService.java) and add annotations (👨‍💻 _28-AIEndpointService-annotation_)
-  - add method `askQuestion` (👨‍💻 _29-OVHcloudMistral-ask-method_)
+  - add method `askQuestion` (👨‍💻 _29-ask-method_)
   - update [JarvisCommand](./src/main/java/fr/wilda/picocli/JarvisCommand.java):
     - `name` to `question` parameter (👨‍💻 _30-jarvis-cli-question-param_)
     - inject `AIEndpointService` (👨‍💻 _31-jarvis-cli-ai-svc_)
@@ -53,12 +53,16 @@ snippets generate \
   - test Jarvis with RAG [45-java-run-rag.sh](bin/45-java-run-rag.sh)
   - run [46-add-quarkus-mcp-client.sh](bin/46-add-quarkus-mcp-client.sh)
   - add MCP configuration to [application.properties](./src/main/resources/application.properties) (👨‍💻 `47-mcp-parameters`)  
-  - create the [McpToolsException](src/main/java/fr/wilda/picocli/sdk/ai/McpToolsException.java) class
-  - create the [OVHcloudMcpAuthProvider](src/main/java/fr/wilda/picocli/sdk/ai/OVHcloudMcpAuthProvider.java) class
+  - create the [McpToolsException](src/main/java/fr/wilda/picocli/sdk/ai/mcp/McpToolsException.java) class
+  - create the [OVHcloudMcpAuthProvider](src/main/java/fr/wilda/picocli/sdk/ai/mcp/OVHcloudMcpAuthProvider.java) class
     - add PAT (👨‍💻 `48-OVHcloud-MCP-PAT`)
     - add Bearer (👨‍💻 `49-bearer-for-mcp`)
-  - create [TimeAndDateTool](./src/main/java/fr/wilda/picocli/sdk/ai/TimeAndDateTool.java) class
-  - add `askAQuestionEvent` method to [AIEndpointService.java](./src/main/java/fr/wilda/picocli/sdk/ai/AIEndpointService.java) (👨‍💻 `50-question-event`)
+  - create [TimeAndDateTool](./src/main/java/fr/wilda/picocli/sdk/ai/tool/TimeAndDateTool.java) class
+  - create [ApprovalMcpToolProvider](src/main/java/fr/wilda/picocli/sdk/ai/mcp/ApprovalMcpToolProvider.java)
+    - add MCP client (👨‍💻 `50-MCP-client`)
+    - add approval tool (👨‍💻 `51-approval-tool`)
+
+
   - create [McpSubCommand](./src/main/java/fr/wilda/picocli/McpSubCommand.java)
     - add LLM call with MCP (👨‍💻 `51-call-llm-with-mcp`)
     - add subcommand to [JarvisCommand](./src/main/java/fr/wilda/picocli/JarvisCommand.java) 
