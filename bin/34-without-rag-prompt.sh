@@ -6,4 +6,4 @@ clear
 bat -P -r 8: $(basename "$0")
 
 # Run native executable with AI call 🚀
-jarvis-ai "Quel est le programme du Mars JUG le 21 janvier ?"
+jarvis-ai "Quelles sont les meilleures rillettes du monde?"
