@@ -5,6 +5,7 @@ import io.quarkus.logging.Log;
 import jakarta.enterprise.context.control.ActivateRequestContext;
 import jakarta.inject.Inject;
 import picocli.AutoComplete.GenerateCompletion;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
 import java.util.Scanner;
@@ -12,24 +13,25 @@ import java.util.concurrent.Callable;
 
 @ActivateRequestContext
 @Command(name = "workflow",
-    description = "🔀 Agentic workflow - (Classification → Routing → Execution) 🔀",
+    description = "🐣 Agentic semi autonomous workflow 🤖",
     mixinStandardHelpOptions = true,
     usageHelpAutoWidth=true,
     subcommands = {GenerateCompletion.class})
-public class WorkflowSubCommand extends BaseCommand implements Callable<Integer> {
+public class WorkflowSubCommandAgent implements Callable<Integer> {
+  @CommandLine.Mixin
+  AgentBaseCommand agentBaseCommand;
+
   @Inject
   JarvisWorkflow jarvisWorkflow;
 
   @Override
   public Integer call() throws Exception {
-    // workflow "pourquoi le ciel est bleu?"
-    // workflow "donne moi le détail de mon compte ovhcloud"
-    // workflow "en te basant sur les documents en ta procession donne moi le programme du Mars JUG"
-    welcomeMessage();
+    // Display common welcom message
+    agentBaseCommand.welcomeMessage();
 
-    if (!interactive) {
-      if (!question.isEmpty()) {
-        processResponse(jarvisWorkflow.executeJarvisWorkflow(question));
+    if (!agentBaseCommand.interactive) {
+      if (!agentBaseCommand.question.isEmpty()) {
+        agentBaseCommand.processResponse(jarvisWorkflow.executeJarvisWorkflow(agentBaseCommand.question));
       }
     } else {
       while (true) {
@@ -39,7 +41,7 @@ public class WorkflowSubCommand extends BaseCommand implements Callable<Integer>
         if (prompt.equals("exit")) {
           break;
         } else {
-          processResponse(jarvisWorkflow.executeJarvisWorkflow(prompt));
+          agentBaseCommand.processResponse(jarvisWorkflow.executeJarvisWorkflow(prompt));
         }
       }
     }

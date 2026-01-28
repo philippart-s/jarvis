@@ -17,8 +17,8 @@ import java.util.concurrent.TimeUnit;
     OVHcloudSubCommand.class,
     RagSubCommand.class,
     McpSubCommand.class,
-    WorkflowSubCommand.class,
-    AgentSubCommand.class,
+    WorkflowSubCommandAgent.class,
+    AgentSubCommandAgent.class,
     GenerateCompletion.class,
     ManualWorkflowSubCommand.class
 })

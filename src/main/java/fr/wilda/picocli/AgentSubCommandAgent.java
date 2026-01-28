@@ -4,6 +4,7 @@ import fr.wilda.picocli.sdk.ai.agent.AutonomousAgent;
 import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
 import picocli.AutoComplete.GenerateCompletion;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
 import java.util.Scanner;
@@ -13,7 +14,10 @@ import java.util.concurrent.Callable;
     description = "⚠️ YOLO mode!!! Autonomous agent selection. ⚠️",
     mixinStandardHelpOptions = true,
     subcommands = {GenerateCompletion.class})
-public class AgentSubCommand extends BaseCommand implements Callable<Integer> {
+public class AgentSubCommandAgent implements Callable<Integer> {
+
+  @CommandLine.Mixin
+  AgentBaseCommand agentBaseCommand;
 
   @Inject
   AutonomousAgent agentService;
@@ -24,11 +28,11 @@ public class AgentSubCommand extends BaseCommand implements Callable<Integer> {
     // agent "donne moi le détail de mon compte ovhcloud"
     // agent "en te basant sur les documents en ta procession donne moi le programme du Mars JUG"
     // ie: donne moi le programme du Mars JUG contenu dans le document en ta disposition
-    welcomeMessage();
+    agentBaseCommand.welcomeMessage();
 
-    if (!interactive) {
-      if (!question.isEmpty()) {
-        Log.info(String.format("🤖> %s%n", agentService.ask(question)));
+    if (!agentBaseCommand.interactive) {
+      if (!agentBaseCommand.question.isEmpty()) {
+        Log.info(String.format("🤖> %s%n", agentService.ask(agentBaseCommand.question)));
       }
     } else {
       while (true) {

@@ -10,7 +10,7 @@ import fr.wilda.picocli.sdk.ai.agent.workflow.ChatAgent;
 
 public interface AutonomousAgent {
     @SupervisorAgent(subAgents = {ChatAgent.class, RagAgent.class, OVHcloudAgent.class}, outputKey = "response",
-        maxAgentsInvocations = 3, responseStrategy = SupervisorResponseStrategy.LAST)
+        maxAgentsInvocations = 4, responseStrategy = SupervisorResponseStrategy.LAST)
     String ask(@V("userInput") String userInput);
 
     @SupervisorRequest
