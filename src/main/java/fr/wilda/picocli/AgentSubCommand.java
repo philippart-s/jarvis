@@ -1,8 +1,7 @@
 package fr.wilda.picocli;
 
-import fr.wilda.picocli.sdk.ai.agent.workflow.JarvisWorkflow;
+import fr.wilda.picocli.sdk.ai.agent.AutonomousAgent;
 import io.quarkus.logging.Log;
-import jakarta.enterprise.context.control.ActivateRequestContext;
 import jakarta.inject.Inject;
 import picocli.AutoComplete.GenerateCompletion;
 import picocli.CommandLine;
@@ -11,27 +10,29 @@ import picocli.CommandLine.Command;
 import java.util.Scanner;
 import java.util.concurrent.Callable;
 
-@ActivateRequestContext
-@Command(name = "workflow",
-    description = "🐣 Agentic semi autonomous workflow 🤖",
+@Command(name = "agent",
+    description = "⚠️ YOLO mode!!! Autonomous agent selection. ⚠️",
     mixinStandardHelpOptions = true,
-    usageHelpAutoWidth=true,
     subcommands = {GenerateCompletion.class})
-public class WorkflowSubCommandAgent implements Callable<Integer> {
+public class AgentSubCommand implements Callable<Integer> {
+
   @CommandLine.Mixin
   AgentBaseCommand agentBaseCommand;
 
   @Inject
-  JarvisWorkflow jarvisWorkflow;
+  AutonomousAgent agentService;
 
   @Override
   public Integer call() throws Exception {
-    // Display common welcom message
+    // agent "pourquoi le ciel est bleu?"
+    // agent "donne moi le détail de mon compte ovhcloud"
+    // agent "en te basant sur les documents en ta procession donne moi le programme du Mars JUG"
+    // ie: donne moi le programme du Mars JUG contenu dans le document en ta disposition
     agentBaseCommand.welcomeMessage();
 
     if (!agentBaseCommand.interactive) {
       if (!agentBaseCommand.question.isEmpty()) {
-        agentBaseCommand.processResponse(jarvisWorkflow.executeJarvisWorkflow(agentBaseCommand.question));
+        Log.info(String.format("🤖> %s%n", agentService.ask(agentBaseCommand.question)));
       }
     } else {
       while (true) {
@@ -41,7 +42,7 @@ public class WorkflowSubCommandAgent implements Callable<Integer> {
         if (prompt.equals("exit")) {
           break;
         } else {
-          agentBaseCommand.processResponse(jarvisWorkflow.executeJarvisWorkflow(prompt));
+          Log.info(String.format("🤖> %s%n", agentService.ask(prompt)));
         }
       }
     }
