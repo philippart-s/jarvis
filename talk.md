@@ -61,13 +61,13 @@ snippets generate \
   - create [ApprovalMcpToolProvider](src/main/java/fr/wilda/picocli/sdk/ai/mcp/ApprovalMcpToolProvider.java)
     - add MCP client (👨‍💻 `50-MCP-client`)
     - add approval tool (👨‍💻 `51-approval-tool`)
-
-
+  - update [AIEndpointService](./src/main/java/fr/wilda/picocli/sdk/ai/AIEndpointService.java)
+    - add askAQuestionAboutOVHcloud method (👨‍💻 `52-ask-about-ovhcloud`)
   - create [McpSubCommand](./src/main/java/fr/wilda/picocli/McpSubCommand.java)
-    - add LLM call with MCP (👨‍💻 `51-call-llm-with-mcp`)
+    - add LLM call with MCP (👨‍💻 `53-call-llm-with-mcp`)
     - add subcommand to [JarvisCommand](./src/main/java/fr/wilda/picocli/JarvisCommand.java) 
   - Optional: run [24-quarkus-build-native.sh](bin/24-quarkus-build-native.sh)
-  - run [52-jarvis-mcp.sh](bin/52-jarvis-mcp.sh)
+  - run [54-jarvis-mcp.sh](bin/54-jarvis-mcp.sh)
   - add `GenerateCompletion` subcommand on [JarvisCommand.java](./src/main/java/fr/wilda/picocli/JarvisCommand.java), [OVHcloudSubCommand.java](./src/main/java/fr/wilda/picocli/OVHcloudSubCommand.java), [RagSubCommand](src/main/java/fr/wilda/picocli/RagSubCommand.java) and [McpSubCommand.java](./src/main/java/fr/wilda/picocli/McpSubCommand.java)
   - Optional: run [24-quarkus-build-native.sh](bin/24-quarkus-build-native.sh)
   - source the `.env` file, `source .env`
