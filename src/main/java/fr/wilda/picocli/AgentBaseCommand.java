@@ -6,10 +6,12 @@ import picocli.CommandLine;
 
 import java.util.concurrent.TimeUnit;
 
-/// This command group some utilities and paramter for all commands.
-public class BaseCommand {
+/// This command group some utilities and parameters for all commands.
+/// Its usage is only with @Mixin, see https://picocli.info/#_mixins
+@CommandLine.Command
+public class AgentBaseCommand {
 
-  @CommandLine.Parameters(paramLabel = "<question>", description = "💬Ask your question (non interactive mode)", defaultValue = "")
+  @CommandLine.Parameters(paramLabel = "<question>", description = "💬 Ask your question (non interactive mode)", defaultValue = "")
   String question;
 
   @CommandLine.Option(names = {"-i", "--interactive"}, description = "🔄 Interactive mode, enter exit to quit.")

@@ -8,6 +8,7 @@ import io.quarkus.logging.Log;
 import jakarta.enterprise.context.control.ActivateRequestContext;
 import jakarta.inject.Inject;
 import picocli.AutoComplete.GenerateCompletion;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
 import java.util.Scanner;
@@ -15,10 +16,13 @@ import java.util.concurrent.Callable;
 
 @ActivateRequestContext
 @Command(name = "manual-workflow",
-    description = "Mode workflow agentique - Orchestration explicite des étapes (Classification → Routage → Exécution)",
+    description = "👤 Agentic manual workflow 🤖",
     mixinStandardHelpOptions = true,
     subcommands = {GenerateCompletion.class})
-public class ManualWorkflowSubCommand extends BaseCommand implements Callable<Integer> {
+public class ManualWorkflowSubCommand implements Callable<Integer> {
+
+  @CommandLine.Mixin
+  AgentBaseCommand agentBaseCommand;
 
   @Inject
   ClassifierAgent classifierAgent;
@@ -34,15 +38,12 @@ public class ManualWorkflowSubCommand extends BaseCommand implements Callable<In
 
   @Override
   public Integer call() throws Exception {
-    // manual-workflow "pourquoi le ciel est bleu?"
-    // manual-workflow "donne moi le détail de mon compte ovhcloud"
-    // manual-workflow "en te basant sur les documents en ta procession donne-moi le programme du Mars JUG de janvier 2026"
+    // Display common welcom message
+    agentBaseCommand.welcomeMessage();
 
-    welcomeMessage();
-
-    if (!interactive) {
-      if (!question.isEmpty()) {
-        workflow(question);
+    if (!agentBaseCommand.interactive) {
+      if (!agentBaseCommand.question.isEmpty()) {
+        workflow(agentBaseCommand.question);
       }
     } else {
       while (true) {
@@ -78,8 +79,7 @@ public class ManualWorkflowSubCommand extends BaseCommand implements Callable<In
       }
     }
 
-    processResponse(jarvisAgent.askAQuestion(input, agentResponse));
-
+    agentBaseCommand.processResponse(jarvisAgent.askAQuestion(input, agentResponse));
   }
 }
 
