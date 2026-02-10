@@ -28,18 +28,4 @@ public interface RagAgent {
   @Agent(description = "This agent should be use when prompt is about to get some information thanks to documents.", outputKey = "agentResponse")
   @ToolBox({RagTool.class})
   String askAQuestionEvent(String userInput);
-
-  //@RetrievalAugmentorSupplier
-  static RetrievalAugmentor ragSupplier() {
-    Log.info("⚙️ Setting up Retrieval Augmentor for RAGAgent...\n");
-    EmbeddingStoreContentRetriever contentRetriever = EmbeddingStoreContentRetriever.builder()
-        .embeddingModel(CDI.current().select(EmbeddingModel.class).get())
-        .embeddingStore(new InMemoryEmbeddingStore<>())
-        .maxResults(3)
-        .minScore(0.1)
-        .build();
-    return DefaultRetrievalAugmentor.builder()
-        .contentRetriever(contentRetriever)
-        .build();
-  }
 }
