@@ -23,26 +23,44 @@ public class ApprovalMcpToolProvider implements ToolProvider {
   @Any
   McpClient mcpClient;
 
+  @Inject
+  TuiToolApproval tuiToolApproval;
+
   @Override
   public ToolProviderResult provideTools(ToolProviderRequest request) {
     Map<ToolSpecification, ToolExecutor> tools = new HashMap<>();
       for (ToolSpecification spec : mcpClient.listTools()) {
         tools.put(spec, (toolRequest, memoryId) -> {
-          // Validation
-          Log.info(String.format("⚠️ Please valid the tool usage: %s ⚠️%n", toolRequest.name()));
-          Log.info("Please type 'ok' to confirm the use of the tool: ");
-          Scanner scanner = new Scanner(System.in);
-          if (scanner.next()
-              .equals("ok")) {
-            Log.info(String.format("🔧 Using tool: %s%n",toolRequest.name()));
-          } else {
-            Log.info(String.format("⛔️ User did not validate the use of the tool ⛔️!%n"));
-            return "⛔️ User did not validate the use of the tool ⛔️!";
+          if (tuiToolApproval.isTuiMode()) {
+            return handleTuiApproval(toolRequest, memoryId);
           }
-          return new McpToolExecutor(mcpClient).execute(toolRequest, memoryId);
+          return handleCliApproval(toolRequest, memoryId);
         });
       }
 
     return ToolProviderResult.builder().addAll(tools).build();
+  }
+
+  private String handleCliApproval(dev.langchain4j.agent.tool.ToolExecutionRequest toolRequest, Object memoryId) {
+    Log.info(String.format("⚠️ Please valid the tool usage: %s ⚠️%n", toolRequest.name()));
+    Log.info("Please type 'ok' to confirm the use of the tool: ");
+    Scanner scanner = new Scanner(System.in);
+    if (scanner.next().equals("ok")) {
+      Log.info(String.format("🔧 Using tool: %s%n", toolRequest.name()));
+    } else {
+      Log.info(String.format("⛔️ User did not validate the use of the tool ⛔️!%n"));
+      return "⛔️ User did not validate the use of the tool ⛔️!";
+    }
+    return new McpToolExecutor(mcpClient).execute(toolRequest, memoryId);
+  }
+
+  private String handleTuiApproval(dev.langchain4j.agent.tool.ToolExecutionRequest toolRequest, Object memoryId) {
+    if (tuiToolApproval.requestApproval(toolRequest.name())) {
+      Log.info(String.format("🔧 Using tool: %s%n", toolRequest.name()));
+      return new McpToolExecutor(mcpClient).execute(toolRequest, memoryId);
+    } else {
+      Log.info(String.format("⛔️ User did not validate the use of the tool ⛔️!%n"));
+      return "⛔️ User did not validate the use of the tool ⛔️!";
+    }
   }
 }

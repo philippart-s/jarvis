@@ -29,6 +29,7 @@ import dev.tamboui.widgets.list.ListWidget;
 import dev.tamboui.widgets.paragraph.Paragraph;
 import dev.tamboui.style.Overflow;
 import fr.wilda.picocli.sdk.ai.AIEndpointService;
+import fr.wilda.picocli.sdk.ai.mcp.TuiToolApproval;
 import fr.wilda.picocli.sdk.ai.tool.DocumentLoader;
 import jakarta.inject.Inject;
 import picocli.CommandLine;
@@ -45,6 +46,9 @@ public class JarvisTUI extends TuiCommand {
 
   @Inject
   DocumentLoader documentLoader;
+
+  @Inject
+  TuiToolApproval tuiToolApproval;
 
   /// Available demo modes, mapped to the list items.
   enum DemoMode {
@@ -114,9 +118,12 @@ public class JarvisTUI extends TuiCommand {
     };
     rootLogger.addHandler(tuiHandler);
 
+    tuiToolApproval.enableTuiMode();
+
     try {
       runner.run(this::handleEvent, this::render);
     } finally {
+      tuiToolApproval.disableTuiMode();
       // Restore original handlers when TUI exits
       rootLogger.removeHandler(tuiHandler);
       for (var handler : originalHandlers) {
@@ -181,6 +188,19 @@ public class JarvisTUI extends TuiCommand {
   // --- Chat key handling ---
 
   private boolean handleChatKey(KeyEvent k) {
+    // Handle MCP tool approval dialog
+    if (tuiToolApproval.hasPendingApproval()) {
+      if (k.isConfirm() || k.isChar('y') || k.isChar('Y')) {
+        tuiToolApproval.approve();
+        return true;
+      }
+      if (k.isCancel() || k.isChar('n') || k.isChar('N')) {
+        tuiToolApproval.reject();
+        return true;
+      }
+      return false; // Ignore other keys during approval
+    }
+
     if (k.isCancel()) {
       switchToMenuView();
       return true;
@@ -324,6 +344,7 @@ public class JarvisTUI extends TuiCommand {
 
     switch (currentDemo) {
       case CHAT, RAG -> streamChat(question);
+      case MCP -> streamMcp(question);
       default -> {
         responseBuffer.append("[ ").append(currentDemo.name()).append(" mode ]\n\n");
         responseBuffer.append("This demo will be wired in a next step...");
@@ -338,6 +359,22 @@ public class JarvisTUI extends TuiCommand {
     Thread.startVirtualThread(() -> {
       try {
         aiEndpointService.askAQuestion(question)
+            .subscribe()
+            .asStream()
+            .forEach(responseBuffer::append);
+      } catch (Exception e) {
+        responseBuffer.append("\n\n⚠️ Error: ").append(e.getMessage());
+      } finally {
+        processing = false;
+      }
+    });
+  }
+
+  /// Streams the MCP-augmented response. Tool calls may trigger an approval dialog.
+  private void streamMcp(String question) {
+    Thread.startVirtualThread(() -> {
+      try {
+        aiEndpointService.askAQuestionAboutOVHcloud(question)
             .subscribe()
             .asStream()
             .forEach(responseBuffer::append);
@@ -617,23 +654,37 @@ public class JarvisTUI extends TuiCommand {
   }
 
   private void renderChatFooter(Frame frame, Rect area) {
-    var helpLine = Line.from(
-        Span.raw(" Enter").bold().yellow(),
-        Span.raw(" Send  ").dim(),
-        Span.raw("↑/↓").bold().yellow(),
-        Span.raw(" Scroll  ").dim(),
-        Span.raw("Esc").bold().yellow(),
-        Span.raw(" Back  ").dim(),
-        Span.raw("Ctrl+C").bold().yellow(),
-        Span.raw(" Quit").dim()
-    );
+    Line helpLine;
+    if (tuiToolApproval.hasPendingApproval()) {
+      helpLine = Line.from(
+          Span.raw(" ⚠️ Tool: ").bold().yellow(),
+          Span.raw(tuiToolApproval.pendingToolName() + "  ").white(),
+          Span.raw("Enter/y").bold().green(),
+          Span.raw(" Approve  ").dim(),
+          Span.raw("Esc/n").bold().red(),
+          Span.raw(" Reject").dim()
+      );
+    } else {
+      helpLine = Line.from(
+          Span.raw(" Enter").bold().yellow(),
+          Span.raw(" Send  ").dim(),
+          Span.raw("↑/↓").bold().yellow(),
+          Span.raw(" Scroll  ").dim(),
+          Span.raw("Esc").bold().yellow(),
+          Span.raw(" Back  ").dim(),
+          Span.raw("Ctrl+C").bold().yellow(),
+          Span.raw(" Quit").dim()
+      );
+    }
 
     var footer = Paragraph.builder()
         .text(Text.from(helpLine))
         .block(Block.builder()
             .borders(Borders.ALL)
             .borderType(BorderType.ROUNDED)
-            .borderStyle(Style.EMPTY.fg(Color.DARK_GRAY))
+            .borderStyle(tuiToolApproval.hasPendingApproval()
+                ? Style.EMPTY.fg(Color.YELLOW)
+                : Style.EMPTY.fg(Color.DARK_GRAY))
             .build())
         .build();
     frame.renderWidget(footer, area);
