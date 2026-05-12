@@ -26,12 +26,17 @@ import dev.tamboui.widgets.list.ListState;
 import dev.tamboui.widgets.list.ListWidget;
 import dev.tamboui.widgets.paragraph.Paragraph;
 import dev.tamboui.style.Overflow;
+import fr.wilda.picocli.sdk.ai.AIEndpointService;
+import jakarta.inject.Inject;
 import picocli.CommandLine;
 
 import java.util.List;
 
 @CommandLine.Command(name = "tui", description = "Start the Jarvis TUI", mixinStandardHelpOptions = true)
 public class JarvisTUI extends TuiCommand {
+
+  @Inject
+  AIEndpointService aiEndpointService;
 
   /// Available demo modes, mapped to the list items.
   enum DemoMode {
@@ -62,10 +67,27 @@ public class JarvisTUI extends TuiCommand {
   private final TextInputState inputState = new TextInputState();
   private final StringBuilder responseBuffer = new StringBuilder();
   private int responseScroll = 0;
+  private volatile boolean processing = false;
 
   @Override
   protected void runTui(TuiRunner runner) throws Exception {
-    runner.run(this::handleEvent, this::render);
+    // Disable all console log handlers to prevent log messages from corrupting
+    // the TUI rendering. Quarkus/JBoss LogManager captures System.out at boot,
+    // so redirecting streams is not sufficient — we must remove the handlers.
+    var rootLogger = java.util.logging.Logger.getLogger("");
+    var originalHandlers = rootLogger.getHandlers();
+    for (var handler : originalHandlers) {
+      rootLogger.removeHandler(handler);
+    }
+
+    try {
+      runner.run(this::handleEvent, this::render);
+    } finally {
+      // Restore handlers when TUI exits
+      for (var handler : originalHandlers) {
+        rootLogger.addHandler(handler);
+      }
+    }
   }
 
   // ========== Event handling ==========
@@ -192,19 +214,44 @@ public class JarvisTUI extends TuiCommand {
     responseScroll = 0;
   }
 
-  // ========== Question submission (placeholder for Step 2) ==========
+  // ========== Question submission ==========
 
   private void submitQuestion() {
     var question = inputState.text().trim();
-    if (question.isEmpty()) {
+    if (question.isEmpty() || processing) {
       return;
     }
     responseBuffer.setLength(0);
     responseScroll = 0;
-    responseBuffer.append("[ ").append(currentDemo.name()).append(" mode ]\n\n");
-    responseBuffer.append("Question: ").append(question).append("\n\n");
-    responseBuffer.append("Response will be wired in a next step...");
     inputState.clear();
+    processing = true;
+
+    switch (currentDemo) {
+      case CHAT -> streamChat(question);
+      default -> {
+        responseBuffer.append("[ ").append(currentDemo.name()).append(" mode ]\n\n");
+        responseBuffer.append("This demo will be wired in a next step...");
+        processing = false;
+      }
+    }
+  }
+
+  /// Streams the response from the AI service on a virtual thread.
+  /// Each token is appended to the response buffer so the TUI renders it progressively.
+  private void streamChat(String question) {
+    Thread.startVirtualThread(() -> {
+      try {
+        responseBuffer.append("🤖 Calling AI service...\n\n");
+        aiEndpointService.askAQuestion(question)
+            .subscribe()
+            .asStream()
+            .forEach(responseBuffer::append);
+      } catch (Exception e) {
+        responseBuffer.append("\n\n⚠️ Error: ").append(e.getMessage());
+      } finally {
+        processing = false;
+      }
+    });
   }
 
   // ========== Rendering ==========
@@ -365,9 +412,14 @@ public class JarvisTUI extends TuiCommand {
   }
 
   private void renderResponseArea(Frame frame, Rect area) {
-    var responseText = responseBuffer.isEmpty()
-        ? "Type your question below and press Enter..."
-        : responseBuffer.toString();
+    String responseText;
+    if (processing && responseBuffer.isEmpty()) {
+      responseText = "🤔 Thinking...";
+    } else if (responseBuffer.isEmpty()) {
+      responseText = "Type your question above and press Enter...";
+    } else {
+      responseText = responseBuffer.toString();
+    }
 
     var paragraph = Paragraph.builder()
         .text(Text.from(responseText))
@@ -386,7 +438,7 @@ public class JarvisTUI extends TuiCommand {
 
   private void renderTextInput(Frame frame, Rect area) {
     var textInput = TextInput.builder()
-        .placeholder("Ask a question...")
+        .placeholder(processing ? "Waiting for response..." : "Ask a question...")
         .placeholderStyle(Style.EMPTY.dim().italic())
         .style(Style.EMPTY.fg(Color.WHITE))
         .cursorStyle(Style.EMPTY.reversed())
