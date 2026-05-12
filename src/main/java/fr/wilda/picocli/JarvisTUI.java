@@ -10,11 +10,13 @@ import dev.tamboui.terminal.Frame;
 import dev.tamboui.text.Line;
 import dev.tamboui.text.Span;
 import dev.tamboui.text.Text;
+import dev.tamboui.tui.TuiConfig;
 import dev.tamboui.tui.TuiRunner;
 import dev.tamboui.tui.event.Event;
 import dev.tamboui.tui.event.KeyCode;
 import dev.tamboui.tui.event.KeyEvent;
 import dev.tamboui.tui.event.ResizeEvent;
+import dev.tamboui.tui.event.TickEvent;
 import dev.tamboui.widgets.block.Block;
 import dev.tamboui.widgets.block.BorderType;
 import dev.tamboui.widgets.block.Borders;
@@ -30,6 +32,7 @@ import fr.wilda.picocli.sdk.ai.AIEndpointService;
 import jakarta.inject.Inject;
 import picocli.CommandLine;
 
+import java.time.Duration;
 import java.util.List;
 
 @CommandLine.Command(name = "tui", description = "Start the Jarvis TUI", mixinStandardHelpOptions = true)
@@ -70,20 +73,46 @@ public class JarvisTUI extends TuiCommand {
   private volatile boolean processing = false;
 
   @Override
+  protected TuiConfig createConfig() {
+    // Enable periodic tick events so the TUI re-renders automatically
+    // when the response buffer is updated by background threads.
+    return TuiConfig.builder()
+        .tickRate(Duration.ofMillis(100))
+        .build();
+  }
+
+  @Override
   protected void runTui(TuiRunner runner) throws Exception {
-    // Disable all console log handlers to prevent log messages from corrupting
-    // the TUI rendering. Quarkus/JBoss LogManager captures System.out at boot,
-    // so redirecting streams is not sufficient — we must remove the handlers.
+    // Replace all console log handlers with a custom one that writes to the
+    // response buffer, so log messages from services (RagTool, DocumentRetriever, etc.)
+    // appear in the TUI response area instead of corrupting the terminal.
     var rootLogger = java.util.logging.Logger.getLogger("");
     var originalHandlers = rootLogger.getHandlers();
     for (var handler : originalHandlers) {
       rootLogger.removeHandler(handler);
     }
 
+    var tuiHandler = new java.util.logging.Handler() {
+      @Override
+      public void publish(java.util.logging.LogRecord record) {
+        if (record.getMessage() != null && viewState == ViewState.CHAT) {
+          responseBuffer.append(record.getMessage());
+        }
+      }
+
+      @Override
+      public void flush() {}
+
+      @Override
+      public void close() {}
+    };
+    rootLogger.addHandler(tuiHandler);
+
     try {
       runner.run(this::handleEvent, this::render);
     } finally {
-      // Restore handlers when TUI exits
+      // Restore original handlers when TUI exits
+      rootLogger.removeHandler(tuiHandler);
       for (var handler : originalHandlers) {
         rootLogger.addHandler(handler);
       }
@@ -106,6 +135,7 @@ public class JarvisTUI extends TuiCommand {
         case MENU -> handleMenuKey(k);
         case CHAT -> handleChatKey(k);
       };
+      case TickEvent _ -> viewState == ViewState.CHAT;
       case ResizeEvent _ -> true;
       default -> false;
     };
@@ -221,7 +251,11 @@ public class JarvisTUI extends TuiCommand {
     if (question.isEmpty() || processing) {
       return;
     }
-    responseBuffer.setLength(0);
+    // Add a separator between conversations
+    if (!responseBuffer.isEmpty()) {
+      responseBuffer.append("\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n");
+    }
+    responseBuffer.append("💬 ").append(question).append("\n\n");
     responseScroll = 0;
     inputState.clear();
     processing = true;
@@ -241,7 +275,6 @@ public class JarvisTUI extends TuiCommand {
   private void streamChat(String question) {
     Thread.startVirtualThread(() -> {
       try {
-        responseBuffer.append("🤖 Calling AI service...\n\n");
         aiEndpointService.askAQuestion(question)
             .subscribe()
             .asStream()
@@ -440,7 +473,7 @@ public class JarvisTUI extends TuiCommand {
     var textInput = TextInput.builder()
         .placeholder(processing ? "Waiting for response..." : "Ask a question...")
         .placeholderStyle(Style.EMPTY.dim().italic())
-        .style(Style.EMPTY.fg(Color.WHITE))
+        .style(Style.EMPTY.fg(Color.BLACK))
         .cursorStyle(Style.EMPTY.reversed())
         .block(Block.builder()
             .borders(Borders.ALL)
