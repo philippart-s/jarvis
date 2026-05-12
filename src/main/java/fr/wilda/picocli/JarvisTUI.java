@@ -29,9 +29,11 @@ import dev.tamboui.widgets.list.ListWidget;
 import dev.tamboui.widgets.paragraph.Paragraph;
 import dev.tamboui.style.Overflow;
 import fr.wilda.picocli.sdk.ai.AIEndpointService;
+import fr.wilda.picocli.sdk.ai.tool.DocumentLoader;
 import jakarta.inject.Inject;
 import picocli.CommandLine;
 
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
 
@@ -41,14 +43,17 @@ public class JarvisTUI extends TuiCommand {
   @Inject
   AIEndpointService aiEndpointService;
 
+  @Inject
+  DocumentLoader documentLoader;
+
   /// Available demo modes, mapped to the list items.
   enum DemoMode {
     CHAT, RAG, MCP, MANUAL_WORKFLOW, WORKFLOW, AGENT
   }
 
-  /// Current view: either the menu or the chat interface.
+  /// Current view: either the menu, the chat interface, or the RAG path input.
   enum ViewState {
-    MENU, CHAT
+    MENU, CHAT, RAG_PATH_INPUT
   }
 
   // --- Menu state ---
@@ -71,6 +76,7 @@ public class JarvisTUI extends TuiCommand {
   private final StringBuilder responseBuffer = new StringBuilder();
   private int responseScroll = 0;
   private volatile boolean processing = false;
+  private boolean ragDocumentsLoaded = false;
 
   @Override
   protected TuiConfig createConfig() {
@@ -134,8 +140,9 @@ public class JarvisTUI extends TuiCommand {
       case KeyEvent k -> switch (viewState) {
         case MENU -> handleMenuKey(k);
         case CHAT -> handleChatKey(k);
+        case RAG_PATH_INPUT -> handleRagPathKey(k);
       };
-      case TickEvent _ -> viewState == ViewState.CHAT;
+      case TickEvent _ -> viewState == ViewState.CHAT || viewState == ViewState.RAG_PATH_INPUT;
       case ResizeEvent _ -> true;
       default -> false;
     };
@@ -228,10 +235,64 @@ public class JarvisTUI extends TuiCommand {
     return false;
   }
 
+  // --- RAG path input key handling ---
+
+  private boolean handleRagPathKey(KeyEvent k) {
+    if (k.isCancel()) {
+      switchToMenuView();
+      return true;
+    }
+    if (k.isConfirm()) {
+      submitRagPath();
+      return true;
+    }
+    // Text input handling (same as chat)
+    if (k.isDeleteBackward()) { inputState.deleteBackward(); return true; }
+    if (k.isDeleteForward()) { inputState.deleteForward(); return true; }
+    if (k.isLeft()) { inputState.moveCursorLeft(); return true; }
+    if (k.isRight()) { inputState.moveCursorRight(); return true; }
+    if (k.isHome()) { inputState.moveCursorToStart(); return true; }
+    if (k.isEnd()) { inputState.moveCursorToEnd(); return true; }
+    if (k.code() == KeyCode.CHAR && !k.hasCtrl() && !k.hasAlt()) {
+      inputState.insert(k.character());
+      return true;
+    }
+    return false;
+  }
+
+  private void submitRagPath() {
+    var path = inputState.text().trim();
+    inputState.clear();
+    processing = true;
+
+    Thread.startVirtualThread(() -> {
+      try {
+        if (path.isEmpty()) {
+          responseBuffer.append("📜 Loading RAG documents from default path...\n\n");
+          documentLoader.loadDocument(null);
+        } else {
+          responseBuffer.append("📜 Loading RAG documents from: ").append(path).append("\n\n");
+          documentLoader.loadDocument(Path.of(path));
+        }
+        ragDocumentsLoaded = true;
+        responseBuffer.append("✅ Documents loaded! You can now ask questions.\n\n");
+      } catch (Exception e) {
+        responseBuffer.append("⚠️ Error loading documents: ").append(e.getMessage()).append("\n\n");
+      } finally {
+        processing = false;
+        viewState = ViewState.CHAT;
+      }
+    });
+  }
+
   // ========== View switching ==========
 
   private void switchToChatView() {
-    viewState = ViewState.CHAT;
+    if (currentDemo == DemoMode.RAG && !ragDocumentsLoaded) {
+      viewState = ViewState.RAG_PATH_INPUT;
+    } else {
+      viewState = ViewState.CHAT;
+    }
     inputState.clear();
     responseBuffer.setLength(0);
     responseScroll = 0;
@@ -242,6 +303,7 @@ public class JarvisTUI extends TuiCommand {
     inputState.clear();
     responseBuffer.setLength(0);
     responseScroll = 0;
+    ragDocumentsLoaded = false;
   }
 
   // ========== Question submission ==========
@@ -261,7 +323,7 @@ public class JarvisTUI extends TuiCommand {
     processing = true;
 
     switch (currentDemo) {
-      case CHAT -> streamChat(question);
+      case CHAT, RAG -> streamChat(question);
       default -> {
         responseBuffer.append("[ ").append(currentDemo.name()).append(" mode ]\n\n");
         responseBuffer.append("This demo will be wired in a next step...");
@@ -293,6 +355,7 @@ public class JarvisTUI extends TuiCommand {
     switch (viewState) {
       case MENU -> renderMenuView(frame);
       case CHAT -> renderChatView(frame);
+      case RAG_PATH_INPUT -> renderRagPathView(frame);
     }
   }
 
@@ -398,6 +461,73 @@ public class JarvisTUI extends TuiCommand {
             .build())
         .build();
     frame.renderWidget(footer, area);
+  }
+
+  // --- RAG path input view ---
+
+  private void renderRagPathView(Frame frame) {
+    var area = frame.area();
+    var layout = Layout.vertical()
+        .constraints(
+            Constraint.length(3),   // header
+            Constraint.length(3),   // text input
+            Constraint.fill(),      // info area
+            Constraint.length(3)    // footer
+        )
+        .split(area);
+
+    renderChatHeader(frame, layout.get(0));
+
+    // Path text input
+    var textInput = TextInput.builder()
+        .placeholder("Enter path to documents (empty for default)...")
+        .placeholderStyle(Style.EMPTY.dim().italic())
+        .style(Style.EMPTY.fg(Color.BLACK))
+        .cursorStyle(Style.EMPTY.reversed())
+        .block(Block.builder()
+            .borders(Borders.ALL)
+            .borderType(BorderType.ROUNDED)
+            .borderStyle(Style.EMPTY.fg(Color.YELLOW))
+            .title(Title.from(Span.raw("Document Path").bold().yellow()))
+            .build())
+        .build();
+    textInput.renderWithCursor(layout.get(1), frame.buffer(), inputState, frame);
+
+    // Info / status area
+    var infoText = responseBuffer.isEmpty()
+        ? "Enter the path to the documents you want to load for RAG.\nLeave empty to use the default path from configuration.\nPress Enter to load."
+        : responseBuffer.toString();
+
+    var info = Paragraph.builder()
+        .text(Text.from(infoText))
+        .overflow(Overflow.WRAP_WORD)
+        .block(Block.builder()
+            .borders(Borders.ALL)
+            .borderType(BorderType.ROUNDED)
+            .borderStyle(Style.EMPTY.fg(Color.GREEN))
+            .title("Info")
+            .build())
+        .build();
+    frame.renderWidget(info, layout.get(2));
+
+    // Footer
+    var helpLine = Line.from(
+        Span.raw(" Enter").bold().yellow(),
+        Span.raw(" Load  ").dim(),
+        Span.raw("Esc").bold().yellow(),
+        Span.raw(" Back  ").dim(),
+        Span.raw("Ctrl+C").bold().yellow(),
+        Span.raw(" Quit").dim()
+    );
+    var footer = Paragraph.builder()
+        .text(Text.from(helpLine))
+        .block(Block.builder()
+            .borders(Borders.ALL)
+            .borderType(BorderType.ROUNDED)
+            .borderStyle(Style.EMPTY.fg(Color.DARK_GRAY))
+            .build())
+        .build();
+    frame.renderWidget(footer, layout.get(3));
   }
 
   // --- Chat view ---
