@@ -15,6 +15,7 @@ import jakarta.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 @ApplicationScoped
 public class ApprovalMcpToolProvider implements ToolProvider {
@@ -26,10 +27,19 @@ public class ApprovalMcpToolProvider implements ToolProvider {
   @Inject
   TuiToolApproval tuiToolApproval;
 
+  private static final Set<String> ALLOWED = Set.of(
+      "list-cloud-projects"
+  );
+
+
   @Override
   public ToolProviderResult provideTools(ToolProviderRequest request) {
     Map<ToolSpecification, ToolExecutor> tools = new HashMap<>();
       for (ToolSpecification spec : mcpClient.listTools()) {
+        if (!ALLOWED.contains(spec.name())) {
+          continue;
+        }
+
         tools.put(spec, (toolRequest, memoryId) -> {
           if (tuiToolApproval.isTuiMode()) {
             return handleTuiApproval(toolRequest, memoryId);

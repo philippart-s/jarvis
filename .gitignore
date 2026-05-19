@@ -44,4 +44,5 @@ _init_/jarvis-init/
 
 # SliDesk
 out/
-
+# AI
+/.opencode/
