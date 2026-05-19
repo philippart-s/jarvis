@@ -5,6 +5,7 @@ import static dev.tamboui.toolkit.Toolkit.*;
 import dev.tamboui.layout.Constraint;
 import dev.tamboui.layout.Flex;
 import dev.tamboui.style.Color;
+import dev.tamboui.style.Overflow;
 import dev.tamboui.toolkit.app.ToolkitRunner;
 import dev.tamboui.toolkit.element.Element;
 import dev.tamboui.toolkit.elements.ListElement;
@@ -78,6 +79,7 @@ public class JarvisTUI implements Callable<Integer> {
       .autoScroll();
   private final TextInputState inputState = new TextInputState();
   private String response = "";
+  private String logs = "";
   private boolean processing = false;
   private boolean ragDocumentsLoaded = false;
   private ToolkitRunner runner;
@@ -153,16 +155,21 @@ public class JarvisTUI implements Callable<Integer> {
     return column(
         chatHeader(),
 
-        textInput(inputState)
-            .placeholder(processing ? "Waiting for response..." : "Ask a question...")
-            .id("chat-input")
-            .onSubmit(this::submitQuestion)
-            .length(3),
+        panel("Question",
+            textInput(inputState)
+                .placeholder(processing ? "Waiting for response..." : "Ask a question...")
+                .id("chat-input")
+                .onSubmit(this::submitQuestion)
+        ).rounded().borderColor(Color.YELLOW).focusedBorderColor(Color.CYAN).length(3),
 
-        panel("Response", text(buildResponseText()))
-            .rounded().borderColor(Color.GREEN).fill()
+        panel("Response", text(buildResponseText()).overflow(Overflow.WRAP_WORD))
+            .rounded().borderColor(Color.GREEN).fill(2)
             .id("chat-response").focusable()
             .onKeyEvent(this::handleChatKey),
+
+        panel("Logs", textLines(logs.isEmpty() ? "No logs yet." : logs))
+            .rounded().borderColor(Color.DARK_GRAY).fill()
+            .id("chat-logs"),
 
         chatFooter()
     );
@@ -268,6 +275,7 @@ public class JarvisTUI implements Callable<Integer> {
     currentMode = Mode.MENU;
     inputState.clear();
     response = "";
+    logs = "";
     ragDocumentsLoaded = false;
   }
 
@@ -286,7 +294,7 @@ public class JarvisTUI implements Callable<Integer> {
       case CHAT, RAG -> streamResponse(aiEndpointService::askAQuestion, question);
       case MCP -> streamResponse(aiEndpointService::askAQuestionAboutOVHcloud, question);
       default -> {
-        response = "[ " + currentMode.name() + " mode ]\n\nThis demo will be wired in a next step...";
+        logs += "[ " + currentMode.name() + " mode ] This demo will be wired in a next step...\n";
         processing = false;
       }
     }
@@ -298,16 +306,16 @@ public class JarvisTUI implements Callable<Integer> {
 
     try {
       if (path.isEmpty()) {
-        response = "📜 Loading RAG documents from default path...";
+        logs += "📜 Loading RAG documents from default path...\n";
         documentLoader.loadDocument(null);
       } else {
-        response = "📜 Loading RAG documents from: " + path;
+        logs += "📜 Loading RAG documents from: " + path + "\n";
         documentLoader.loadDocument(Path.of(path));
       }
       ragDocumentsLoaded = true;
-      response = "✅ Documents loaded! You can now ask questions.";
+      logs += "✅ Documents loaded! You can now ask questions.\n";
     } catch (Exception e) {
-      response = "⚠️ Error loading documents: " + e.getMessage();
+      logs += "⚠️ Error loading documents: " + e.getMessage() + "\n";
     }
     // RAG docs loaded — render() will now show chatView()
   }
@@ -318,7 +326,7 @@ public class JarvisTUI implements Callable<Integer> {
         .subscribe().with(
             token -> runner.runOnRenderThread(() -> response += token),
             error -> runner.runOnRenderThread(() -> {
-              response += "\n\n⚠️ Error: " + error.getMessage();
+              logs += "⚠️ Error: " + error.getMessage() + "\n";
               processing = false;
             }),
             () -> runner.runOnRenderThread(() -> processing = false)
@@ -326,6 +334,16 @@ public class JarvisTUI implements Callable<Integer> {
   }
 
   // ========== Helpers ==========
+
+  /// Converts a multiline string into a column of text elements with word wrapping.
+  private Element textLines(String content) {
+    var lines = content.split("\n", -1);
+    var elements = new Element[lines.length];
+    for (int i = 0; i < lines.length; i++) {
+      elements[i] = text(lines[i]).overflow(Overflow.WRAP_WORD);
+    }
+    return column(elements);
+  }
 
   private String buildResponseText() {
     if (processing && response.isEmpty()) {
@@ -345,7 +363,7 @@ public class JarvisTUI implements Callable<Integer> {
       @Override
       public void publish(java.util.logging.LogRecord logRecord) {
         if (logRecord.getMessage() != null && currentMode != Mode.MENU) {
-          runner.runOnRenderThread(() -> response += logRecord.getMessage());
+          runner.runOnRenderThread(() -> logs += logRecord.getMessage() + "\n");
         }
       }
 

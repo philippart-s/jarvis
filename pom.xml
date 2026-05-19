@@ -73,6 +73,12 @@
         </dependency>
         <dependency>
             <groupId>dev.tamboui</groupId>
+            <artifactId>tamboui-toolkit</artifactId>
+            <version>0.2.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>dev.tamboui</groupId>
             <artifactId>tamboui-jline3-backend</artifactId>
             <version>0.2.0</version>
             <scope>compile</scope>
