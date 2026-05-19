@@ -1,53 +1,33 @@
 package fr.wilda.picocli;
 
+import static dev.tamboui.toolkit.Toolkit.*;
+
 import dev.tamboui.layout.Constraint;
-import dev.tamboui.layout.Layout;
-import dev.tamboui.layout.Rect;
-import dev.tamboui.picocli.TuiCommand;
+import dev.tamboui.layout.Flex;
 import dev.tamboui.style.Color;
-import dev.tamboui.style.Style;
-import dev.tamboui.terminal.Frame;
-import dev.tamboui.text.Line;
-import dev.tamboui.text.Span;
-import dev.tamboui.text.Text;
+import dev.tamboui.toolkit.app.ToolkitRunner;
+import dev.tamboui.toolkit.element.Element;
+import dev.tamboui.toolkit.elements.ListElement;
+import dev.tamboui.toolkit.elements.Row;
+import dev.tamboui.toolkit.event.EventResult;
 import dev.tamboui.tui.TuiConfig;
-import dev.tamboui.tui.TuiRunner;
-import dev.tamboui.tui.bindings.ActionHandler;
-import dev.tamboui.tui.bindings.Actions;
-import dev.tamboui.tui.bindings.Bindings;
-import dev.tamboui.tui.bindings.BindingSets;
-import dev.tamboui.tui.bindings.KeyTrigger;
-import dev.tamboui.tui.event.Event;
-import dev.tamboui.tui.event.KeyCode;
 import dev.tamboui.tui.event.KeyEvent;
-import dev.tamboui.tui.event.ResizeEvent;
-import dev.tamboui.tui.event.TickEvent;
-import dev.tamboui.widgets.block.Block;
-import dev.tamboui.widgets.block.BorderType;
-import dev.tamboui.widgets.block.Borders;
-import dev.tamboui.widgets.block.Title;
-import dev.tamboui.widgets.input.TextInput;
 import dev.tamboui.widgets.input.TextInputState;
-import dev.tamboui.widgets.list.ListItem;
-import dev.tamboui.widgets.list.ListState;
-import dev.tamboui.widgets.list.ListWidget;
-import dev.tamboui.widgets.paragraph.Paragraph;
-import dev.tamboui.style.Overflow;
 import fr.wilda.picocli.sdk.ai.AIEndpointService;
 import fr.wilda.picocli.sdk.ai.mcp.TuiToolApproval;
 import fr.wilda.picocli.sdk.ai.tool.DocumentLoader;
+import io.smallrye.mutiny.Multi;
 import jakarta.inject.Inject;
 import picocli.CommandLine;
 
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.function.Function;
 
-import io.smallrye.mutiny.Multi;
-
 @CommandLine.Command(name = "tui", description = "Start the Jarvis TUI", mixinStandardHelpOptions = true)
-public class JarvisTUI extends TuiCommand {
+public class JarvisTUI implements Callable<Integer> {
 
   @Inject
   AIEndpointService aiEndpointService;
@@ -58,90 +38,314 @@ public class JarvisTUI extends TuiCommand {
   @Inject
   TuiToolApproval tuiToolApproval;
 
-  /// Available demo modes, mapped to the list items.
-  /// The label is used in the chat header to display the current mode.
-  enum DemoMode {
+  /// Available modes with their display labels.
+  enum Mode {
+    MENU(""),
     CHAT("Chat Bot"),
-    RAG("RAG Demo"),
-    MCP("MCP Demo"),
-    MANUAL_WORKFLOW("Manual Workflow Demo"),
-    WORKFLOW("Workflow Demo"),
-    AGENT("YOLO Agent Demo");
+    RAG("RAG"),
+    MCP("MCP"),
+    MANUAL_WORKFLOW("Manual Workflow"),
+    WORKFLOW("Workflow"),
+    AGENT("YOLO Agent");
 
-    private final String label;
+    private final String title;
 
-    DemoMode(String label) {
-      this.label = label;
+    Mode(String title) {
+      this.title = title;
     }
 
-    String label() {
-      return label;
+    @Override
+    public String toString() {
+      return title;
     }
   }
 
-  /// Current view: either the menu, the chat interface, or the RAG path input.
-  enum ViewState {
-    MENU, CHAT, RAG_PATH_INPUT
-  }
-
-  // --- Menu state ---
-  private final ListState listState = new ListState();
-  private final List<String> items = List.of(
-      "💬  Chat bot 💬",
-      "🧮  RAG demo 🧮",
-      "🧩  MCP demo 🧩",
-      "👤  Agent with human workflow demo 👤",
-      "🏗️   Agent with developed workflow demo 🏗️",
-      "🤖  YOLO mode demo 🤖"
+  // --- Menu items ---
+  private static final List<String> MENU_ITEMS = List.of(
+      "Chat bot",
+      "RAG demo",
+      "MCP demo",
+      "Agent with human workflow demo",
+      "Agent with developed workflow demo",
+      "YOLO mode demo"
   );
 
-  // --- View state ---
-  private ViewState viewState = ViewState.MENU;
-  private DemoMode currentDemo = DemoMode.CHAT;
-
-  // --- Chat state ---
+  // --- State ---
+  private Mode currentMode = Mode.MENU;
+  private final ListElement<?> menuList = list(MENU_ITEMS.toArray(new String[0]))
+      .highlightColor(Color.CYAN)
+      .highlightSymbol("▶ ")
+      .autoScroll();
   private final TextInputState inputState = new TextInputState();
-  private final StringBuffer responseBuffer = new StringBuffer();
-  private int responseScroll = 0;
-  private volatile boolean processing = false;
+  private String response = "";
+  private boolean processing = false;
   private boolean ragDocumentsLoaded = false;
+  private ToolkitRunner runner;
 
   @Override
-  protected TuiConfig createConfig() {
-    // Enable periodic tick events so the TUI re-renders automatically
-    // when the response buffer is updated by background threads.
-    return TuiConfig.builder()
+  public Integer call() throws Exception {
+    var config = TuiConfig.builder()
         .tickRate(Duration.ofMillis(100))
         .build();
-  }
 
-  @Override
-  protected void runTui(TuiRunner runner) throws Exception {
     var logRedirector = new TuiLogRedirector();
     logRedirector.install();
-
     tuiToolApproval.enableTuiMode();
 
-    try {
-      runner.run(this::handleEvent, this::render);
+    try (var runner = ToolkitRunner.create(config)) {
+      this.runner = runner;
+      runner.run(this::render);
+      return 0;
     } finally {
       tuiToolApproval.disableTuiMode();
       logRedirector.uninstall();
     }
   }
 
+  // ========== Rendering ==========
+
+  private Element render() {
+    return switch (currentMode) {
+      case MENU -> menuView();
+      case RAG -> ragDocumentsLoaded ? chatView() : ragPathView();
+      default -> chatView();
+    };
+  }
+
+  // --- Menu view ---
+
+  private Element menuView() {
+    return column(
+        panel(
+            text("PicoCLI + TamboUI Demo").bold().cyan()
+        ).rounded().borderColor(Color.CYAN).length(3),
+
+        panel("Jarvis", menuList)
+            .rounded().borderColor(Color.GREEN).fill()
+            .id("menu").focusable()
+            .focusedBorderColor(Color.CYAN)
+            .onKeyEvent(this::handleMenuKey),
+
+        helpBar(
+            "↑/↓", "Navigate",
+            "Enter", "Select",
+            "q/Ctrl+C", "Quit"
+        )
+    );
+  }
+
+  private EventResult handleMenuKey(KeyEvent event) {
+    if (event.isConfirm() || event.isSelect()) {
+      var selected = menuList.selected();
+      if (selected >= 0 && selected < MENU_ITEMS.size()) {
+        currentMode = Mode.values()[selected + 1]; // skip MENU
+        inputState.clear();
+        response = "";
+        return EventResult.HANDLED;
+      }
+    }
+    return EventResult.UNHANDLED;
+  }
+
+  // --- Chat view ---
+
+  private Element chatView() {
+    return column(
+        chatHeader(),
+
+        textInput(inputState)
+            .placeholder(processing ? "Waiting for response..." : "Ask a question...")
+            .id("chat-input")
+            .onSubmit(this::submitQuestion)
+            .length(3),
+
+        panel("Response", text(buildResponseText()))
+            .rounded().borderColor(Color.GREEN).fill()
+            .id("chat-response").focusable()
+            .onKeyEvent(this::handleChatKey),
+
+        chatFooter()
+    );
+  }
+
+  private EventResult handleChatKey(KeyEvent event) {
+    if (tuiToolApproval.hasPendingApproval()) {
+      if (event.isConfirm() || event.isChar('y') || event.isChar('Y')) {
+        tuiToolApproval.approve();
+        return EventResult.HANDLED;
+      }
+      if (event.isCancel() || event.isChar('n') || event.isChar('N')) {
+        tuiToolApproval.reject();
+        return EventResult.HANDLED;
+      }
+      return EventResult.HANDLED;
+    }
+
+    if (event.isCancel()) {
+      switchToMenuView();
+      return EventResult.HANDLED;
+    }
+    return EventResult.UNHANDLED;
+  }
+
+  // --- RAG path input view ---
+
+  private Element ragPathView() {
+    var infoText = response.isEmpty()
+        ? "Enter the path to the documents you want to load for RAG.\n"
+            + "Leave empty to use the default path from configuration.\n"
+            + "Press Enter to load."
+        : response;
+
+    return column(
+        chatHeader(),
+
+        textInput(inputState)
+            .placeholder("Enter path to documents (empty for default)...")
+            .id("rag-input")
+            .onSubmit(this::submitRagPath)
+            .length(3),
+
+        panel("Info", text(infoText))
+            .rounded().borderColor(Color.GREEN).fill()
+            .id("rag-info").focusable()
+            .onKeyEvent(event -> {
+              if (event.isCancel()) {
+                switchToMenuView();
+                return EventResult.HANDLED;
+              }
+              return EventResult.UNHANDLED;
+            }),
+
+        helpBar("Enter", "Load", "Esc", "Back", "Ctrl+C", "Quit")
+    );
+  }
+
+  // ========== Shared UI components ==========
+
+  /// Builds the chat/RAG header showing the current demo mode.
+  private Element chatHeader() {
+    return panel(
+        row(
+            text("🤖 Jarvis").bold().cyan().fit(),
+            text(" - ").white().fit(),
+            text(currentMode.toString()).bold().yellow().fit()
+        ).flex(Flex.CENTER)
+    ).rounded().borderColor(Color.CYAN).length(3);
+  }
+
+  /// Builds the chat footer, adapting to MCP tool approval state.
+  private Element chatFooter() {
+    if (tuiToolApproval.hasPendingApproval()) {
+      return row(
+          text(" ⚠️ Tool: ").bold().yellow().fit(),
+          text(tuiToolApproval.pendingToolName() + "  ").white().fit(),
+          text("Enter/y").bold().green().fit(),
+          text(" Approve  ").dim().fit(),
+          text("Esc/n").bold().red().fit(),
+          text(" Reject").dim().fit()
+      ).flex(Flex.START).length(1);
+    }
+    return helpBar("Enter", "Send", "Esc", "Back", "Ctrl+C", "Quit");
+  }
+
+  /// Creates a key-binding help bar from alternating key/description pairs.
+  private Row helpBar(String... keysAndDescriptions) {
+    var elements = new Element[keysAndDescriptions.length];
+    for (int i = 0; i < keysAndDescriptions.length; i++) {
+      if (i % 2 == 0) {
+        elements[i] = text(" " + keysAndDescriptions[i]).bold().yellow().fit();
+      } else {
+        elements[i] = text(" " + keysAndDescriptions[i] + "  ").dim().fit();
+      }
+    }
+    return row(elements).flex(Flex.START).length(1);
+  }
+
+  // ========== View switching ==========
+
+  private void switchToMenuView() {
+    currentMode = Mode.MENU;
+    inputState.clear();
+    response = "";
+    ragDocumentsLoaded = false;
+  }
+
+  // ========== Question submission ==========
+
+  private void submitQuestion() {
+    var question = inputState.text().trim();
+    if (question.isEmpty() || processing) {
+      return;
+    }
+    response = "";
+    inputState.clear();
+    processing = true;
+
+    switch (currentMode) {
+      case CHAT, RAG -> streamResponse(aiEndpointService::askAQuestion, question);
+      case MCP -> streamResponse(aiEndpointService::askAQuestionAboutOVHcloud, question);
+      default -> {
+        response = "[ " + currentMode.name() + " mode ]\n\nThis demo will be wired in a next step...";
+        processing = false;
+      }
+    }
+  }
+
+  private void submitRagPath() {
+    var path = inputState.text().trim();
+    inputState.clear();
+
+    try {
+      if (path.isEmpty()) {
+        response = "📜 Loading RAG documents from default path...";
+        documentLoader.loadDocument(null);
+      } else {
+        response = "📜 Loading RAG documents from: " + path;
+        documentLoader.loadDocument(Path.of(path));
+      }
+      ragDocumentsLoaded = true;
+      response = "✅ Documents loaded! You can now ask questions.";
+    } catch (Exception e) {
+      response = "⚠️ Error loading documents: " + e.getMessage();
+    }
+    // RAG docs loaded — render() will now show chatView()
+  }
+
+  /// Streams a Multi response from the AI service reactively.
+  private void streamResponse(Function<String, Multi<String>> serviceCall, String question) {
+    serviceCall.apply(question)
+        .subscribe().with(
+            token -> runner.runOnRenderThread(() -> response += token),
+            error -> runner.runOnRenderThread(() -> {
+              response += "\n\n⚠️ Error: " + error.getMessage();
+              processing = false;
+            }),
+            () -> runner.runOnRenderThread(() -> processing = false)
+        );
+  }
+
+  // ========== Helpers ==========
+
+  private String buildResponseText() {
+    if (processing && response.isEmpty()) {
+      return "🤔 Thinking...";
+    } else if (response.isEmpty()) {
+      return "Type your question above and press Enter...";
+    }
+    return response;
+  }
+
   /// Redirects JUL log output to the TUI response buffer instead of the terminal.
-  /// This prevents log messages from services (RagTool, DocumentRetriever, etc.)
-  /// from corrupting the TUI display.
   private class TuiLogRedirector {
     private final java.util.logging.Logger rootLogger = java.util.logging.Logger.getLogger("");
     private java.util.logging.Handler[] originalHandlers;
 
     private final java.util.logging.Handler tuiHandler = new java.util.logging.Handler() {
       @Override
-      public void publish(java.util.logging.LogRecord record) {
-        if (record.getMessage() != null && viewState == ViewState.CHAT) {
-          responseBuffer.append(record.getMessage());
+      public void publish(java.util.logging.LogRecord logRecord) {
+        if (logRecord.getMessage() != null && currentMode != Mode.MENU) {
+          runner.runOnRenderThread(() -> response += logRecord.getMessage());
         }
       }
 
@@ -166,516 +370,5 @@ public class JarvisTUI extends TuiCommand {
         rootLogger.addHandler(handler);
       }
     }
-  }
-
-  // --- Action handlers ---
-  // Menu uses standard bindings (q quits). Input views rebind quit to Ctrl+C only
-  // so the user can type 'q' freely in text fields.
-
-  /// Bindings for input views: standard bindings with quit restricted to Ctrl+C only.
-  private static final Bindings INPUT_BINDINGS = BindingSets.standard()
-      .toBuilder()
-      .rebind(KeyTrigger.ctrl('c'), Actions.QUIT)
-      .build();
-
-  private final ActionHandler menuActions = new ActionHandler(BindingSets.standard())
-      .on(Actions.MOVE_UP, _ -> listState.selectPrevious())
-      .on(Actions.MOVE_DOWN, _ -> listState.selectNext(items.size()))
-      .on(Actions.HOME, _ -> listState.selectFirst())
-      .on(Actions.END, _ -> listState.select(items.size() - 1))
-      .on(Actions.SELECT, _ -> selectMenuItem())
-      .on(Actions.CONFIRM, _ -> selectMenuItem());
-
-  /// Action handler for text input (shared between chat and RAG path views).
-  /// Handles cursor movement and deletion. Confirm/cancel are handled
-  /// per-view before dispatching to this handler.
-  private final ActionHandler textInputActions = new ActionHandler(INPUT_BINDINGS)
-      .on(Actions.DELETE_BACKWARD, _ -> inputState.deleteBackward())
-      .on(Actions.DELETE_FORWARD, _ -> inputState.deleteForward())
-      .on(Actions.MOVE_LEFT, _ -> inputState.moveCursorLeft())
-      .on(Actions.MOVE_RIGHT, _ -> inputState.moveCursorRight())
-      .on(Actions.HOME, _ -> inputState.moveCursorToStart())
-      .on(Actions.END, _ -> inputState.moveCursorToEnd());
-
-  // ========== Event handling ==========
-
-  private boolean handleEvent(Event event, TuiRunner runner) {
-    return switch (event) {
-      case KeyEvent k when k.isCtrlC() -> {
-        runner.quit();
-        yield false;
-      }
-      case KeyEvent k -> switch (viewState) {
-        case MENU -> handleMenuEvent(k, runner);
-        case CHAT -> handleChatEvent(k);
-        case RAG_PATH_INPUT -> handleRagPathEvent(k);
-      };
-      case TickEvent _ -> viewState == ViewState.CHAT || viewState == ViewState.RAG_PATH_INPUT;
-      case ResizeEvent _ -> true;
-      default -> false;
-    };
-  }
-
-  // --- Menu event handling ---
-
-  private boolean handleMenuEvent(KeyEvent k, TuiRunner runner) {
-    if (k.isQuit()) {
-      runner.quit();
-      return false;
-    }
-    return menuActions.dispatch(k);
-  }
-
-  // --- Chat event handling ---
-
-  private boolean handleChatEvent(KeyEvent k) {
-    // MCP tool approval takes priority over all other input
-    if (tuiToolApproval.hasPendingApproval()) {
-      return handleToolApproval(k);
-    }
-
-    if (k.isCancel()) {
-      switchToMenuView();
-      return true;
-    }
-    if (k.isConfirm()) {
-      submitQuestion();
-      return true;
-    }
-
-    // Scrolling the response area (Up/Down/PageUp/PageDown)
-    if (k.isUp() || k.isPageUp()) {
-      if (responseScroll > 0) responseScroll--;
-      return true;
-    }
-    if (k.isDown() || k.isPageDown()) {
-      responseScroll++;
-      return true;
-    }
-
-    // Text input: try action handler first, then fall back to character insertion
-    if (textInputActions.dispatch(k)) return true;
-    return insertCharIfApplicable(k);
-  }
-
-  // --- RAG path input event handling ---
-
-  private boolean handleRagPathEvent(KeyEvent k) {
-    if (k.isCancel()) {
-      switchToMenuView();
-      return true;
-    }
-    if (k.isConfirm()) {
-      submitRagPath();
-      return true;
-    }
-
-    if (textInputActions.dispatch(k)) return true;
-    return insertCharIfApplicable(k);
-  }
-
-  /// Handles the MCP tool approval dialog: Enter/y approves, Esc/n rejects.
-  private boolean handleToolApproval(KeyEvent k) {
-    if (k.isConfirm() || k.isChar('y') || k.isChar('Y')) {
-      tuiToolApproval.approve();
-      return true;
-    }
-    if (k.isCancel() || k.isChar('n') || k.isChar('N')) {
-      tuiToolApproval.reject();
-      return true;
-    }
-    return false;
-  }
-
-  /// Inserts a typed character into the text input if the key is a plain character
-  /// (no Ctrl/Alt modifiers). Returns false for non-character keys.
-  private boolean insertCharIfApplicable(KeyEvent k) {
-    if (k.code() == KeyCode.CHAR && !k.hasCtrl() && !k.hasAlt()) {
-      inputState.insert(k.character());
-      return true;
-    }
-    return false;
-  }
-
-  private void submitRagPath() {
-    var path = inputState.text().trim();
-    inputState.clear();
-    processing = true;
-
-    Thread.startVirtualThread(() -> {
-      try {
-        if (path.isEmpty()) {
-          responseBuffer.append("📜 Loading RAG documents from default path...\n\n");
-          documentLoader.loadDocument(null);
-        } else {
-          responseBuffer.append("📜 Loading RAG documents from: ").append(path).append("\n\n");
-          documentLoader.loadDocument(Path.of(path));
-        }
-        ragDocumentsLoaded = true;
-        responseBuffer.append("✅ Documents loaded! You can now ask questions.\n\n");
-      } catch (Exception e) {
-        responseBuffer.append("⚠️ Error loading documents: ").append(e.getMessage()).append("\n\n");
-      } finally {
-        processing = false;
-        viewState = ViewState.CHAT;
-      }
-    });
-  }
-
-  // ========== View switching ==========
-
-  private void selectMenuItem() {
-    var selected = listState.selected();
-    if (selected != null) {
-      currentDemo = DemoMode.values()[selected];
-      switchToChatView();
-    }
-  }
-
-  private void switchToChatView() {
-    if (currentDemo == DemoMode.RAG && !ragDocumentsLoaded) {
-      viewState = ViewState.RAG_PATH_INPUT;
-    } else {
-      viewState = ViewState.CHAT;
-    }
-    inputState.clear();
-    responseBuffer.setLength(0);
-    responseScroll = 0;
-  }
-
-  private void switchToMenuView() {
-    viewState = ViewState.MENU;
-    inputState.clear();
-    responseBuffer.setLength(0);
-    responseScroll = 0;
-    ragDocumentsLoaded = false;
-  }
-
-  // ========== Question submission ==========
-
-  private void submitQuestion() {
-    var question = inputState.text().trim();
-    if (question.isEmpty() || processing) {
-      return;
-    }
-    // Add a separator between conversations
-    if (!responseBuffer.isEmpty()) {
-      responseBuffer.append("\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n");
-    }
-    responseBuffer.append("💬 ").append(question).append("\n\n");
-    responseScroll = 0;
-    inputState.clear();
-    processing = true;
-
-    switch (currentDemo) {
-      case CHAT, RAG -> streamResponse(aiEndpointService::askAQuestion, question);
-      case MCP -> streamResponse(aiEndpointService::askAQuestionAboutOVHcloud, question);
-      default -> {
-        responseBuffer.append("[ ").append(currentDemo.name()).append(" mode ]\n\n");
-        responseBuffer.append("This demo will be wired in a next step...");
-        processing = false;
-      }
-    }
-  }
-
-  /// Streams a Multi response from the AI service on a virtual thread.
-  /// Each token is appended to the response buffer so the TUI renders it progressively.
-  private void streamResponse(Function<String, Multi<String>> serviceCall, String question) {
-    Thread.startVirtualThread(() -> {
-      try {
-        serviceCall.apply(question)
-            .subscribe()
-            .asStream()
-            .forEach(responseBuffer::append);
-      } catch (Exception e) {
-        responseBuffer.append("\n\n⚠️ Error: ").append(e.getMessage());
-      } finally {
-        processing = false;
-      }
-    });
-  }
-
-  // ========== Rendering ==========
-
-  private void render(Frame frame) {
-    switch (viewState) {
-      case MENU -> renderMenuView(frame);
-      case CHAT -> renderChatView(frame);
-      case RAG_PATH_INPUT -> renderRagPathView(frame);
-    }
-  }
-
-  // --- Menu view (existing) ---
-
-  private void renderMenuView(Frame frame) {
-    var area = frame.area();
-    var layout = Layout.vertical()
-        .constraints(
-            Constraint.length(3),
-            Constraint.fill(),
-            Constraint.length(5),
-            Constraint.length(3)
-        )
-        .split(area);
-
-    renderMenuHeader(frame, layout.get(0));
-    renderList(frame, layout.get(1));
-    //renderInfo(frame, layout.get(2));
-    renderMenuFooter(frame, layout.get(3));
-  }
-
-  private void renderMenuHeader(Frame frame, Rect area) {
-    var header = Block.builder()
-        .borders(Borders.ALL)
-        .borderType(BorderType.ROUNDED)
-        .borderStyle(Style.EMPTY.fg(Color.CYAN))
-        .title(Title.from(
-            Line.from(Span.raw(" 🤖  Jarvis TUI 🤖  ").bold().cyan())).centered())
-        .build();
-    frame.renderWidget(header, area);
-  }
-
-  private void renderList(Frame frame, Rect area) {
-    var listItems = items.stream()
-        .map(s -> ListItem.from(s).toSizedWidget())
-        .toList();
-
-    var list = ListWidget.builder()
-        .items(listItems)
-        .block(Block.builder()
-            .borders(Borders.ALL)
-            .borderType(BorderType.ROUNDED)
-            .borderStyle(Style.EMPTY.fg(Color.GREEN))
-            .title("Jarvis")
-            .titleBottom(Title.from("↑/↓ navigate, Enter select").right())
-            .build())
-        .highlightStyle(Style.EMPTY.bg(Color.GREEN).fg(Color.WHITE).bold())
-        .highlightSymbol("▶ ")
-        .build();
-
-    frame.renderStatefulWidget(list, area, listState);
-  }
-
-  private void renderInfo(Frame frame, Rect area) {
-    var selected = listState.selected();
-    var selectedText = selected != null && selected < items.size()
-        ? items.get(selected)
-        : "None";
-
-    var content = Text.from(
-        Line.from(Span.raw("Title: ").bold(), Span.raw("Jarvis").cyan()),
-        Line.from(Span.raw("Items: ").bold(), Span.raw(String.valueOf(items.size())).yellow()),
-        Line.from(Span.raw("Selected: ").bold(), Span.raw(selectedText).green())
-    );
-
-    var info = Paragraph.builder()
-        .text(content)
-        .block(Block.builder()
-            .borders(Borders.ALL)
-            .borderType(BorderType.ROUNDED)
-            .borderStyle(Style.EMPTY.fg(Color.MAGENTA))
-            .title("CLI Options")
-            .build())
-        .build();
-    frame.renderWidget(info, area);
-  }
-
-  private void renderMenuFooter(Frame frame, Rect area) {
-    renderSimpleFooter(frame, area, Line.from(
-        Span.raw(" ↑/↓").bold().yellow(),
-        Span.raw(" Navigate  ").dim(),
-        Span.raw("Enter").bold().yellow(),
-        Span.raw(" Select  ").dim(),
-        Span.raw("q/Ctrl+C").bold().yellow(),
-        Span.raw(" Quit  ").dim(),
-        Span.raw("--help").bold().yellow(),
-        Span.raw(" CLI help").dim()
-    ));
-  }
-
-  // --- RAG path input view ---
-
-  private void renderRagPathView(Frame frame) {
-    var area = frame.area();
-    var layout = Layout.vertical()
-        .constraints(
-            Constraint.length(3),   // header
-            Constraint.length(3),   // text input
-            Constraint.fill(),      // info area
-            Constraint.length(3)    // footer
-        )
-        .split(area);
-
-    renderChatHeader(frame, layout.get(0));
-
-    // Path text input
-    var textInput = TextInput.builder()
-        .placeholder("Enter path to documents (empty for default)...")
-        .placeholderStyle(Style.EMPTY.dim().italic())
-        .style(Style.EMPTY.fg(Color.BLACK))
-        .cursorStyle(Style.EMPTY.reversed())
-        .block(Block.builder()
-            .borders(Borders.ALL)
-            .borderType(BorderType.ROUNDED)
-            .borderStyle(Style.EMPTY.fg(Color.YELLOW))
-            .title(Title.from(Span.raw("Document Path").bold().yellow()))
-            .build())
-        .build();
-    textInput.renderWithCursor(layout.get(1), frame.buffer(), inputState, frame);
-
-    // Info / status area
-    var infoText = responseBuffer.isEmpty()
-        ? "Enter the path to the documents you want to load for RAG.\nLeave empty to use the default path from configuration.\nPress Enter to load."
-        : responseBuffer.toString();
-
-    var info = Paragraph.builder()
-        .text(Text.from(infoText))
-        .overflow(Overflow.WRAP_WORD)
-        .block(Block.builder()
-            .borders(Borders.ALL)
-            .borderType(BorderType.ROUNDED)
-            .borderStyle(Style.EMPTY.fg(Color.GREEN))
-            .title("Info")
-            .build())
-        .build();
-    frame.renderWidget(info, layout.get(2));
-
-    // Footer
-    renderSimpleFooter(frame, layout.get(3), Line.from(
-        Span.raw(" Enter").bold().yellow(),
-        Span.raw(" Load  ").dim(),
-        Span.raw("Esc").bold().yellow(),
-        Span.raw(" Back  ").dim(),
-        Span.raw("Ctrl+C").bold().yellow(),
-        Span.raw(" Quit").dim()
-    ));
-  }
-
-  // --- Chat view ---
-
-  private void renderChatView(Frame frame) {
-    var area = frame.area();
-    var layout = Layout.vertical()
-        .constraints(
-            Constraint.length(3),   // header
-            Constraint.length(3),   // text input
-            Constraint.fill(),      // response area
-            Constraint.length(3)    // footer
-        )
-        .split(area);
-
-    renderChatHeader(frame, layout.get(0));
-    renderTextInput(frame, layout.get(1));
-    renderResponseArea(frame, layout.get(2));
-    renderChatFooter(frame, layout.get(3));
-  }
-
-  private void renderChatHeader(Frame frame, Rect area) {
-    var header = Block.builder()
-        .borders(Borders.ALL)
-        .borderType(BorderType.ROUNDED)
-        .borderStyle(Style.EMPTY.fg(Color.CYAN))
-        .title(Title.from(
-            Line.from(
-                Span.raw(" 🤖 Jarvis ").bold().cyan(),
-                Span.raw("- ").white(),
-                Span.raw(currentDemo.label() + " ").bold().yellow()
-            )
-        ).centered())
-        .build();
-    frame.renderWidget(header, area);
-  }
-
-  private void renderResponseArea(Frame frame, Rect area) {
-    String responseText;
-    if (processing && responseBuffer.isEmpty()) {
-      responseText = "🤔 Thinking...";
-    } else if (responseBuffer.isEmpty()) {
-      responseText = "Type your question above and press Enter...";
-    } else {
-      responseText = responseBuffer.toString();
-    }
-
-    var paragraph = Paragraph.builder()
-        .text(Text.from(responseText))
-        .overflow(Overflow.WRAP_WORD)
-        .scroll(responseScroll)
-        .block(Block.builder()
-            .borders(Borders.ALL)
-            .borderType(BorderType.ROUNDED)
-            .borderStyle(Style.EMPTY.fg(Color.GREEN))
-            .title("Response")
-            .titleBottom(Title.from("↑/↓ scroll").right())
-            .build())
-        .build();
-    frame.renderWidget(paragraph, area);
-  }
-
-  private void renderTextInput(Frame frame, Rect area) {
-    var textInput = TextInput.builder()
-        .placeholder(processing ? "Waiting for response..." : "Ask a question...")
-        .placeholderStyle(Style.EMPTY.dim().italic())
-        .style(Style.EMPTY.fg(Color.BLACK))
-        .cursorStyle(Style.EMPTY.reversed())
-        .block(Block.builder()
-            .borders(Borders.ALL)
-            .borderType(BorderType.ROUNDED)
-            .borderStyle(Style.EMPTY.fg(Color.YELLOW))
-            .title(Title.from(Span.raw("Question").bold().yellow()))
-            .build())
-        .build();
-
-    textInput.renderWithCursor(area, frame.buffer(), inputState, frame);
-  }
-
-  private void renderChatFooter(Frame frame, Rect area) {
-    Line helpLine;
-    if (tuiToolApproval.hasPendingApproval()) {
-      helpLine = Line.from(
-          Span.raw(" ⚠️ Tool: ").bold().yellow(),
-          Span.raw(tuiToolApproval.pendingToolName() + "  ").white(),
-          Span.raw("Enter/y").bold().green(),
-          Span.raw(" Approve  ").dim(),
-          Span.raw("Esc/n").bold().red(),
-          Span.raw(" Reject").dim()
-      );
-    } else {
-      helpLine = Line.from(
-          Span.raw(" Enter").bold().yellow(),
-          Span.raw(" Send  ").dim(),
-          Span.raw("↑/↓").bold().yellow(),
-          Span.raw(" Scroll  ").dim(),
-          Span.raw("Esc").bold().yellow(),
-          Span.raw(" Back  ").dim(),
-          Span.raw("Ctrl+C").bold().yellow(),
-          Span.raw(" Quit").dim()
-      );
-    }
-
-    var footer = Paragraph.builder()
-        .text(Text.from(helpLine))
-        .block(Block.builder()
-            .borders(Borders.ALL)
-            .borderType(BorderType.ROUNDED)
-            .borderStyle(tuiToolApproval.hasPendingApproval()
-                ? Style.EMPTY.fg(Color.YELLOW)
-                : Style.EMPTY.fg(Color.DARK_GRAY))
-            .build())
-        .build();
-    frame.renderWidget(footer, area);
-  }
-
-  /// Renders a simple footer with a dark gray border and the given help line.
-  /// Used by the menu view and RAG path input view.
-  private void renderSimpleFooter(Frame frame, Rect area, Line helpLine) {
-    var footer = Paragraph.builder()
-        .text(Text.from(helpLine))
-        .block(Block.builder()
-            .borders(Borders.ALL)
-            .borderType(BorderType.ROUNDED)
-            .borderStyle(Style.EMPTY.fg(Color.DARK_GRAY))
-            .build())
-        .build();
-    frame.renderWidget(footer, area);
   }
 }
