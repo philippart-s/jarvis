@@ -153,7 +153,7 @@ public class JarvisTUI implements Callable<Integer> {
   // --- Chat view ---
 
   private Element chatView() {
-    return column(
+    var view = column(
         chatHeader(),
 
         panel("Question",
@@ -176,21 +176,28 @@ public class JarvisTUI implements Callable<Integer> {
 
         chatFooter()
     );
+
+    if (tuiToolApproval.hasPendingApproval()) {
+      runner.focusManager().setFocus("approval-dialog");
+      return stack(
+          view,
+          dialog("⚠️  Tool Approval",
+              text("Tool: " + tuiToolApproval.pendingToolName()).bold().cyan(),
+              text(""),
+              text("Do you want to allow this tool execution?"),
+              text(""),
+              text("[Enter] Approve    [Esc] Reject").dim()
+          ).rounded().borderColor(Color.YELLOW).width(60)
+              .id("approval-dialog").focusable()
+              .onConfirm(tuiToolApproval::approve)
+              .onCancel(tuiToolApproval::reject)
+      );
+    }
+
+    return view;
   }
 
   private EventResult handleChatKey(KeyEvent event) {
-    if (tuiToolApproval.hasPendingApproval()) {
-      if (event.isConfirm() || event.isChar('y') || event.isChar('Y')) {
-        tuiToolApproval.approve();
-        return EventResult.HANDLED;
-      }
-      if (event.isCancel() || event.isChar('n') || event.isChar('N')) {
-        tuiToolApproval.reject();
-        return EventResult.HANDLED;
-      }
-      return EventResult.HANDLED;
-    }
-
     if (event.isCancel()) {
       switchToMenuView();
       return EventResult.HANDLED;
@@ -244,18 +251,8 @@ public class JarvisTUI implements Callable<Integer> {
     ).rounded().borderColor(Color.CYAN).length(3);
   }
 
-  /// Builds the chat footer, adapting to MCP tool approval state.
-  private Element chatFooter() {
-    if (tuiToolApproval.hasPendingApproval()) {
-      return row(
-          text(" ⚠️ Tool: ").bold().yellow().fit(),
-          text(tuiToolApproval.pendingToolName() + "  ").white().fit(),
-          text("Enter/y").bold().green().fit(),
-          text(" Approve  ").dim().fit(),
-          text("Esc/n").bold().red().fit(),
-          text(" Reject").dim().fit()
-      ).flex(Flex.START).length(1);
-    }
+  /// Builds the chat footer.
+  private Row chatFooter() {
     return helpBar("Enter", "Send", "Esc", "Back", "Ctrl+C", "Quit");
   }
 
