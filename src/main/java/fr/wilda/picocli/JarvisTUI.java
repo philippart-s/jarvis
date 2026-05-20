@@ -1,6 +1,7 @@
 package fr.wilda.picocli;
 
 import static dev.tamboui.toolkit.Toolkit.*;
+import static dev.tamboui.toolkit.markdown.MarkdownElement.markdown;
 
 import dev.tamboui.layout.Constraint;
 import dev.tamboui.layout.Flex;
@@ -162,7 +163,9 @@ public class JarvisTUI implements Callable<Integer> {
                 .onSubmit(this::submitQuestion)
         ).rounded().borderColor(Color.YELLOW).focusedBorderColor(Color.CYAN).length(3),
 
-        panel("Response", text(buildResponseText()).overflow(Overflow.WRAP_WORD))
+        panel("Response",
+            markdown(buildResponseText())
+                .overflow(Overflow.WRAP_WORD))
             .rounded().borderColor(Color.GREEN).fill(2)
             .id("chat-response").focusable()
             .onKeyEvent(this::handleChatKey),
@@ -213,7 +216,7 @@ public class JarvisTUI implements Callable<Integer> {
             .onSubmit(this::submitRagPath)
             .length(3),
 
-        panel("Info", text(infoText))
+        panel("Info", textLines(infoText))
             .rounded().borderColor(Color.GREEN).fill()
             .id("rag-info").focusable()
             .onKeyEvent(event -> {
