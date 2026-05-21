@@ -6,6 +6,7 @@ import jakarta.inject.Inject;
 import picocli.AutoComplete;
 import picocli.CommandLine;
 
+import java.time.Duration;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 

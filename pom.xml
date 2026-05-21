@@ -11,8 +11,9 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-        <quarkus.platform.version>3.31.2</quarkus.platform.version>
-        <quarkus.langchain4j.version>1.6.0</quarkus.langchain4j.version>
+        <quarkus.platform.version>3.35.2</quarkus.platform.version>
+        <quarkus.langchain4j.version>1.10.0</quarkus.langchain4j.version>
+        <tamboui.version>0.3.0</tamboui.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.5.3</surefire-plugin.version>
     </properties>
@@ -64,6 +65,36 @@
         <dependency>
             <groupId>io.quarkiverse.langchain4j</groupId>
             <artifactId>quarkus-langchain4j-agentic</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dev.tamboui</groupId>
+            <artifactId>tamboui-picocli</artifactId>
+            <version>${tamboui.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>dev.tamboui</groupId>
+            <artifactId>tamboui-toolkit</artifactId>
+            <version>${tamboui.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>dev.tamboui</groupId>
+            <artifactId>tamboui-panama-backend</artifactId>
+            <version>${tamboui.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>dev.tamboui</groupId>
+            <artifactId>tamboui-markdown</artifactId>
+            <version>${tamboui.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>dev.tamboui</groupId>
+            <artifactId>tamboui-toolkit-markdown</artifactId>
+            <version>${tamboui.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>

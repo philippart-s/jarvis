@@ -25,21 +25,6 @@ public interface JarvisAgent {
   @Agent(description = "Chatbot agent that uses data from other agent to have accuracy response.", outputKey = "WFresponse")
   @UserMessage("{userInput}")
   Multi<String> askAQuestion(String userInput, String agentResponse);
-
-  //@RetrievalAugmentorSupplier
-  static RetrievalAugmentor ragSupplier() {
-    Log.info("⚙️ Setting up Retrieval Augmentor for JarvisAgent...\n");
-    EmbeddingStoreContentRetriever contentRetriever = EmbeddingStoreContentRetriever.builder()
-        .embeddingModel(CDI.current().select(EmbeddingModel.class).get())
-        .embeddingStore(new InMemoryEmbeddingStore<>())
-        .maxResults(3)
-        .minScore(0.1)
-        .build();
-    return DefaultRetrievalAugmentor.builder()
-        .contentRetriever(contentRetriever)
-        .build();
-
-  }
 }
 
 
