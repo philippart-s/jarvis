@@ -22,7 +22,6 @@ public class McpSubCommand implements Callable<Integer> {
 
   @Override
   public Integer call() throws Exception {
-    long start = System.currentTimeMillis();
     aiEndpointService.askAQuestionAboutOVHcloud(question)
         .subscribe()
         .asStream()
@@ -36,9 +35,6 @@ public class McpSubCommand implements Callable<Integer> {
         });
 
     Log.info("\n");
-    long end = System.currentTimeMillis();
-    Log.info("⏱️ Transcription generating duration: " + Duration.ofMillis(end - start).toSeconds() + " secondes");
-
 
     return 0;
   }
