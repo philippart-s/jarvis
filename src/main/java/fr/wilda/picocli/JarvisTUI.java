@@ -3,7 +3,6 @@ package fr.wilda.picocli;
 import static dev.tamboui.toolkit.Toolkit.*;
 import static dev.tamboui.toolkit.markdown.MarkdownElement.markdown;
 
-import dev.tamboui.layout.Constraint;
 import dev.tamboui.layout.Flex;
 import dev.tamboui.style.Color;
 import dev.tamboui.style.Overflow;
@@ -322,7 +321,7 @@ public class JarvisTUI implements Callable<Integer> {
 
   /// Streams a Multi response from the AI service reactively.
   private void streamResponse(Function<String, Multi<String>> serviceCall, String question) {
-    serviceCall.apply(question)
+    Thread.startVirtualThread(() -> serviceCall.apply(question)
         .subscribe().with(
             token -> runner.runOnRenderThread(() -> response += token),
             error -> runner.runOnRenderThread(() -> {
@@ -330,7 +329,7 @@ public class JarvisTUI implements Callable<Integer> {
               processing = false;
             }),
             () -> runner.runOnRenderThread(() -> processing = false)
-        );
+        ));
   }
 
   // ========== Helpers ==========
