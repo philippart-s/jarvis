@@ -90,9 +90,8 @@ public class JarvisTUI implements Callable<Integer> {
         .tickRate(Duration.ofMillis(100))
         .build();
 
-    var logRedirector = new TuiLogRedirector();
-    logRedirector.install();
     tuiToolApproval.enableTuiMode();
+    var originalHandlers = redirectLogsToPanel();
 
     try (var runner = ToolkitRunner.create(config)) {
       this.runner = runner;
@@ -100,7 +99,42 @@ public class JarvisTUI implements Callable<Integer> {
       return 0;
     } finally {
       tuiToolApproval.disableTuiMode();
-      logRedirector.uninstall();
+      restoreLogHandlers(originalHandlers);
+    }
+  }
+
+  /**
+   * Redirects Quarkus logs to the TUI logs panel.
+   * The console handler holds a static reference to stdout — bytes written there
+   * are interpreted as keyboard input by JLine, so we must remove it.
+   */
+  private java.util.logging.Handler[] redirectLogsToPanel() {
+    var rootLogger = java.util.logging.Logger.getLogger("");
+    var originalHandlers = rootLogger.getHandlers();
+    for (var handler : originalHandlers) {
+      rootLogger.removeHandler(handler);
+    }
+    rootLogger.addHandler(new java.util.logging.Handler() {
+      @Override
+      public void publish(java.util.logging.LogRecord logRecord) {
+        if (logRecord.getMessage() != null && runner != null && currentMode != Mode.MENU) {
+          var msg = logRecord.getMessage();
+          runner.runOnRenderThread(() -> logs += msg + "\n");
+        }
+      }
+      @Override public void flush() {}
+      @Override public void close() {}
+    });
+    return originalHandlers;
+  }
+
+  private void restoreLogHandlers(java.util.logging.Handler[] originalHandlers) {
+    var rootLogger = java.util.logging.Logger.getLogger("");
+    for (var handler : rootLogger.getHandlers()) {
+      rootLogger.removeHandler(handler);
+    }
+    for (var handler : originalHandlers) {
+      rootLogger.addHandler(handler);
     }
   }
 
@@ -119,7 +153,7 @@ public class JarvisTUI implements Callable<Integer> {
   private Element menuView() {
     return column(
         panel(
-            text("PicoCLI + TamboUI Demo").bold().cyan()
+            text("🤖 Jarvis TUI 🤖").bold().cyan()
         ).rounded().borderColor(Color.CYAN).length(3),
 
         panel("Jarvis", menuList)
@@ -316,7 +350,6 @@ public class JarvisTUI implements Callable<Integer> {
     } catch (Exception e) {
       logs += "⚠️ Error loading documents: " + e.getMessage() + "\n";
     }
-    // RAG docs loaded — render() will now show chatView()
   }
 
   /// Streams a Multi response from the AI service reactively.
@@ -353,39 +386,4 @@ public class JarvisTUI implements Callable<Integer> {
     return response;
   }
 
-  /// Redirects JUL log output to the TUI response buffer instead of the terminal.
-  private class TuiLogRedirector {
-    private final java.util.logging.Logger rootLogger = java.util.logging.Logger.getLogger("");
-    private java.util.logging.Handler[] originalHandlers;
-
-    private final java.util.logging.Handler tuiHandler = new java.util.logging.Handler() {
-      @Override
-      public void publish(java.util.logging.LogRecord logRecord) {
-        if (logRecord.getMessage() != null && currentMode != Mode.MENU) {
-          runner.runOnRenderThread(() -> logs += logRecord.getMessage() + "\n");
-        }
-      }
-
-      @Override
-      public void flush() {}
-
-      @Override
-      public void close() {}
-    };
-
-    void install() {
-      originalHandlers = rootLogger.getHandlers();
-      for (var handler : originalHandlers) {
-        rootLogger.removeHandler(handler);
-      }
-      rootLogger.addHandler(tuiHandler);
-    }
-
-    void uninstall() {
-      rootLogger.removeHandler(tuiHandler);
-      for (var handler : originalHandlers) {
-        rootLogger.addHandler(handler);
-      }
-    }
-  }
 }
