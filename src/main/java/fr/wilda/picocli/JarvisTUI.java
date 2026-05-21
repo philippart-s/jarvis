@@ -21,7 +21,6 @@ import io.smallrye.mutiny.Multi;
 import jakarta.inject.Inject;
 import picocli.CommandLine;
 
-import java.io.OutputStream;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
@@ -95,49 +94,16 @@ public class JarvisTUI implements Callable<Integer> {
         .build();
 
     tuiToolApproval.enableTuiMode();
-    tuiLoggingController.enable(logOutputStream());
 
     try (var runner = ToolkitRunner.create(config)) {
       this.runner = runner;
+      tuiLoggingController.enable(msg -> logs += msg);
       runner.run(this::render);
       return 0;
     } finally {
       tuiToolApproval.disableTuiMode();
       tuiLoggingController.disable();
     }
-  }
-
-  private OutputStream logOutputStream() {
-    return new java.io.OutputStream() {
-      private final java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
-
-      @Override
-      public void write(int b) {
-        if (b == '\n') {
-          flush();
-        } else {
-          buffer.write(b);
-        }
-      }
-
-      @Override
-      public void write(byte[] bytes, int off, int len) {
-        for (int i = off; i < off + len; i++) {
-          write(bytes[i]);
-        }
-      }
-
-      @Override
-      public void flush() {
-        if (buffer.size() > 0) {
-          var line = buffer.toString(java.nio.charset.StandardCharsets.UTF_8);
-          buffer.reset();
-          if (runner != null && currentMode != Mode.MENU) {
-            runner.runOnRenderThread(() -> logs += line + "\n");
-          }
-        }
-      }
-    };
   }
 
   // ========== Rendering ==========
