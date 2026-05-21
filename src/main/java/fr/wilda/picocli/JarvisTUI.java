@@ -21,6 +21,7 @@ import io.smallrye.mutiny.Multi;
 import jakarta.inject.Inject;
 import picocli.CommandLine;
 
+import java.io.OutputStream;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
@@ -38,6 +39,9 @@ public class JarvisTUI implements Callable<Integer> {
 
   @Inject
   TuiToolApproval tuiToolApproval;
+
+  @Inject
+  TuiLoggingController tuiLoggingController;
 
   /// Available modes with their display labels.
   enum Mode {
@@ -91,7 +95,7 @@ public class JarvisTUI implements Callable<Integer> {
         .build();
 
     tuiToolApproval.enableTuiMode();
-    var originalHandlers = redirectLogsToPanel();
+    tuiLoggingController.enable(logOutputStream());
 
     try (var runner = ToolkitRunner.create(config)) {
       this.runner = runner;
@@ -99,43 +103,41 @@ public class JarvisTUI implements Callable<Integer> {
       return 0;
     } finally {
       tuiToolApproval.disableTuiMode();
-      restoreLogHandlers(originalHandlers);
+      tuiLoggingController.disable();
     }
   }
 
-  /**
-   * Redirects Quarkus logs to the TUI logs panel.
-   * The console handler holds a static reference to stdout — bytes written there
-   * are interpreted as keyboard input by JLine, so we must remove it.
-   */
-  private java.util.logging.Handler[] redirectLogsToPanel() {
-    var rootLogger = java.util.logging.Logger.getLogger("");
-    var originalHandlers = rootLogger.getHandlers();
-    for (var handler : originalHandlers) {
-      rootLogger.removeHandler(handler);
-    }
-    rootLogger.addHandler(new java.util.logging.Handler() {
+  private OutputStream logOutputStream() {
+    return new java.io.OutputStream() {
+      private final java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
+
       @Override
-      public void publish(java.util.logging.LogRecord logRecord) {
-        if (logRecord.getMessage() != null && runner != null && currentMode != Mode.MENU) {
-          var msg = logRecord.getMessage();
-          runner.runOnRenderThread(() -> logs += msg + "\n");
+      public void write(int b) {
+        if (b == '\n') {
+          flush();
+        } else {
+          buffer.write(b);
         }
       }
-      @Override public void flush() {}
-      @Override public void close() {}
-    });
-    return originalHandlers;
-  }
 
-  private void restoreLogHandlers(java.util.logging.Handler[] originalHandlers) {
-    var rootLogger = java.util.logging.Logger.getLogger("");
-    for (var handler : rootLogger.getHandlers()) {
-      rootLogger.removeHandler(handler);
-    }
-    for (var handler : originalHandlers) {
-      rootLogger.addHandler(handler);
-    }
+      @Override
+      public void write(byte[] bytes, int off, int len) {
+        for (int i = off; i < off + len; i++) {
+          write(bytes[i]);
+        }
+      }
+
+      @Override
+      public void flush() {
+        if (buffer.size() > 0) {
+          var line = buffer.toString(java.nio.charset.StandardCharsets.UTF_8);
+          buffer.reset();
+          if (runner != null && currentMode != Mode.MENU) {
+            runner.runOnRenderThread(() -> logs += line + "\n");
+          }
+        }
+      }
+    };
   }
 
   // ========== Rendering ==========
