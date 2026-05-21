@@ -47,10 +47,10 @@ public class JarvisTUI implements Callable<Integer> {
     MENU(""),
     CHAT("Chat Bot"),
     RAG("RAG"),
-    MCP("MCP"),
-    MANUAL_WORKFLOW("Manual Workflow"),
-    WORKFLOW("Workflow"),
-    AGENT("YOLO Agent");
+    MCP("MCP");
+//    MANUAL_WORKFLOW("Manual Workflow"),
+//    WORKFLOW("Workflow"),
+//    AGENT("YOLO Agent");
 
     private final String title;
 
@@ -68,10 +68,10 @@ public class JarvisTUI implements Callable<Integer> {
   private static final List<String> MENU_ITEMS = List.of(
       "Chat bot",
       "RAG demo",
-      "MCP demo",
-      "Agent with human workflow demo",
-      "Agent with developed workflow demo",
-      "YOLO mode demo"
+      "MCP demo"
+//      "Agent with human workflow demo",
+//      "Agent with developed workflow demo",
+//      "YOLO mode demo"
   );
 
   // --- State ---
