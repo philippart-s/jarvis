@@ -15,7 +15,7 @@ import dev.tamboui.tui.TuiConfig;
 import dev.tamboui.tui.event.KeyEvent;
 import dev.tamboui.widgets.input.TextInputState;
 import fr.wilda.picocli.sdk.ai.AIEndpointService;
-import fr.wilda.picocli.sdk.ai.mcp.TuiToolApproval;
+import fr.wilda.picocli.sdk.ai.mcp.ToolApproval;
 import fr.wilda.picocli.sdk.ai.tool.DocumentLoader;
 import io.smallrye.mutiny.Multi;
 import jakarta.inject.Inject;
@@ -37,7 +37,7 @@ public class JarvisTUI implements Callable<Integer> {
   DocumentLoader documentLoader;
 
   @Inject
-  TuiToolApproval tuiToolApproval;
+  ToolApproval toolApproval;
 
   @Inject
   TuiLoggingController tuiLoggingController;
@@ -93,7 +93,7 @@ public class JarvisTUI implements Callable<Integer> {
         .tickRate(Duration.ofMillis(100))
         .build();
 
-    tuiToolApproval.enableTuiMode();
+    toolApproval.enableTuiMode();
 
     try (var runner = ToolkitRunner.create(config)) {
       this.runner = runner;
@@ -101,7 +101,7 @@ public class JarvisTUI implements Callable<Integer> {
       runner.run(this::render);
       return 0;
     } finally {
-      tuiToolApproval.disableTuiMode();
+      toolApproval.disableTuiMode();
       tuiLoggingController.disable();
     }
   }
@@ -178,20 +178,20 @@ public class JarvisTUI implements Callable<Integer> {
         chatFooter()
     );
 
-    if (tuiToolApproval.hasPendingApproval()) {
+    if (toolApproval.hasPendingApproval()) {
       runner.focusManager().setFocus("approval-dialog");
       return stack(
           view,
           dialog("⚠️  Tool Approval",
-              text("Tool: " + tuiToolApproval.pendingToolName()).bold().cyan(),
+              text("Tool: " + toolApproval.pendingToolName()).bold().cyan(),
               text(""),
               text("Do you want to allow this tool execution?"),
               text(""),
               text("[Enter] Approve    [Esc] Reject").dim()
           ).rounded().borderColor(Color.YELLOW).width(60)
               .id("approval-dialog").focusable()
-              .onConfirm(tuiToolApproval::approve)
-              .onCancel(tuiToolApproval::reject)
+              .onConfirm(toolApproval::approve)
+              .onCancel(toolApproval::reject)
       );
     }
 
