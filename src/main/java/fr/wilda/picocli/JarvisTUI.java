@@ -15,6 +15,7 @@ import dev.tamboui.tui.TuiConfig;
 import dev.tamboui.tui.event.KeyEvent;
 import dev.tamboui.widgets.input.TextInputState;
 import fr.wilda.picocli.sdk.ai.AIEndpointService;
+import fr.wilda.picocli.sdk.ai.agent.AutonomousAgent;
 import fr.wilda.picocli.sdk.ai.agent.common.ClassifierAgent;
 import fr.wilda.picocli.sdk.ai.agent.common.JarvisAgent;
 import fr.wilda.picocli.sdk.ai.agent.common.OVHcloudAgent;
@@ -64,6 +65,9 @@ public class JarvisTUI implements Callable<Integer> {
   @Inject
   JarvisWorkflow jarvisWorkflow;
 
+  @Inject
+  AutonomousAgent autonomousAgent;
+
   /// Available modes with their display labels.
   enum Mode {
     MENU(""),
@@ -71,10 +75,8 @@ public class JarvisTUI implements Callable<Integer> {
     RAG("RAG"),
     MCP("MCP"),
     MANUAL_WORKFLOW("Manual Workflow"),
-    WORKFLOW("Workflow");
-//    MANUAL_WORKFLOW("Manual Workflow"),
-//    WORKFLOW("Workflow"),
-//    AGENT("YOLO Agent");
+    WORKFLOW("Workflow"),
+    AGENT("YOLO Agent");
 
     private final String title;
 
@@ -94,10 +96,8 @@ public class JarvisTUI implements Callable<Integer> {
       "RAG demo",
       "MCP demo",
       "Manual Workflow demo",
-      "Workflow demo"
-//      "Agent with human workflow demo",
-//      "Agent with developed workflow demo",
-//      "YOLO mode demo"
+      "Workflow demo",
+      "YOLO Agent demo"
   );
 
   // --- State ---
@@ -322,6 +322,7 @@ public class JarvisTUI implements Callable<Integer> {
       case MCP -> streamResponse(aiEndpointService::askAQuestionAboutOVHcloud, question);
       case MANUAL_WORKFLOW -> executeManualWorkflow(question);
       case WORKFLOW -> executeWorkflow(question);
+      case AGENT -> executeAgent(question);
       default -> {
         logs += "[ " + currentMode.name() + " mode ] This demo will be wired in a next step...\n";
         processing = false;
@@ -390,6 +391,20 @@ public class JarvisTUI implements Callable<Integer> {
         processing = false;
       } finally {
         requestContext.terminate();
+      }
+    });
+  }
+
+  private void executeAgent(String question) {
+    Thread.startVirtualThread(() -> {
+      try {
+        logs += "⚠️ YOLO mode activated...\n";
+        var result = autonomousAgent.ask(question);
+        response = result;
+        processing = false;
+      } catch (Exception e) {
+        logs += "⚠️ Agent error: " + e.getMessage() + "\n";
+        processing = false;
       }
     });
   }
