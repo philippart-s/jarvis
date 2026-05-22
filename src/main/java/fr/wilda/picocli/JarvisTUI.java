@@ -15,9 +15,17 @@ import dev.tamboui.tui.TuiConfig;
 import dev.tamboui.tui.event.KeyEvent;
 import dev.tamboui.widgets.input.TextInputState;
 import fr.wilda.picocli.sdk.ai.AIEndpointService;
-import fr.wilda.picocli.sdk.ai.mcp.TuiToolApproval;
+import fr.wilda.picocli.sdk.ai.agent.AutonomousAgent;
+import fr.wilda.picocli.sdk.ai.agent.common.ClassifierAgent;
+import fr.wilda.picocli.sdk.ai.agent.common.JarvisAgent;
+import fr.wilda.picocli.sdk.ai.agent.common.OVHcloudAgent;
+import fr.wilda.picocli.sdk.ai.agent.common.RagAgent;
+import fr.wilda.picocli.sdk.ai.agent.workflow.JarvisWorkflow;
+import fr.wilda.picocli.sdk.ai.mcp.ToolApproval;
 import fr.wilda.picocli.sdk.ai.tool.DocumentLoader;
+import io.quarkus.arc.Arc;
 import io.smallrye.mutiny.Multi;
+import jakarta.enterprise.context.control.ActivateRequestContext;
 import jakarta.inject.Inject;
 import picocli.CommandLine;
 
@@ -37,20 +45,38 @@ public class JarvisTUI implements Callable<Integer> {
   DocumentLoader documentLoader;
 
   @Inject
-  TuiToolApproval tuiToolApproval;
+  ToolApproval tuiToolApproval;
 
   @Inject
   TuiLoggingController tuiLoggingController;
+
+  @Inject
+  ClassifierAgent classifierAgent;
+
+  @Inject
+  RagAgent ragAgent;
+
+  @Inject
+  JarvisAgent jarvisAgent;
+
+  @Inject
+  OVHcloudAgent ovhcloudAgent;
+
+  @Inject
+  JarvisWorkflow jarvisWorkflow;
+
+  @Inject
+  AutonomousAgent autonomousAgent;
 
   /// Available modes with their display labels.
   enum Mode {
     MENU(""),
     CHAT("Chat Bot"),
     RAG("RAG"),
-    MCP("MCP");
-//    MANUAL_WORKFLOW("Manual Workflow"),
-//    WORKFLOW("Workflow"),
-//    AGENT("YOLO Agent");
+    MCP("MCP"),
+    MANUAL_WORKFLOW("Manual Workflow"),
+    WORKFLOW("Workflow"),
+    AGENT("YOLO Agent");
 
     private final String title;
 
@@ -68,10 +94,10 @@ public class JarvisTUI implements Callable<Integer> {
   private static final List<String> MENU_ITEMS = List.of(
       "Chat bot",
       "RAG demo",
-      "MCP demo"
-//      "Agent with human workflow demo",
-//      "Agent with developed workflow demo",
-//      "YOLO mode demo"
+      "MCP demo",
+      "Manual Workflow demo",
+      "Workflow demo",
+      "YOLO Agent demo"
   );
 
   // --- State ---
@@ -294,11 +320,93 @@ public class JarvisTUI implements Callable<Integer> {
     switch (currentMode) {
       case CHAT, RAG -> streamResponse(aiEndpointService::askAQuestion, question);
       case MCP -> streamResponse(aiEndpointService::askAQuestionAboutOVHcloud, question);
+      case MANUAL_WORKFLOW -> executeManualWorkflow(question);
+      case WORKFLOW -> executeWorkflow(question);
+      case AGENT -> executeAgent(question);
       default -> {
         logs += "[ " + currentMode.name() + " mode ] This demo will be wired in a next step...\n";
         processing = false;
       }
     }
+  }
+
+  private void executeManualWorkflow(String question) {
+    Thread.startVirtualThread(() -> {
+      var requestContext = Arc.container().requestContext();
+      requestContext.activate();
+      try {
+        logs += "🔍 Classifying question...\n";
+        var subCommand = classifierAgent.classify(question);
+        logs += switch (subCommand) {
+          case MCP -> "☁️ MCP Agent selected ☁️\n";
+          case RAG -> "📜 RAG Agent selected 📜\n";
+          case CHAT -> "💬 Chat Agent selected 💬\n";
+        };
+
+        var agentResponse = switch (subCommand) {
+          case MCP -> ovhcloudAgent.askAQuestion(question);
+          case RAG -> {
+            ragAgent.askAQuestionEvent(question);
+            yield "";
+          }
+          case CHAT -> "";
+        };
+
+        logs += "🤖 Calling Jarvis agent... with question=\"" + question + "\" and agentResponse=\"" + agentResponse + "\"\n";
+        jarvisAgent.askAQuestion(question, agentResponse)
+            .subscribe().with(
+                token -> response += token,
+                error -> {
+                  logs += "⚠️ Error: " + error.getMessage() + "\n";
+                  processing = false;
+                },
+                () -> processing = false
+            );
+      } catch (Exception e) {
+          logs += "⚠️ Workflow error: " + e.getMessage() + "\n";
+          processing = false;
+      } finally {
+        requestContext.terminate();
+      }
+    });
+  }
+
+  private void executeWorkflow(String question) {
+    Thread.startVirtualThread(() -> {
+      var requestContext = Arc.container().requestContext();
+      requestContext.activate();
+      try {
+        logs += "🐣 Executing workflow...\n";
+        jarvisWorkflow.executeJarvisWorkflow(question)
+            .subscribe().with(
+                token -> response += token,
+                error -> {
+                  logs += "⚠️ Error: " + error.getMessage() + "\n";
+                  processing = false;
+                },
+                () -> processing = false
+            );
+      } catch (Exception e) {
+        logs += "⚠️ Workflow error: " + e.getMessage() + "\n";
+        processing = false;
+      } finally {
+        requestContext.terminate();
+      }
+    });
+  }
+
+  private void executeAgent(String question) {
+    Thread.startVirtualThread(() -> {
+      try {
+        logs += "⚠️ YOLO mode activated...\n";
+        var result = autonomousAgent.ask(question);
+        response = result;
+        processing = false;
+      } catch (Exception e) {
+        logs += "⚠️ Agent error: " + e.getMessage() + "\n";
+        processing = false;
+      }
+    });
   }
 
   private void submitRagPath() {
