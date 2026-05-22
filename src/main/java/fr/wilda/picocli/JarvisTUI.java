@@ -19,6 +19,7 @@ import fr.wilda.picocli.sdk.ai.agent.common.ClassifierAgent;
 import fr.wilda.picocli.sdk.ai.agent.common.JarvisAgent;
 import fr.wilda.picocli.sdk.ai.agent.common.OVHcloudAgent;
 import fr.wilda.picocli.sdk.ai.agent.common.RagAgent;
+import fr.wilda.picocli.sdk.ai.agent.workflow.JarvisWorkflow;
 import fr.wilda.picocli.sdk.ai.mcp.ToolApproval;
 import fr.wilda.picocli.sdk.ai.tool.DocumentLoader;
 import io.quarkus.arc.Arc;
@@ -60,13 +61,17 @@ public class JarvisTUI implements Callable<Integer> {
   @Inject
   OVHcloudAgent ovhcloudAgent;
 
+  @Inject
+  JarvisWorkflow jarvisWorkflow;
+
   /// Available modes with their display labels.
   enum Mode {
     MENU(""),
     CHAT("Chat Bot"),
     RAG("RAG"),
     MCP("MCP"),
-    MANUAL_WORKFLOW("Manual Workflow");
+    MANUAL_WORKFLOW("Manual Workflow"),
+    WORKFLOW("Workflow");
 //    MANUAL_WORKFLOW("Manual Workflow"),
 //    WORKFLOW("Workflow"),
 //    AGENT("YOLO Agent");
@@ -88,7 +93,8 @@ public class JarvisTUI implements Callable<Integer> {
       "Chat bot",
       "RAG demo",
       "MCP demo",
-      "Manual Workflow demo"
+      "Manual Workflow demo",
+      "Workflow demo"
 //      "Agent with human workflow demo",
 //      "Agent with developed workflow demo",
 //      "YOLO mode demo"
@@ -315,6 +321,7 @@ public class JarvisTUI implements Callable<Integer> {
       case CHAT, RAG -> streamResponse(aiEndpointService::askAQuestion, question);
       case MCP -> streamResponse(aiEndpointService::askAQuestionAboutOVHcloud, question);
       case MANUAL_WORKFLOW -> executeManualWorkflow(question);
+      case WORKFLOW -> executeWorkflow(question);
       default -> {
         logs += "[ " + currentMode.name() + " mode ] This demo will be wired in a next step...\n";
         processing = false;
@@ -357,6 +364,30 @@ public class JarvisTUI implements Callable<Integer> {
       } catch (Exception e) {
           logs += "⚠️ Workflow error: " + e.getMessage() + "\n";
           processing = false;
+      } finally {
+        requestContext.terminate();
+      }
+    });
+  }
+
+  private void executeWorkflow(String question) {
+    Thread.startVirtualThread(() -> {
+      var requestContext = Arc.container().requestContext();
+      requestContext.activate();
+      try {
+        logs += "🐣 Executing workflow...\n";
+        jarvisWorkflow.executeJarvisWorkflow(question)
+            .subscribe().with(
+                token -> response += token,
+                error -> {
+                  logs += "⚠️ Error: " + error.getMessage() + "\n";
+                  processing = false;
+                },
+                () -> processing = false
+            );
+      } catch (Exception e) {
+        logs += "⚠️ Workflow error: " + e.getMessage() + "\n";
+        processing = false;
       } finally {
         requestContext.terminate();
       }
