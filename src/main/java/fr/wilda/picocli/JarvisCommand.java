@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 @TopCommand
 @Command(name = "jarvis", usageHelpAutoWidth = true, mixinStandardHelpOptions = true, subcommands = {
+    JarvisTUI.class,
     OVHcloudSubCommand.class,
     RagSubCommand.class,
     McpSubCommand.class,
