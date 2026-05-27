@@ -1,8 +1,5 @@
 package fr.wilda.picocli;
 
-import static dev.tamboui.toolkit.Toolkit.*;
-import static dev.tamboui.toolkit.markdown.MarkdownElement.markdown;
-
 import dev.tamboui.layout.Flex;
 import dev.tamboui.style.Color;
 import dev.tamboui.style.Overflow;
@@ -13,6 +10,7 @@ import dev.tamboui.toolkit.elements.Row;
 import dev.tamboui.toolkit.event.EventResult;
 import dev.tamboui.tui.TuiConfig;
 import dev.tamboui.tui.event.KeyEvent;
+import dev.tamboui.widgets.input.TextAreaState;
 import dev.tamboui.widgets.input.TextInputState;
 import fr.wilda.picocli.sdk.ai.AIEndpointService;
 import fr.wilda.picocli.sdk.ai.agent.AutonomousAgent;
@@ -25,7 +23,6 @@ import fr.wilda.picocli.sdk.ai.mcp.ToolApproval;
 import fr.wilda.picocli.sdk.ai.tool.DocumentLoader;
 import io.quarkus.arc.Arc;
 import io.smallrye.mutiny.Multi;
-import jakarta.enterprise.context.control.ActivateRequestContext;
 import jakarta.inject.Inject;
 import picocli.CommandLine;
 
@@ -34,6 +31,9 @@ import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
+
+import static dev.tamboui.toolkit.Toolkit.*;
+import static dev.tamboui.toolkit.markdown.MarkdownElement.markdown;
 
 @CommandLine.Command(name = "tui", description = "Start the Jarvis TUI", mixinStandardHelpOptions = true)
 public class JarvisTUI implements Callable<Integer> {
@@ -106,12 +106,18 @@ public class JarvisTUI implements Callable<Integer> {
       .highlightColor(Color.CYAN)
       .highlightSymbol("▶ ")
       .autoScroll();
-  private final TextInputState inputState = new TextInputState();
+  private ListElement<?> logList = list()
+      .scrollbar()
+      .autoScroll()
+      .displayOnly()
+      .highlightColor(Color.CYAN);
+  final TextInputState inputState = new TextInputState();
   private String response = "";
   private String logs = "";
   private boolean processing = false;
   private boolean ragDocumentsLoaded = false;
   private ToolkitRunner runner;
+  private int scroll, logScroll = 0;
 
   @Override
   public Integer call() throws Exception {
@@ -147,12 +153,18 @@ public class JarvisTUI implements Callable<Integer> {
   private Element menuView() {
     return column(
         panel(
-            text("🤖 Jarvis TUI 🤖").bold().cyan()
-        ).rounded().borderColor(Color.CYAN).length(3),
+            text("🤖 Jarvis TUI 🤖").bold()
+                .cyan()
+        ).rounded()
+            .borderColor(Color.CYAN)
+            .length(3),
 
         panel("Jarvis", menuList)
-            .rounded().borderColor(Color.GREEN).fill()
-            .id("menu").focusable()
+            .rounded()
+            .borderColor(Color.GREEN)
+            .fill()
+            .id("menu")
+            .focusable()
             .focusedBorderColor(Color.CYAN)
             .onKeyEvent(this::handleMenuKey),
 
@@ -180,6 +192,10 @@ public class JarvisTUI implements Callable<Integer> {
   // --- Chat view ---
 
   private Element chatView() {
+    var lines = logs.isEmpty() ? List.of("No logs yet.") : List.of(logs.split("\n"));
+    logList.items(lines);
+    logList.selected(Math.min(logScroll, lines.size() - 1));
+
     var view = column(
         chatHeader(),
 
@@ -188,34 +204,50 @@ public class JarvisTUI implements Callable<Integer> {
                 .placeholder(processing ? "Waiting for response..." : "Ask a question...")
                 .id("chat-input")
                 .onSubmit(this::submitQuestion)
-        ).rounded().borderColor(Color.YELLOW).focusedBorderColor(Color.CYAN).length(3),
+        ).rounded()
+            .borderColor(Color.YELLOW)
+            .focusedBorderColor(Color.CYAN)
+            .length(3),
 
         panel("Response",
             markdown(buildResponseText())
+                .scroll(scroll)
                 .overflow(Overflow.WRAP_WORD))
-            .rounded().borderColor(Color.GREEN).fill(2)
-            .id("chat-response").focusable()
+            .rounded()
+            .borderColor(Color.GREEN)
+            .fill(2)
+            .id("chat-response")
+            .focusable()
+            .focusedBorderColor(Color.CYAN)
             .onKeyEvent(this::handleChatKey),
 
-        panel("Logs", textLines(logs.isEmpty() ? "No logs yet." : logs))
-            .rounded().borderColor(Color.DARK_GRAY).fill()
+        panel("Logs", logList)
+            .onKeyEvent(this::handleChatKey)
+            .focusable()
+            .rounded()
+            .borderColor(Color.DARK_GRAY)
+            .fill()
             .id("chat-logs"),
-
         chatFooter()
     );
 
     if (tuiToolApproval.hasPendingApproval()) {
-      runner.focusManager().setFocus("approval-dialog");
+      runner.focusManager()
+          .setFocus("approval-dialog");
       return stack(
           view,
           dialog("⚠️  Tool Approval",
-              text("Tool: " + tuiToolApproval.pendingToolName()).bold().cyan(),
+              text("Tool: " + tuiToolApproval.pendingToolName()).bold()
+                  .cyan(),
               text(""),
               text("Do you want to allow this tool execution?"),
               text(""),
               text("[Enter] Approve    [Esc] Reject").dim()
-          ).rounded().borderColor(Color.YELLOW).width(60)
-              .id("approval-dialog").focusable()
+          ).rounded()
+              .borderColor(Color.YELLOW)
+              .width(60)
+              .id("approval-dialog")
+              .focusable()
               .onConfirm(tuiToolApproval::approve)
               .onCancel(tuiToolApproval::reject)
       );
@@ -229,6 +261,25 @@ public class JarvisTUI implements Callable<Integer> {
       switchToMenuView();
       return EventResult.HANDLED;
     }
+    if (event.isPageDown()) {
+      logScroll++;
+      return EventResult.HANDLED;
+
+    }
+    if (event.isPageUp()) {
+      logScroll = Math.max(0, logScroll - 1);
+      return EventResult.HANDLED;
+
+    }
+    if (event.isDown()) {
+      scroll++;
+      return EventResult.HANDLED;
+    }
+    if (event.isUp()) {
+      scroll = Math.max(0, scroll - 1);
+      return EventResult.HANDLED;
+    }
+
     return EventResult.UNHANDLED;
   }
 
@@ -236,9 +287,11 @@ public class JarvisTUI implements Callable<Integer> {
 
   private Element ragPathView() {
     var infoText = response.isEmpty()
-        ? "Enter the path to the documents you want to load for RAG.\n"
-            + "Leave empty to use the default path from configuration.\n"
-            + "Press Enter to load."
+        ? """
+        Enter the path to the documents you want to load for RAG.
+        Leave empty to use the default path from configuration.
+        Press Enter to load.
+        """
         : response;
 
     return column(
@@ -250,9 +303,13 @@ public class JarvisTUI implements Callable<Integer> {
             .onSubmit(this::submitRagPath)
             .length(3),
 
-        panel("Info", textLines(infoText))
-            .rounded().borderColor(Color.GREEN).fill()
-            .id("rag-info").focusable()
+        panel("Info", textArea(new TextAreaState(infoText)))
+//            .overflow(Overflow.WRAP_WORD))
+            .rounded()
+            .borderColor(Color.GREEN)
+            .fill()
+            .id("rag-info")
+            .focusable()
             .onKeyEvent(event -> {
               if (event.isCancel()) {
                 switchToMenuView();
@@ -271,16 +328,23 @@ public class JarvisTUI implements Callable<Integer> {
   private Element chatHeader() {
     return panel(
         row(
-            text("🤖 Jarvis").bold().cyan().fit(),
-            text(" - ").white().fit(),
-            text(currentMode.toString()).bold().yellow().fit()
+            text("🤖 Jarvis").bold()
+                .cyan()
+                .fit(),
+            text(" - ").white()
+                .fit(),
+            text(currentMode.toString()).bold()
+                .yellow()
+                .fit()
         ).flex(Flex.CENTER)
-    ).rounded().borderColor(Color.CYAN).length(3);
+    ).rounded()
+        .borderColor(Color.CYAN)
+        .length(3);
   }
 
   /// Builds the chat footer.
   private Row chatFooter() {
-    return helpBar("Enter", "Send", "Esc", "Back", "Ctrl+C", "Quit");
+    return helpBar("Enter", "Send", "Esc", "Back", "Ctrl+C", "Quit", "Page up/Page down", "Scroll Logs", "↑/↓", "Scroll Response");
   }
 
   /// Creates a key-binding help bar from alternating key/description pairs.
@@ -288,12 +352,16 @@ public class JarvisTUI implements Callable<Integer> {
     var elements = new Element[keysAndDescriptions.length];
     for (int i = 0; i < keysAndDescriptions.length; i++) {
       if (i % 2 == 0) {
-        elements[i] = text(" " + keysAndDescriptions[i]).bold().yellow().fit();
+        elements[i] = text(" " + keysAndDescriptions[i]).bold()
+            .yellow()
+            .fit();
       } else {
-        elements[i] = text(" " + keysAndDescriptions[i] + "  ").dim().fit();
+        elements[i] = text(" " + keysAndDescriptions[i] + "  ").dim()
+            .fit();
       }
     }
-    return row(elements).flex(Flex.START).length(1);
+    return row(elements).flex(Flex.START)
+        .length(1);
   }
 
   // ========== View switching ==========
@@ -309,7 +377,8 @@ public class JarvisTUI implements Callable<Integer> {
   // ========== Question submission ==========
 
   private void submitQuestion() {
-    var question = inputState.text().trim();
+    var question = inputState.text()
+        .trim();
     if (question.isEmpty() || processing) {
       return;
     }
@@ -332,7 +401,8 @@ public class JarvisTUI implements Callable<Integer> {
 
   private void executeManualWorkflow(String question) {
     Thread.startVirtualThread(() -> {
-      var requestContext = Arc.container().requestContext();
+      var requestContext = Arc.container()
+          .requestContext();
       requestContext.activate();
       try {
         logs += "🔍 Classifying question...\n";
@@ -354,7 +424,8 @@ public class JarvisTUI implements Callable<Integer> {
 
         logs += "🤖 Calling Jarvis agent... with question=\"" + question + "\" and agentResponse=\"" + agentResponse + "\"\n";
         jarvisAgent.askAQuestion(question, agentResponse)
-            .subscribe().with(
+            .subscribe()
+            .with(
                 token -> response += token,
                 error -> {
                   logs += "⚠️ Error: " + error.getMessage() + "\n";
@@ -363,8 +434,8 @@ public class JarvisTUI implements Callable<Integer> {
                 () -> processing = false
             );
       } catch (Exception e) {
-          logs += "⚠️ Workflow error: " + e.getMessage() + "\n";
-          processing = false;
+        logs += "⚠️ Workflow error: " + e.getMessage() + "\n";
+        processing = false;
       } finally {
         requestContext.terminate();
       }
@@ -373,12 +444,14 @@ public class JarvisTUI implements Callable<Integer> {
 
   private void executeWorkflow(String question) {
     Thread.startVirtualThread(() -> {
-      var requestContext = Arc.container().requestContext();
+      var requestContext = Arc.container()
+          .requestContext();
       requestContext.activate();
       try {
         logs += "🐣 Executing workflow...\n";
         jarvisWorkflow.executeJarvisWorkflow(question)
-            .subscribe().with(
+            .subscribe()
+            .with(
                 token -> response += token,
                 error -> {
                   logs += "⚠️ Error: " + error.getMessage() + "\n";
@@ -410,7 +483,8 @@ public class JarvisTUI implements Callable<Integer> {
   }
 
   private void submitRagPath() {
-    var path = inputState.text().trim();
+    var path = inputState.text()
+        .trim();
     inputState.clear();
 
     try {
@@ -431,7 +505,8 @@ public class JarvisTUI implements Callable<Integer> {
   /// Streams a Multi response from the AI service reactively.
   private void streamResponse(Function<String, Multi<String>> serviceCall, String question) {
     Thread.startVirtualThread(() -> serviceCall.apply(question)
-        .subscribe().with(
+        .subscribe()
+        .with(
             token -> runner.runOnRenderThread(() -> response += token),
             error -> runner.runOnRenderThread(() -> {
               logs += "⚠️ Error: " + error.getMessage() + "\n";
@@ -442,17 +517,6 @@ public class JarvisTUI implements Callable<Integer> {
   }
 
   // ========== Helpers ==========
-
-  /// Converts a multiline string into a column of text elements with word wrapping.
-  private Element textLines(String content) {
-    var lines = content.split("\n", -1);
-    var elements = new Element[lines.length];
-    for (int i = 0; i < lines.length; i++) {
-      elements[i] = text(lines[i]).overflow(Overflow.WRAP_WORD);
-    }
-    return column(elements);
-  }
-
   private String buildResponseText() {
     if (processing && response.isEmpty()) {
       return "🤔 Thinking...";
