@@ -1,0 +1,103 @@
+{
+  "reflection": [
+    {
+      "type": {
+        "proxy": [
+          "fr.wilda.picocli.sdk.ai.agent.common.ClassifierAgent",
+          "dev.langchain4j.agentic.internal.InternalAgent",
+          "dev.langchain4j.agentic.internal.AgenticScopeOwner",
+          "dev.langchain4j.service.memory.ChatMemoryAccess",
+          "dev.langchain4j.agentic.agent.ChatMessagesAccess",
+          "dev.langchain4j.observability.api.listener.AiServiceResponseReceivedListener"
+        ]
+      }
+    },
+    {
+      "type": {
+        "proxy": [
+          "fr.wilda.picocli.sdk.ai.agent.common.JarvisAgent",
+          "dev.langchain4j.agentic.internal.InternalAgent",
+          "dev.langchain4j.agentic.internal.AgenticScopeOwner",
+          "dev.langchain4j.service.memory.ChatMemoryAccess",
+          "dev.langchain4j.agentic.agent.ChatMessagesAccess",
+          "dev.langchain4j.observability.api.listener.AiServiceResponseReceivedListener"
+        ]
+      }
+    },
+    {
+      "type": {
+        "proxy": [
+          "fr.wilda.picocli.sdk.ai.agent.common.OVHcloudAgent",
+          "dev.langchain4j.agentic.internal.InternalAgent",
+          "dev.langchain4j.agentic.internal.AgenticScopeOwner",
+          "dev.langchain4j.service.memory.ChatMemoryAccess",
+          "dev.langchain4j.agentic.agent.ChatMessagesAccess",
+          "dev.langchain4j.observability.api.listener.AiServiceResponseReceivedListener"
+        ]
+      }
+    },
+    {
+      "type": {
+        "proxy": [
+          "fr.wilda.picocli.sdk.ai.agent.common.RagAgent",
+          "dev.langchain4j.agentic.internal.InternalAgent",
+          "dev.langchain4j.agentic.internal.AgenticScopeOwner",
+          "dev.langchain4j.service.memory.ChatMemoryAccess",
+          "dev.langchain4j.agentic.agent.ChatMessagesAccess",
+          "dev.langchain4j.observability.api.listener.AiServiceResponseReceivedListener"
+        ]
+      }
+    },
+    {
+      "type": {
+        "proxy": [
+          "fr.wilda.picocli.sdk.ai.agent.common.ChatAgent",
+          "dev.langchain4j.agentic.internal.InternalAgent",
+          "dev.langchain4j.agentic.internal.AgenticScopeOwner",
+          "dev.langchain4j.service.memory.ChatMemoryAccess",
+          "dev.langchain4j.agentic.agent.ChatMessagesAccess",
+          "dev.langchain4j.observability.api.listener.AiServiceResponseReceivedListener"
+        ]
+      }
+    },
+    {
+      "type": {
+        "proxy": [
+          "fr.wilda.picocli.sdk.ai.agent.workflow.AvailableAgents",
+          "dev.langchain4j.agentic.internal.InternalAgent",
+          "dev.langchain4j.agentic.internal.AgenticScopeOwner",
+          "dev.langchain4j.agentic.scope.AgenticScopeAccess"
+        ]
+      }
+    },
+    {
+      "type": {
+        "proxy": [
+          "fr.wilda.picocli.sdk.ai.agent.workflow.AvailableAgents",
+          "dev.langchain4j.agentic.internal.InternalAgent",
+          "dev.langchain4j.agentic.internal.AgenticScopeOwner"
+        ]
+      }
+    },
+    {
+      "type": {
+        "proxy": [
+          "fr.wilda.picocli.sdk.ai.agent.workflow.JarvisWorkflow",
+          "dev.langchain4j.agentic.internal.InternalAgent",
+          "dev.langchain4j.agentic.internal.AgenticScopeOwner",
+          "dev.langchain4j.agentic.scope.AgenticScopeAccess"
+        ]
+      }
+    },
+    {
+      "type": {
+        "proxy": [
+          "fr.wilda.picocli.sdk.ai.agent.AutonomousAgent",
+          "dev.langchain4j.agentic.internal.InternalAgent",
+          "dev.langchain4j.agentic.internal.AgenticScopeOwner",
+          "dev.langchain4j.agentic.scope.AgenticScopeAccess"
+        ]
+      }
+    }
+  ]
+}
