@@ -1,0 +1,44 @@
+package fr.wilda.picocli;
+
+import fr.wilda.picocli.sdk.ai.agent.workflow.JarvisWorkflow;
+import io.quarkus.logging.Log;
+import jakarta.enterprise.context.control.ActivateRequestContext;
+import jakarta.inject.Inject;
+import picocli.AutoComplete.GenerateCompletion;
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
+
+@ActivateRequestContext
+@Command(name = "workflow",
+    description = "🐣 Agentic semi autonomous workflow 🤖",
+    mixinStandardHelpOptions = true,
+    usageHelpAutoWidth = true,
+    subcommands = {GenerateCompletion.class})
+public class WorkflowSubCommand implements Callable<Integer> {
+  @CommandLine.Parameters(paramLabel = "<question>", description = "💬 Ask your question", defaultValue = "")
+  String question;
+
+  @Inject
+  JarvisWorkflow jarvisWorkflow;
+
+  @Override
+  public Integer call() throws Exception {
+    jarvisWorkflow.executeJarvisWorkflow(question)
+        .subscribe()
+        .asStream()
+        .forEach(token -> {
+          try {
+            TimeUnit.MILLISECONDS.sleep(150);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
+          Log.info(token);
+        });
+    Log.info("\n");
+    return 0;
+  }
+}
+
