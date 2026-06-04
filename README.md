@@ -64,3 +64,12 @@ To test it: 'jarvis ovhcloud -f "./src/main/resources/fun-java-poem.txt"
 
 This step is to add the completion on your bash for the CLI.  
 To activate it: `source <(jarvis generate-completion)`
+
+## 11-👤-agent-workflow
+This step is to create an agent workflow with the Jarvis CLI.
+
+## 12-👤-autonomous agent
+This step is to create an autonomous agent with the Jarvis CLI.
+
+## 13-👤-TUI
+This step is to create a TUI (Text User Interface) with the Jarvis CLI.

@@ -74,3 +74,20 @@ snippets generate \
   - display help on autocompletion: `jarvis generate-completion --help`
   - activate the autocompletion: `source <(jarvis generate-completion)`
   - test the autocompletion
+  - run [55-add-quarkus-agentic.sh](bin/55-add-quarkus-agentic.sh)
+  - create [ClassifierAgent.java](./src/main/java/fr/wilda/picocli/sdk/ai/agent/common/ClassifierAgent.java) (👨‍💻 `56-classifier-enum-agent` && `57-classifier-agent`)
+  - create [ChatAgent.java](./src/main/java/fr/wilda/picocli/sdk/ai/agent/common/ChatAgent.java) (👨‍💻 `58-chat-agent`)
+  - create [RagTool.java](./src/main/java/fr/wilda/picocli/sdk/ai/agent/tool/RagTool.java) (👨‍💻 `59-rag-tool`)
+  - create [RagAgent](./src/main/java/fr/wilda/picocli/sdk/ai/agent/common/RagAgent.java) (👨‍💻 `60-rag-agent`)
+  - run [61-add-quarkus-mcp.sh](bin/61-add-quarkus-mcp.sh)
+  - create [OVHcloudAgent.java](./src/main/java/fr/wilda/picocli/sdk/ai/agent/common/OVHcloudAgent.java) (👨‍💻 `62-ovhcloud-agent`)
+  - create [JarvisAgent.java](./src/main/java/fr/wilda/picocli/sdk/ai/agent/common/JarvisAgent.java) (👨‍💻 `63-jarvis-agent`)
+  - create [AvailableAgents.java](./src/main/java/fr/wilda/picocli/sdk/ai/agent/common/AvailableAgents.java) (👨‍💻 `64-conditional-agent` && `65-conditional-agent`)
+  - create [JarvisWorkflow.java](./src/main/java/fr/wilda/picocli/sdk/ai/agent/common/JarvisWorkflow.java) (👨‍💻 `66-jarvis-workflow`)
+  - create [WorkflowSubCommand.java](./src/main/java/fr/wilda/picocli/WorkflowSubCommand.java) 
+  - add `WorkflowSubCommand` to [JarvisCommand.java](./src/main/java/fr/wilda/picocli/JarvisCommand.java)
+  - run [67-run-agent-workflow.sh](bin/67-run-agent-workflow.sh)
+  - create [AutonomousAgent.java](./src/main/java/fr/wilda/picocli/sdk/ai/agent/AutonomousAgent.java) (👨‍💻 `68-autonomous-agent`)
+  - create [AgentSubCommand.java](./src/main/java/fr/wilda/picocli/AgentSubCommand.java)
+  - add `AgentSubCommand` to [JarvisCommand.java](./src/main/java/fr/wilda/picocli/JarvisCommand.java)
+  - run [69-run-agent-supervidor.sh](bin/69-run-agent-supervisor.sh)
