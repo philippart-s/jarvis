@@ -2,9 +2,9 @@ package fr.wilda.picocli.sdk.ai.agent.common;
 
 public interface ClassifierAgent {
 
-  // 56-classifier-enum-agent
+  // 57-classifier-enum-agent
 
-  // 57-classifier-agent
+  // 58-classifier-agent
 
 }
 

@@ -19,11 +19,11 @@ import java.util.Scanner;
 @ApplicationScoped
 public class ApprovalMcpToolProvider implements ToolProvider {
 
-  // 50-MCP-client
+  // 51-MCP-client
 
   @Override
   public ToolProviderResult provideTools(ToolProviderRequest request) {
-    // 51-approval-tool
+    // 52-approval-tool
     
   }
 }

@@ -3,7 +3,7 @@ package fr.wilda.picocli.sdk.ai.mcp;
 @ApplicationScoped
 public class OVHcloudMcpAuthProvider implements McpClientAuthProvider {
 
-  // 48-OVHcloud-MCP-PAT
+  // 49-OVHcloud-MCP-PAT
 
-  // 49-bearer-for-mcp
+  // 50-bearer-for-mcp
 }
