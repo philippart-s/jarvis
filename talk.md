@@ -27,7 +27,7 @@ snippets generate \
   - run [23-run-script.sh](bin/23-run-script.sh)
   - run [24-quarkus-build-native.sh](bin/24-quarkus-build-native.sh)
   - run [25-jarvis-api-run.sh](bin/25-jarvis-api-run.sh)
-  - run [26-add-langchain-4j.sh](bin/26-add-langchain-4j.sh)
+  - run [26-add-langchain-4j.sh](bin/04-add-langchain-4j.sh)
   - update `application.properties`: (👨‍💻 _27-props-langchain4J_)
   - create interface [AIEndpointService.java](./src/main/java/fr/wilda/picocli/sdk/ai/AIEndpointService.java) and add annotations (👨‍💻 _28-AIEndpointService-annotation_)
   - add method `askQuestion` (👨‍💻 _29-ask-method_)

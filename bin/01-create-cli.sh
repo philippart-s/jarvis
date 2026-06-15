@@ -9,4 +9,4 @@ read -n 1 -p "Press any key to continue"
 
 cd ..
 # Create CLI project
-quarkus create cli fr.wilda.picocli:jarvis-init:0.0.1-SNAPSHOT --extension='quarkus-rest-client-jackson' --no-wrapper --dry-run
+quarkus create cli fr.wilda.picocli:jarvis-init:0.0.1-SNAPSHOT --no-wrapper --dry-run
