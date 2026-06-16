@@ -15,6 +15,7 @@
         <quarkus.platform.version>3.36.0</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.5.3</surefire-plugin.version>
+<!--        <tamboui.version>0.3.0</tamboui.version>-->
     </properties>
     <repositories>
         <repository>
@@ -50,6 +51,39 @@
             <artifactId>quarkus-junit5</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!--
+        <dependency>
+            <groupId>dev.tamboui</groupId>
+            <artifactId>tamboui-picocli</artifactId>
+            <version>${tamboui.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>dev.tamboui</groupId>
+            <artifactId>tamboui-toolkit</artifactId>
+            <version>${tamboui.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>dev.tamboui</groupId>
+            <artifactId>tamboui-panama-backend</artifactId>
+            <version>${tamboui.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>dev.tamboui</groupId>
+            <artifactId>tamboui-markdown</artifactId>
+            <version>${tamboui.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>dev.tamboui</groupId>
+            <artifactId>tamboui-toolkit-markdown</artifactId>
+            <version>${tamboui.version}</version>
+            <scope>compile</scope>
+        </dependency>
+    -->
     </dependencies>
     <build>
         <plugins>
