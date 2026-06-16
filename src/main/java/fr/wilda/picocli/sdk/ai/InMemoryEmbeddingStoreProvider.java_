@@ -1,7 +1,9 @@
 package fr.wilda.picocli.sdk.ai;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
 @ApplicationScoped
 public class InMemoryEmbeddingStoreProvider {
 
-  // 36-in-memory-embedding-store
+  // 26-in-memory-embedding-store
 }

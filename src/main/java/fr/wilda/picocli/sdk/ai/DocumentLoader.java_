@@ -1,11 +1,15 @@
 package fr.wilda.picocli.sdk.ai;
 
+import jakarta.inject.Singleton;
+
+import java.nio.file.Path;
+
 @Singleton
 public class DocumentLoader {
 
-  // 37-rag-resources
+  // 27-rag-resources
 
   public void loadDocument(Path ragFiles) {
-    // 38-load-rag-files
+    // 28-load-rag-files
   }
 }

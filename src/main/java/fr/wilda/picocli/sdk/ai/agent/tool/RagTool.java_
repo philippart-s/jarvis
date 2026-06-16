@@ -5,5 +5,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class RagTool {
 
-  // 60-rag-tool
+  // 49-rag-tool
+
 }

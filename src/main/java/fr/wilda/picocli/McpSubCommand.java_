@@ -1,12 +1,13 @@
 package fr.wilda.picocli;
 
 import fr.wilda.picocli.sdk.ai.AIEndpointService;
-import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
 import picocli.AutoComplete;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "mcp", description = "Use MCP to add knowledge to Jarvis.", mixinStandardHelpOptions = true)
+import java.util.concurrent.Callable;
+
+@CommandLine.Command(name = "mcp", description = "Use MCP to add knowledge to Jarvis.", mixinStandardHelpOptions = true, subcommands = {AutoComplete.GenerateCompletion.class})
 public class McpSubCommand implements Callable<Integer> {
 
     @Inject
@@ -17,7 +18,7 @@ public class McpSubCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-        // 54-call-llm-with-mcp
+        // 43-call-llm-with-mcp
 
         return 0;
     }
