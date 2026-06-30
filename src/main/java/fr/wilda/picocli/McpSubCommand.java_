@@ -2,12 +2,11 @@ package fr.wilda.picocli;
 
 import fr.wilda.picocli.sdk.ai.AIEndpointService;
 import jakarta.inject.Inject;
-import picocli.AutoComplete;
 import picocli.CommandLine;
 
 import java.util.concurrent.Callable;
 
-@CommandLine.Command(name = "mcp", description = "Use MCP to add knowledge to Jarvis.", mixinStandardHelpOptions = true, subcommands = {AutoComplete.GenerateCompletion.class})
+@CommandLine.Command(name = "mcp", description = "Use MCP to add knowledge to Jarvis.", mixinStandardHelpOptions = true)
 public class McpSubCommand implements Callable<Integer> {
 
     @Inject

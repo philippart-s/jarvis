@@ -3,7 +3,6 @@ package fr.wilda.picocli;
 import fr.wilda.picocli.sdk.ai.agent.AutonomousAgent;
 import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
-import picocli.AutoComplete.GenerateCompletion;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
@@ -11,8 +10,7 @@ import java.util.concurrent.Callable;
 
 @Command(name = "agent",
     description = "⚠️ YOLO mode!!! Autonomous agent selection. ⚠️",
-    mixinStandardHelpOptions = true,
-    subcommands = {GenerateCompletion.class})
+    mixinStandardHelpOptions = true)
 public class AgentSubCommand implements Callable<Integer> {
 
   @Inject
