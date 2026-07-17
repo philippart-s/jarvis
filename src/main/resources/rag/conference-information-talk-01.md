@@ -1,8 +1,4 @@
 # Nom et information sur la conférence
-Pour sa 8ème édition, Touraine Tech revient plus dynamique que jamais, avec l’ambition
-de réunir plus de 600 passionnés, professionnels et étudiants autour des grandes
-thématiques du numérique. Rendez-vous les 12 & 13 février 2026 à la Faculté des
-Sciences de l’Université de Tours.
 
 ## Dates, lieux et contenus des événements
 
