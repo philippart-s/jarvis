@@ -44,5 +44,7 @@ _init_/jarvis-init/
 
 # SliDesk
 out/
+
 # AI
 /.opencode/
+/.claude/settings.local.json
