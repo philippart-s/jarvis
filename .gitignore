@@ -15,6 +15,7 @@ release.properties
 .idea/codeStyles/
 .idea/*.xml
 .idea/.gitignore
+.idea/fileTemplates
 *.ipr
 *.iml
 *.iws
@@ -46,3 +47,5 @@ _init_/jarvis-init/
 # SliDesk
 out/
 
+# AI
+/.claude/settings.local.json
