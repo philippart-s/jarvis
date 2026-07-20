@@ -1,7 +1,0 @@
-package fr.wilda.picocli.sdk.ai.agent.common;
-
-public interface OVHcloudAgent {
-
-  // 51-ovhcloud-agent
-
-}

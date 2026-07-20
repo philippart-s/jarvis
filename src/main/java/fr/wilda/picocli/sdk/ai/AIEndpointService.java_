@@ -1,8 +1,0 @@
-package fr.wilda.picocli.sdk.ai;
-
-// 12-AIEndpointService-annotation
-public interface AIEndpointService {
-  // 13-ask-method
-
-  // 42-ask-about-ovhcloud
-}

@@ -1,6 +1,0 @@
-package fr.wilda.picocli.sdk.ai.agent.common;
-
-public interface ChatAgent {
-  // 48-chat-agent
-
-}

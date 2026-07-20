@@ -1,8 +1,0 @@
-package fr.wilda.picocli.sdk.ai.agent.workflow;
-
-public interface AvailableAgents {
-
-  // 53-conditional-agent
-
-  // 54-activation-condition
-}
