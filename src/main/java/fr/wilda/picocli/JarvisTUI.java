@@ -405,13 +405,13 @@ public class JarvisTUI implements Callable<Integer> {
           .requestContext();
       requestContext.activate();
       try {
-        logs += "🔍 Classifying question...\n";
+        onUi(() -> logs += "🔍 Classifying question...\n");
         var subCommand = classifierAgent.classify(question);
-        logs += switch (subCommand) {
+        onUi(() -> logs += switch (subCommand) {
           case MCP -> "☁️ MCP Agent selected ☁️\n";
           case RAG -> "📜 RAG Agent selected 📜\n";
           case CHAT -> "💬 Chat Agent selected 💬\n";
-        };
+        });
 
         var agentResponse = switch (subCommand) {
           case MCP -> ovhcloudAgent.askAQuestion(question);
@@ -422,20 +422,22 @@ public class JarvisTUI implements Callable<Integer> {
           case CHAT -> "";
         };
 
-        logs += "🤖 Calling Jarvis agent... with question=\"" + question + "\" and agentResponse=\"" + agentResponse + "\"\n";
+        onUi(() -> logs += "🤖 Calling Jarvis agent... with question=\"" + question + "\" and agentResponse=\"" + agentResponse + "\"\n");
         jarvisAgent.askAQuestion(question, agentResponse)
             .subscribe()
             .with(
-                token -> response += token,
-                error -> {
+                token -> onUi(() -> response += token),
+                error -> onUi(() -> {
                   logs += "⚠️ Error: " + error.getMessage() + "\n";
                   processing = false;
-                },
-                () -> processing = false
+                }),
+                () -> onUi(() -> processing = false)
             );
       } catch (Exception e) {
-        logs += "⚠️ Workflow error: " + e.getMessage() + "\n";
-        processing = false;
+        onUi(() -> {
+          logs += "⚠️ Workflow error: " + e.getMessage() + "\n";
+          processing = false;
+        });
       } finally {
         requestContext.terminate();
       }
@@ -448,20 +450,22 @@ public class JarvisTUI implements Callable<Integer> {
           .requestContext();
       requestContext.activate();
       try {
-        logs += "🐣 Executing workflow...\n";
+        onUi(() -> logs += "🐣 Executing workflow...\n");
         jarvisWorkflow.executeJarvisWorkflow(question)
             .subscribe()
             .with(
-                token -> response += token,
-                error -> {
+                token -> onUi(() -> response += token),
+                error -> onUi(() -> {
                   logs += "⚠️ Error: " + error.getMessage() + "\n";
                   processing = false;
-                },
-                () -> processing = false
+                }),
+                () -> onUi(() -> processing = false)
             );
       } catch (Exception e) {
-        logs += "⚠️ Workflow error: " + e.getMessage() + "\n";
-        processing = false;
+        onUi(() -> {
+          logs += "⚠️ Workflow error: " + e.getMessage() + "\n";
+          processing = false;
+        });
       } finally {
         requestContext.terminate();
       }
@@ -471,13 +475,17 @@ public class JarvisTUI implements Callable<Integer> {
   private void executeAgent(String question) {
     Thread.startVirtualThread(() -> {
       try {
-        logs += "⚠️ YOLO mode activated...\n";
+        onUi(() -> logs += "⚠️ YOLO mode activated...\n");
         var result = autonomousAgent.ask(question);
-        response = result;
-        processing = false;
+        onUi(() -> {
+          response = result;
+          processing = false;
+        });
       } catch (Exception e) {
-        logs += "⚠️ Agent error: " + e.getMessage() + "\n";
-        processing = false;
+        onUi(() -> {
+          logs += "⚠️ Agent error: " + e.getMessage() + "\n";
+          processing = false;
+        });
       }
     });
   }
@@ -507,16 +515,25 @@ public class JarvisTUI implements Callable<Integer> {
     Thread.startVirtualThread(() -> serviceCall.apply(question)
         .subscribe()
         .with(
-            token -> runner.runOnRenderThread(() -> response += token),
-            error -> runner.runOnRenderThread(() -> {
+            token -> onUi(() -> response += token),
+            error -> onUi(() -> {
               logs += "⚠️ Error: " + error.getMessage() + "\n";
               processing = false;
             }),
-            () -> runner.runOnRenderThread(() -> processing = false)
+            () -> onUi(() -> processing = false)
         ));
   }
 
   // ========== Helpers ==========
+
+  /// Applies a UI state mutation on the render thread.
+  /// Runs inline when already on it, so this is safe to call from any thread —
+  /// agents and Mutiny subscriptions run on virtual threads and must not touch
+  /// the fields the render loop reads.
+  private void onUi(Runnable mutation) {
+    runner.runOnRenderThread(mutation);
+  }
+
   private String buildResponseText() {
     if (processing && response.isEmpty()) {
       return "🤔 Thinking...";
