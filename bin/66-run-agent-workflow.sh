@@ -21,9 +21,9 @@ bat -P -r 23:24 $(basename "$0")
 read -n 1 -p "Press any key to continue"
 
 # Run native executable with AI call 🚀
-jarvis-agents workflow "Avec les documents en ta possession, Donne moi le programme du mardi 7 juillet de Riviera Dev"
-#../target/jarvis-0.0.1-SNAPSHOT-runner workflow "Avec les documents en ta possession, Donne moi le programme du mardi 7 juillet de Riviera Dev"
-#java -jar ../target/quarkus-app/quarkus-run.jar workflow "Avec les documents en ta possession, Donne moi le programme du mardi 7 juillet de Riviera Dev"
+jarvis-agents workflow "Avec les documents en ta possession, Donne moi le programme de la WAX de Marseille du jeudi 1 octobre à 17h00"
+#../target/jarvis-0.0.1-SNAPSHOT-runner workflow "Avec les documents en ta possession, Donne moi le programme de la WAX de Marseille du jeudi 1 octobre à 17h00"
+#java -jar ../target/quarkus-app/quarkus-run.jar workflow "Avec les documents en ta possession, Donne moi le programme de la WAX de Marseille du jeudi 1 octobre à 17h00"
 
 read -n 1 -p "Press any key to continue"
 
