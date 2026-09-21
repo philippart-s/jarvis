@@ -28,6 +28,7 @@ import picocli.CommandLine;
 
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
@@ -100,20 +101,28 @@ public class JarvisTUI implements Callable<Integer> {
       "YOLO Agent demo"
   );
 
+  /// Upper bound on retained log lines. The logs panel is a rolling view, and an
+  /// unbounded list would keep growing for the whole session.
+  private static final int MAX_LOG_LINES = 500;
+
   // --- State ---
   private Mode currentMode = Mode.MENU;
   private final ListElement<?> menuList = list(MENU_ITEMS.toArray(new String[0]))
       .highlightColor(Color.CYAN)
       .highlightSymbol("▶ ")
       .autoScroll();
-  private ListElement<?> logList = list()
+  private final ListElement<?> logList = list()
       .scrollbar()
       .autoScroll()
       .displayOnly()
       .highlightColor(Color.CYAN);
   final TextInputState inputState = new TextInputState();
   private String response = "";
-  private String logs = "";
+  /// Log lines, and a revision counter so the render loop only pushes them into
+  /// the list element when they actually changed.
+  private final List<String> logLines = new ArrayList<>();
+  private int logRevision = 0;
+  private int renderedLogRevision = -1;
   private boolean processing = false;
   private boolean ragDocumentsLoaded = false;
   private ToolkitRunner runner;
@@ -129,7 +138,7 @@ public class JarvisTUI implements Callable<Integer> {
 
     try (var runner = ToolkitRunner.create(config)) {
       this.runner = runner;
-      tuiLoggingController.enable(msg -> logs += msg);
+      tuiLoggingController.enable(this::log);
       runner.run(this::render);
       return 0;
     } finally {
@@ -192,9 +201,11 @@ public class JarvisTUI implements Callable<Integer> {
   // --- Chat view ---
 
   private Element chatView() {
-    var lines = logs.isEmpty() ? List.of("No logs yet.") : List.of(logs.split("\n"));
-    logList.items(lines);
-    logList.selected(Math.min(logScroll, lines.size() - 1));
+    if (renderedLogRevision != logRevision) {
+      logList.items(logLines.isEmpty() ? List.of("No logs yet.") : List.copyOf(logLines));
+      renderedLogRevision = logRevision;
+    }
+    logList.selected(Math.min(logScroll, Math.max(0, logLines.size() - 1)));
 
     var view = column(
         chatHeader(),
@@ -370,7 +381,8 @@ public class JarvisTUI implements Callable<Integer> {
     currentMode = Mode.MENU;
     inputState.clear();
     response = "";
-    logs = "";
+    logLines.clear();
+    logRevision++;
     ragDocumentsLoaded = false;
   }
 
@@ -393,7 +405,7 @@ public class JarvisTUI implements Callable<Integer> {
       case WORKFLOW -> executeWorkflow(question);
       case AGENT -> executeAgent(question);
       default -> {
-        logs += "[ " + currentMode.name() + " mode ] This demo will be wired in a next step...\n";
+        log("[ " + currentMode.name() + " mode ] This demo will be wired in a next step...");
         processing = false;
       }
     }
@@ -405,12 +417,12 @@ public class JarvisTUI implements Callable<Integer> {
           .requestContext();
       requestContext.activate();
       try {
-        onUi(() -> logs += "🔍 Classifying question...\n");
+        log("🔍 Classifying question...");
         var subCommand = classifierAgent.classify(question);
-        onUi(() -> logs += switch (subCommand) {
-          case MCP -> "☁️ MCP Agent selected ☁️\n";
-          case RAG -> "📜 RAG Agent selected 📜\n";
-          case CHAT -> "💬 Chat Agent selected 💬\n";
+        log(switch (subCommand) {
+          case MCP -> "☁️ MCP Agent selected ☁️";
+          case RAG -> "📜 RAG Agent selected 📜";
+          case CHAT -> "💬 Chat Agent selected 💬";
         });
 
         var agentResponse = switch (subCommand) {
@@ -422,20 +434,20 @@ public class JarvisTUI implements Callable<Integer> {
           case CHAT -> "";
         };
 
-        onUi(() -> logs += "🤖 Calling Jarvis agent... with question=\"" + question + "\" and agentResponse=\"" + agentResponse + "\"\n");
+        log("🤖 Calling Jarvis agent... with question=\"" + question + "\" and agentResponse=\"" + agentResponse + "\"");
         jarvisAgent.askAQuestion(question, agentResponse)
             .subscribe()
             .with(
                 token -> onUi(() -> response += token),
                 error -> onUi(() -> {
-                  logs += "⚠️ Error: " + error.getMessage() + "\n";
+                  log("⚠️ Error: " + error.getMessage());
                   processing = false;
                 }),
                 () -> onUi(() -> processing = false)
             );
       } catch (Exception e) {
         onUi(() -> {
-          logs += "⚠️ Workflow error: " + e.getMessage() + "\n";
+          log("⚠️ Workflow error: " + e.getMessage());
           processing = false;
         });
       } finally {
@@ -450,20 +462,20 @@ public class JarvisTUI implements Callable<Integer> {
           .requestContext();
       requestContext.activate();
       try {
-        onUi(() -> logs += "🐣 Executing workflow...\n");
+        log("🐣 Executing workflow...");
         jarvisWorkflow.executeJarvisWorkflow(question)
             .subscribe()
             .with(
                 token -> onUi(() -> response += token),
                 error -> onUi(() -> {
-                  logs += "⚠️ Error: " + error.getMessage() + "\n";
+                  log("⚠️ Error: " + error.getMessage());
                   processing = false;
                 }),
                 () -> onUi(() -> processing = false)
             );
       } catch (Exception e) {
         onUi(() -> {
-          logs += "⚠️ Workflow error: " + e.getMessage() + "\n";
+          log("⚠️ Workflow error: " + e.getMessage());
           processing = false;
         });
       } finally {
@@ -475,7 +487,7 @@ public class JarvisTUI implements Callable<Integer> {
   private void executeAgent(String question) {
     Thread.startVirtualThread(() -> {
       try {
-        onUi(() -> logs += "⚠️ YOLO mode activated...\n");
+        log("⚠️ YOLO mode activated...");
         var result = autonomousAgent.ask(question);
         onUi(() -> {
           response = result;
@@ -483,7 +495,7 @@ public class JarvisTUI implements Callable<Integer> {
         });
       } catch (Exception e) {
         onUi(() -> {
-          logs += "⚠️ Agent error: " + e.getMessage() + "\n";
+          log("⚠️ Agent error: " + e.getMessage());
           processing = false;
         });
       }
@@ -497,16 +509,16 @@ public class JarvisTUI implements Callable<Integer> {
 
     try {
       if (path.isEmpty()) {
-        logs += "📜 Loading RAG documents from default path...\n";
+        log("📜 Loading RAG documents from default path...");
         documentLoader.loadDocument(null);
       } else {
-        logs += "📜 Loading RAG documents from: " + path + "\n";
+        log("📜 Loading RAG documents from: " + path);
         documentLoader.loadDocument(Path.of(path));
       }
       ragDocumentsLoaded = true;
-      logs += "✅ Documents loaded! You can now ask questions.\n";
+      log("✅ Documents loaded! You can now ask questions.");
     } catch (Exception e) {
-      logs += "⚠️ Error loading documents: " + e.getMessage() + "\n";
+      log("⚠️ Error loading documents: " + e.getMessage());
     }
   }
 
@@ -517,7 +529,7 @@ public class JarvisTUI implements Callable<Integer> {
         .with(
             token -> onUi(() -> response += token),
             error -> onUi(() -> {
-              logs += "⚠️ Error: " + error.getMessage() + "\n";
+              log("⚠️ Error: " + error.getMessage());
               processing = false;
             }),
             () -> onUi(() -> processing = false)
@@ -532,6 +544,24 @@ public class JarvisTUI implements Callable<Integer> {
   /// the fields the render loop reads.
   private void onUi(Runnable mutation) {
     runner.runOnRenderThread(mutation);
+  }
+
+  /// Appends a message to the logs panel, one entry per line.
+  private void log(String message) {
+    onUi(() -> appendLog(message));
+  }
+
+  private void appendLog(String message) {
+    if (message == null || message.isBlank()) {
+      return;
+    }
+    for (var line : message.stripTrailing().split("\n")) {
+      logLines.add(line);
+    }
+    if (logLines.size() > MAX_LOG_LINES) {
+      logLines.subList(0, logLines.size() - MAX_LOG_LINES).clear();
+    }
+    logRevision++;
   }
 
   private String buildResponseText() {
