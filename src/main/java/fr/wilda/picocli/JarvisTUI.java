@@ -1,6 +1,7 @@
 package fr.wilda.picocli;
 
 import dev.tamboui.layout.Flex;
+import dev.tamboui.markdown.MarkdownView;
 import dev.tamboui.style.Color;
 import dev.tamboui.style.Overflow;
 import dev.tamboui.toolkit.app.ToolkitRunner;
@@ -123,6 +124,8 @@ public class JarvisTUI implements Callable<Integer> {
   private final List<String> logLines = new ArrayList<>();
   private int logRevision = 0;
   private int renderedLogRevision = -1;
+  private TextAreaState ragInfoState;
+  private String ragInfoText = "";
   private boolean processing = false;
   private boolean ragDocumentsLoaded = false;
   private ToolkitRunner runner;
@@ -273,17 +276,15 @@ public class JarvisTUI implements Callable<Integer> {
       return EventResult.HANDLED;
     }
     if (event.isPageDown()) {
-      logScroll++;
+      logScroll = Math.min(logScroll + 1, Math.max(0, logLines.size() - 1));
       return EventResult.HANDLED;
-
     }
     if (event.isPageUp()) {
       logScroll = Math.max(0, logScroll - 1);
       return EventResult.HANDLED;
-
     }
     if (event.isDown()) {
-      scroll++;
+      scroll = Math.min(scroll + 1, maxResponseScroll());
       return EventResult.HANDLED;
     }
     if (event.isUp()) {
@@ -314,8 +315,7 @@ public class JarvisTUI implements Callable<Integer> {
             .onSubmit(this::submitRagPath)
             .length(3),
 
-        panel("Info", textArea(new TextAreaState(infoText)))
-//            .overflow(Overflow.WRAP_WORD))
+        panel("Info", textArea(ragInfoState(infoText)).wrapWord())
             .rounded()
             .borderColor(Color.GREEN)
             .fill()
@@ -383,6 +383,8 @@ public class JarvisTUI implements Callable<Integer> {
     response = "";
     logLines.clear();
     logRevision++;
+    scroll = 0;
+    logScroll = 0;
     ragDocumentsLoaded = false;
   }
 
@@ -395,6 +397,7 @@ public class JarvisTUI implements Callable<Integer> {
       return;
     }
     response = "";
+    scroll = 0;
     inputState.clear();
     processing = true;
 
@@ -562,6 +565,42 @@ public class JarvisTUI implements Callable<Integer> {
       logLines.subList(0, logLines.size() - MAX_LOG_LINES).clear();
     }
     logRevision++;
+  }
+
+  /// Upper bound for the response scroll offset, measured against the area the
+  /// response panel occupied in the last frame.
+  ///
+  /// MarkdownView clamps the scroll it is handed, so the display is already
+  /// correct without this; what it avoids is the local counter running away, which
+  /// would leave Up looking dead until it has been pressed as many times as Down
+  /// was. The two extra rows absorb any difference between this measurement and
+  /// the styled view actually rendered — over-estimating costs a couple of
+  /// harmless key presses, under-estimating would block the last rows.
+  private int maxResponseScroll() {
+    var area = runner.elementRegistry()
+        .getArea("chat-response");
+    if (area == null) {
+      return Integer.MAX_VALUE;
+    }
+    // The panel draws a rounded border, so the content is inset by one cell.
+    var width = Math.max(1, area.width() - 2);
+    var height = Math.max(1, area.height() - 2);
+    var totalRows = MarkdownView.builder()
+        .source(buildResponseText())
+        .overflow(Overflow.WRAP_WORD)
+        .build()
+        .computeHeight(width);
+    return Math.max(0, totalRows - height + 2);
+  }
+
+  /// Reuses the RAG info text area state across frames; rebuilding it on every
+  /// render would drop the cursor and reparse the text ten times a second.
+  private TextAreaState ragInfoState(String infoText) {
+    if (ragInfoState == null || !ragInfoText.equals(infoText)) {
+      ragInfoState = new TextAreaState(infoText);
+      ragInfoText = infoText;
+    }
+    return ragInfoState;
   }
 
   private String buildResponseText() {
