@@ -1,6 +1,5 @@
-package fr.wilda.picocli;
+package fr.wilda.picocli.sdk.ai.agent;
 
-import fr.wilda.picocli.sdk.ai.agent.AutonomousAgent;
 import fr.wilda.picocli.sdk.ai.agent.common.ClassifierAgent;
 import fr.wilda.picocli.sdk.ai.agent.common.JarvisAgent;
 import fr.wilda.picocli.sdk.ai.agent.common.OVHcloudAgent;
