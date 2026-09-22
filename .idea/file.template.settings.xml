@@ -42,9 +42,5 @@
       </template>
       <template name="75-JarvisTUI.java.child.0.java" file-name="TuiLoggingController" reformat="true" live-template-enabled="false" />
     </default_templates>
-    <internal_templates>
-      <template name="Jsp File.jsp" reformat="true" live-template-enabled="true" />
-      <template name="Jspx File.jspx" reformat="true" live-template-enabled="true" />
-    </internal_templates>
   </component>
 </project>
