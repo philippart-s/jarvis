@@ -1,0 +1,21 @@
+package fr.wilda.picocli.sdk.ai;
+
+
+import dev.langchain4j.rag.AugmentationRequest;
+import dev.langchain4j.rag.AugmentationResult;
+import dev.langchain4j.rag.RetrievalAugmentor;
+import jakarta.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
+public class DocumentRetriever implements RetrievalAugmentor {
+
+  private final RetrievalAugmentor augmentor;
+
+  // 32-retriever
+
+  @Override
+  public AugmentationResult augment(AugmentationRequest augmentationRequest) {
+    return augmentor.augment(augmentationRequest);
+  }
+
+}

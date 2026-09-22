@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExportableFileTemplateSettings">
+    <default_templates>
+      <template name="04_JarvisCommand.java" file-name="JarvisCommand.java" reformat="true" live-template-enabled="false" />
+      <template name="12_AIEndpointService.java" file-name="AIEndpointService.java" reformat="true" live-template-enabled="false" />
+      <template name="28_InMemoryEmbeddingStoreProvider.java" file-name="InMemoryEmbeddingStoreProvider.java" reformat="true" live-template-enabled="false">
+        <template name="28_InMemoryEmbeddingStoreProvider.java.child.0.java" file-name="DocumentLoader" reformat="true" live-template-enabled="false" />
+        <template name="28_InMemoryEmbeddingStoreProvider.java.child.1.java" file-name="DocumentRetriever" reformat="true" live-template-enabled="false" />
+      </template>
+      <template name="28_InMemoryEmbeddingStoreProvider.java.child.0.java" file-name="DocumentLoader" reformat="true" live-template-enabled="false" />
+      <template name="28_InMemoryEmbeddingStoreProvider.java.child.1.java" file-name="DocumentRetriever" reformat="true" live-template-enabled="false" />
+      <template name="33_RagSubCommand.java" file-name="RagSubCommand" reformat="true" live-template-enabled="false" />
+      <template name="42_OVHcloudMcpAuthProvider.java" file-name="OVHcloudMcpAuthProvider" reformat="true" live-template-enabled="false">
+        <template name="42_OVHcloudMcpAuthProvider.java.child.0.java" file-name="ApprovalMcpToolProvider" reformat="true" live-template-enabled="false" />
+        <template name="42_OVHcloudMcpAuthProvider.java.child.1.java" file-name="McpToolsException" reformat="true" live-template-enabled="false" />
+      </template>
+      <template name="42_OVHcloudMcpAuthProvider.java.child.0.java" file-name="ApprovalMcpToolProvider" reformat="true" live-template-enabled="false" />
+      <template name="42_OVHcloudMcpAuthProvider.java.child.1.java" file-name="McpToolsException" reformat="true" live-template-enabled="false" />
+      <template name="48-McpSubCommand.java" file-name="McpSubCommand" reformat="true" live-template-enabled="false" />
+      <template name="52-WorkflowAgents.java" file-name="ClassifierAgent" reformat="true" live-template-enabled="false">
+        <template name="52-WorkflowAgents.java.child.0.java" file-name="JarvisAgent" reformat="true" live-template-enabled="false" />
+        <template name="52-WorkflowAgents.java.child.1.java" file-name="RagAgent" reformat="true" live-template-enabled="false" />
+        <template name="52-WorkflowAgents.java.child.2.java" file-name="OVHcloudAgent" reformat="true" live-template-enabled="false" />
+        <template name="52-WorkflowAgents.java.child.3.java" file-name="ChatAgent" reformat="true" live-template-enabled="false" />
+      </template>
+      <template name="52-WorkflowAgents.java.child.0.java" file-name="JarvisAgent" reformat="true" live-template-enabled="false" />
+      <template name="52-WorkflowAgents.java.child.1.java" file-name="RagAgent" reformat="true" live-template-enabled="false" />
+      <template name="52-WorkflowAgents.java.child.2.java" file-name="OVHcloudAgent" reformat="true" live-template-enabled="false" />
+      <template name="52-WorkflowAgents.java.child.3.java" file-name="ChatAgent" reformat="true" live-template-enabled="false" />
+      <template name="57-RagTool.java" file-name="RagTool" reformat="true" live-template-enabled="false" />
+      <template name="61-JarvisWorkflow.java" file-name="AvailableAgents" reformat="true" live-template-enabled="false">
+        <template name="61-JarvisWorkflow.java.child.0.java" file-name="JarvisWorkflow" reformat="true" live-template-enabled="false" />
+      </template>
+      <template name="61-JarvisWorkflow.java.child.0.java" file-name="JarvisWorkflow" reformat="true" live-template-enabled="false" />
+      <template name="65-WorkflowSubCommand.java" file-name="WorkflowSubCommand" reformat="true" live-template-enabled="false" />
+      <template name="67-AutonomousAgent.java" file-name="AutonomousAgent" reformat="true" live-template-enabled="false" />
+      <template name="69-AgentSubCommand.java" file-name="AgentSubCommand" reformat="true" live-template-enabled="false" />
+      <template name="74-ToolApproval.java" file-name="ToolApproval" reformat="true" live-template-enabled="false" />
+      <template name="75-JarvisTUI.java" file-name="JarvisTUI" reformat="true" live-template-enabled="false">
+        <template name="75-JarvisTUI.java.child.0.java" file-name="TuiLoggingController" reformat="true" live-template-enabled="false" />
+      </template>
+      <template name="75-JarvisTUI.java.child.0.java" file-name="TuiLoggingController" reformat="true" live-template-enabled="false" />
+    </default_templates>
+    <internal_templates>
+      <template name="Jsp File.jsp" reformat="true" live-template-enabled="true" />
+      <template name="Jspx File.jspx" reformat="true" live-template-enabled="true" />
+    </internal_templates>
+  </component>
+</project>
