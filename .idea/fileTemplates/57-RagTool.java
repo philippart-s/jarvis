@@ -1,0 +1,10 @@
+package fr.wilda.picocli.sdk.ai.agent.tool;
+
+import jakarta.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
+public class RagTool {
+
+  // 58-rag-tool
+
+}

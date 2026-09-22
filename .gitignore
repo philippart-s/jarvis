@@ -13,7 +13,12 @@ release.properties
 bin/
 
 # IntelliJ
-.idea
+.idea/*
+# ... sauf les templates de fichiers du talk, partagés volontairement
+!.idea/fileTemplates/
+!.idea/file.template.settings.xml
+# surcharges de templates internes d'IntelliJ, hors talk
+.idea/fileTemplates/internal/
 *.ipr
 *.iml
 *.iws
