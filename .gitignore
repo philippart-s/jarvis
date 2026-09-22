@@ -48,3 +48,4 @@ out/
 # AI
 /.opencode/
 /.claude/settings.local.json
+/docs/upgrades/
