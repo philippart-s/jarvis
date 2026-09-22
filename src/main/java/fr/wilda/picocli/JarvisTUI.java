@@ -1,6 +1,7 @@
 package fr.wilda.picocli;
 
 import dev.tamboui.layout.Flex;
+import dev.tamboui.markdown.MarkdownView;
 import dev.tamboui.style.Color;
 import dev.tamboui.style.Overflow;
 import dev.tamboui.toolkit.app.ToolkitRunner;
@@ -28,6 +29,7 @@ import picocli.CommandLine;
 
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
@@ -100,20 +102,30 @@ public class JarvisTUI implements Callable<Integer> {
       "YOLO Agent demo"
   );
 
+  /// Upper bound on retained log lines. The logs panel is a rolling view, and an
+  /// unbounded list would keep growing for the whole session.
+  private static final int MAX_LOG_LINES = 500;
+
   // --- State ---
   private Mode currentMode = Mode.MENU;
   private final ListElement<?> menuList = list(MENU_ITEMS.toArray(new String[0]))
       .highlightColor(Color.CYAN)
       .highlightSymbol("▶ ")
       .autoScroll();
-  private ListElement<?> logList = list()
+  private final ListElement<?> logList = list()
       .scrollbar()
       .autoScroll()
       .displayOnly()
       .highlightColor(Color.CYAN);
   final TextInputState inputState = new TextInputState();
   private String response = "";
-  private String logs = "";
+  /// Log lines, and a revision counter so the render loop only pushes them into
+  /// the list element when they actually changed.
+  private final List<String> logLines = new ArrayList<>();
+  private int logRevision = 0;
+  private int renderedLogRevision = -1;
+  private TextAreaState ragInfoState;
+  private String ragInfoText = "";
   private boolean processing = false;
   private boolean ragDocumentsLoaded = false;
   private ToolkitRunner runner;
@@ -129,7 +141,7 @@ public class JarvisTUI implements Callable<Integer> {
 
     try (var runner = ToolkitRunner.create(config)) {
       this.runner = runner;
-      tuiLoggingController.enable(msg -> logs += msg);
+      tuiLoggingController.enable(this::log);
       runner.run(this::render);
       return 0;
     } finally {
@@ -192,9 +204,11 @@ public class JarvisTUI implements Callable<Integer> {
   // --- Chat view ---
 
   private Element chatView() {
-    var lines = logs.isEmpty() ? List.of("No logs yet.") : List.of(logs.split("\n"));
-    logList.items(lines);
-    logList.selected(Math.min(logScroll, lines.size() - 1));
+    if (renderedLogRevision != logRevision) {
+      logList.items(logLines.isEmpty() ? List.of("No logs yet.") : List.copyOf(logLines));
+      renderedLogRevision = logRevision;
+    }
+    logList.selected(Math.min(logScroll, Math.max(0, logLines.size() - 1)));
 
     var view = column(
         chatHeader(),
@@ -262,17 +276,15 @@ public class JarvisTUI implements Callable<Integer> {
       return EventResult.HANDLED;
     }
     if (event.isPageDown()) {
-      logScroll++;
+      logScroll = Math.min(logScroll + 1, Math.max(0, logLines.size() - 1));
       return EventResult.HANDLED;
-
     }
     if (event.isPageUp()) {
       logScroll = Math.max(0, logScroll - 1);
       return EventResult.HANDLED;
-
     }
     if (event.isDown()) {
-      scroll++;
+      scroll = Math.min(scroll + 1, maxResponseScroll());
       return EventResult.HANDLED;
     }
     if (event.isUp()) {
@@ -303,8 +315,7 @@ public class JarvisTUI implements Callable<Integer> {
             .onSubmit(this::submitRagPath)
             .length(3),
 
-        panel("Info", textArea(new TextAreaState(infoText)))
-//            .overflow(Overflow.WRAP_WORD))
+        panel("Info", textArea(ragInfoState(infoText)).wrapWord())
             .rounded()
             .borderColor(Color.GREEN)
             .fill()
@@ -370,7 +381,10 @@ public class JarvisTUI implements Callable<Integer> {
     currentMode = Mode.MENU;
     inputState.clear();
     response = "";
-    logs = "";
+    logLines.clear();
+    logRevision++;
+    scroll = 0;
+    logScroll = 0;
     ragDocumentsLoaded = false;
   }
 
@@ -383,6 +397,7 @@ public class JarvisTUI implements Callable<Integer> {
       return;
     }
     response = "";
+    scroll = 0;
     inputState.clear();
     processing = true;
 
@@ -393,7 +408,7 @@ public class JarvisTUI implements Callable<Integer> {
       case WORKFLOW -> executeWorkflow(question);
       case AGENT -> executeAgent(question);
       default -> {
-        logs += "[ " + currentMode.name() + " mode ] This demo will be wired in a next step...\n";
+        log("[ " + currentMode.name() + " mode ] This demo will be wired in a next step...");
         processing = false;
       }
     }
@@ -405,13 +420,13 @@ public class JarvisTUI implements Callable<Integer> {
           .requestContext();
       requestContext.activate();
       try {
-        logs += "🔍 Classifying question...\n";
+        log("🔍 Classifying question...");
         var subCommand = classifierAgent.classify(question);
-        logs += switch (subCommand) {
-          case MCP -> "☁️ MCP Agent selected ☁️\n";
-          case RAG -> "📜 RAG Agent selected 📜\n";
-          case CHAT -> "💬 Chat Agent selected 💬\n";
-        };
+        log(switch (subCommand) {
+          case MCP -> "☁️ MCP Agent selected ☁️";
+          case RAG -> "📜 RAG Agent selected 📜";
+          case CHAT -> "💬 Chat Agent selected 💬";
+        });
 
         var agentResponse = switch (subCommand) {
           case MCP -> ovhcloudAgent.askAQuestion(question);
@@ -422,20 +437,22 @@ public class JarvisTUI implements Callable<Integer> {
           case CHAT -> "";
         };
 
-        logs += "🤖 Calling Jarvis agent... with question=\"" + question + "\" and agentResponse=\"" + agentResponse + "\"\n";
+        log("🤖 Calling Jarvis agent... with question=\"" + question + "\" and agentResponse=\"" + agentResponse + "\"");
         jarvisAgent.askAQuestion(question, agentResponse)
             .subscribe()
             .with(
-                token -> response += token,
-                error -> {
-                  logs += "⚠️ Error: " + error.getMessage() + "\n";
+                token -> onUi(() -> response += token),
+                error -> onUi(() -> {
+                  log("⚠️ Error: " + error.getMessage());
                   processing = false;
-                },
-                () -> processing = false
+                }),
+                () -> onUi(() -> processing = false)
             );
       } catch (Exception e) {
-        logs += "⚠️ Workflow error: " + e.getMessage() + "\n";
-        processing = false;
+        onUi(() -> {
+          log("⚠️ Workflow error: " + e.getMessage());
+          processing = false;
+        });
       } finally {
         requestContext.terminate();
       }
@@ -448,20 +465,22 @@ public class JarvisTUI implements Callable<Integer> {
           .requestContext();
       requestContext.activate();
       try {
-        logs += "🐣 Executing workflow...\n";
+        log("🐣 Executing workflow...");
         jarvisWorkflow.executeJarvisWorkflow(question)
             .subscribe()
             .with(
-                token -> response += token,
-                error -> {
-                  logs += "⚠️ Error: " + error.getMessage() + "\n";
+                token -> onUi(() -> response += token),
+                error -> onUi(() -> {
+                  log("⚠️ Error: " + error.getMessage());
                   processing = false;
-                },
-                () -> processing = false
+                }),
+                () -> onUi(() -> processing = false)
             );
       } catch (Exception e) {
-        logs += "⚠️ Workflow error: " + e.getMessage() + "\n";
-        processing = false;
+        onUi(() -> {
+          log("⚠️ Workflow error: " + e.getMessage());
+          processing = false;
+        });
       } finally {
         requestContext.terminate();
       }
@@ -471,13 +490,17 @@ public class JarvisTUI implements Callable<Integer> {
   private void executeAgent(String question) {
     Thread.startVirtualThread(() -> {
       try {
-        logs += "⚠️ YOLO mode activated...\n";
+        log("⚠️ YOLO mode activated...");
         var result = autonomousAgent.ask(question);
-        response = result;
-        processing = false;
+        onUi(() -> {
+          response = result;
+          processing = false;
+        });
       } catch (Exception e) {
-        logs += "⚠️ Agent error: " + e.getMessage() + "\n";
-        processing = false;
+        onUi(() -> {
+          log("⚠️ Agent error: " + e.getMessage());
+          processing = false;
+        });
       }
     });
   }
@@ -489,16 +512,16 @@ public class JarvisTUI implements Callable<Integer> {
 
     try {
       if (path.isEmpty()) {
-        logs += "📜 Loading RAG documents from default path...\n";
+        log("📜 Loading RAG documents from default path...");
         documentLoader.loadDocument(null);
       } else {
-        logs += "📜 Loading RAG documents from: " + path + "\n";
+        log("📜 Loading RAG documents from: " + path);
         documentLoader.loadDocument(Path.of(path));
       }
       ragDocumentsLoaded = true;
-      logs += "✅ Documents loaded! You can now ask questions.\n";
+      log("✅ Documents loaded! You can now ask questions.");
     } catch (Exception e) {
-      logs += "⚠️ Error loading documents: " + e.getMessage() + "\n";
+      log("⚠️ Error loading documents: " + e.getMessage());
     }
   }
 
@@ -507,16 +530,79 @@ public class JarvisTUI implements Callable<Integer> {
     Thread.startVirtualThread(() -> serviceCall.apply(question)
         .subscribe()
         .with(
-            token -> runner.runOnRenderThread(() -> response += token),
-            error -> runner.runOnRenderThread(() -> {
-              logs += "⚠️ Error: " + error.getMessage() + "\n";
+            token -> onUi(() -> response += token),
+            error -> onUi(() -> {
+              log("⚠️ Error: " + error.getMessage());
               processing = false;
             }),
-            () -> runner.runOnRenderThread(() -> processing = false)
+            () -> onUi(() -> processing = false)
         ));
   }
 
   // ========== Helpers ==========
+
+  /// Applies a UI state mutation on the render thread.
+  /// Runs inline when already on it, so this is safe to call from any thread —
+  /// agents and Mutiny subscriptions run on virtual threads and must not touch
+  /// the fields the render loop reads.
+  private void onUi(Runnable mutation) {
+    runner.runOnRenderThread(mutation);
+  }
+
+  /// Appends a message to the logs panel, one entry per line.
+  private void log(String message) {
+    onUi(() -> appendLog(message));
+  }
+
+  private void appendLog(String message) {
+    if (message == null || message.isBlank()) {
+      return;
+    }
+    for (var line : message.stripTrailing().split("\n")) {
+      logLines.add(line);
+    }
+    if (logLines.size() > MAX_LOG_LINES) {
+      logLines.subList(0, logLines.size() - MAX_LOG_LINES).clear();
+    }
+    logRevision++;
+  }
+
+  /// Upper bound for the response scroll offset, measured against the area the
+  /// response panel occupied in the last frame.
+  ///
+  /// MarkdownView clamps the scroll it is handed, so the display is already
+  /// correct without this; what it avoids is the local counter running away, which
+  /// would leave Up looking dead until it has been pressed as many times as Down
+  /// was. The two extra rows absorb any difference between this measurement and
+  /// the styled view actually rendered — over-estimating costs a couple of
+  /// harmless key presses, under-estimating would block the last rows.
+  private int maxResponseScroll() {
+    var area = runner.elementRegistry()
+        .getArea("chat-response");
+    if (area == null) {
+      return Integer.MAX_VALUE;
+    }
+    // The panel draws a rounded border, so the content is inset by one cell.
+    var width = Math.max(1, area.width() - 2);
+    var height = Math.max(1, area.height() - 2);
+    var totalRows = MarkdownView.builder()
+        .source(buildResponseText())
+        .overflow(Overflow.WRAP_WORD)
+        .build()
+        .computeHeight(width);
+    return Math.max(0, totalRows - height + 2);
+  }
+
+  /// Reuses the RAG info text area state across frames; rebuilding it on every
+  /// render would drop the cursor and reparse the text ten times a second.
+  private TextAreaState ragInfoState(String infoText) {
+    if (ragInfoState == null || !ragInfoText.equals(infoText)) {
+      ragInfoState = new TextAreaState(infoText);
+      ragInfoText = infoText;
+    }
+    return ragInfoState;
+  }
+
   private String buildResponseText() {
     if (processing && response.isEmpty()) {
       return "🤔 Thinking...";
